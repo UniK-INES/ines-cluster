@@ -1,2 +1,0 @@
-# ines-cluster
-Cluster Documentation
