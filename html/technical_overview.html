@@ -1,0 +1,867 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Technical Overview &mdash; RPi Cluster 0.1 alpha documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="User Guide" href="userguide.html" />
+    <link rel="prev" title="Overview" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> RPi Cluster
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Technical Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#server-module">Server Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#network-interfaces">Network Interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#important-services">Important Services</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#homematic-module">Homematic Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Network Interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Important Services</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#router">Router</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Network Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#client-modules">Client Modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hostnames-and-hardwareaddress">Hostnames and Hardwareaddress</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geographical-position">Geographical Position</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#known-problems">Known Problems</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html">User Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">RPi Cluster</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Technical Overview</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/technical_overview.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="technical-overview">
+<h1>Technical Overview<a class="headerlink" href="#technical-overview" title="Permalink to this headline">¶</a></h1>
+<p>The cluster at Fachgebiet Integrierte Energiesysteme includes 48 RaspberryPi 3+ and 12 RaspberryPi Zero modules for computing and 2 additional RaspberryPi 3+ modules
+for managing the system. All modules contain an sd-card. The card itself is only used in the management modules.</p>
+<div class="section" id="server-module">
+<h2>Server Module<a class="headerlink" href="#server-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="network-interfaces">
+<h3>Network Interfaces<a class="headerlink" href="#network-interfaces" title="Permalink to this headline">¶</a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 18%" />
+<col style="width: 39%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Hardwareaddress</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>IP</p></th>
+<th class="head"><p>Rate</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>B8:27:EB:36:A7:A3</p></td>
+<td><p>eth0</p></td>
+<td><p>10.42.0.250</p></td>
+<td><p>100 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>D0:37:45:88:8C:EF</p></td>
+<td><p>eth1</p></td>
+<td><p>141.51.123.55</p></td>
+<td><p>1000 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>D0:37:45:88:8C:EF</p></td>
+<td><p>wlan0</p></td>
+<td><p>192.168.1.111</p></td>
+<td><p>56 MB/s</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="important-services">
+<h3>Important Services<a class="headerlink" href="#important-services" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><strong>dnsmasq</strong> used as DHCP and TFTP server</p></li>
+<li><p><strong>nfs-kernel-server</strong> used for providing the root partition and the individual content directory</p></li>
+<li><p><strong>iptables</strong> rules connecting eth0 and wlan0 interfaces</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="homematic-module">
+<h2>Homematic Module<a class="headerlink" href="#homematic-module" title="Permalink to this headline">¶</a></h2>
+<p>The Homematic module is used to power the cluster. Additionally we use it when you are not able to create a direct route into the cluster.</p>
+<div class="section" id="id1">
+<h3>Network Interfaces<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 18%" />
+<col style="width: 39%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Hardwareaddress</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>IP</p></th>
+<th class="head"><p>Rate</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>DC:A6:32:36:33:2D</p></td>
+<td><p>eth0</p></td>
+<td><p>141.51.123.42</p></td>
+<td><p>100 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>DC:A6:32:36:33:2F</p></td>
+<td><p>wlan0</p></td>
+<td><p>192.168.1.134</p></td>
+<td><p>56 MB/s</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="id2">
+<h3>Important Services<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Debmatic / lighttpd running on <a class="reference external" href="http://141.51.123.42">http://141.51.123.42</a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="router">
+<h2>Router<a class="headerlink" href="#router" title="Permalink to this headline">¶</a></h2>
+<p>The router provides a WiFi <strong>nostromo</strong> to the server module’s wlan0 interface and the Zero client modules. When connected to the wifi you can add a route to the client modules with <strong>192.168.1.111</strong> (server module wlan0) as a gateway.</p>
+<div class="section" id="id3">
+<h3>Network Interfaces<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 18%" />
+<col style="width: 39%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Hardwareaddress</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>IP</p></th>
+<th class="head"><p>Rate</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>B0:C7:45:3F:86:1B</p></td>
+<td><p>vlan2</p></td>
+<td><p>141.51.123.4</p></td>
+<td><p>100 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B0:C7:45:3F:86:1C</p></td>
+<td><p>br0</p></td>
+<td><p>192.168.1.1</p></td>
+<td><p>100 MB/s</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="client-modules">
+<h2>Client Modules<a class="headerlink" href="#client-modules" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="hostnames-and-hardwareaddress">
+<h3>Hostnames and Hardwareaddress<a class="headerlink" href="#hostnames-and-hardwareaddress" title="Permalink to this headline">¶</a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 19%" />
+<col style="width: 28%" />
+<col style="width: 11%" />
+<col style="width: 15%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Hardwareaddresses</p></th>
+<th class="head"><p>Hostname</p></th>
+<th class="head"><p>Geographical</p></th>
+<th class="head"><p>Typ</p></th>
+<th class="head"><p>SD Rate</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>B8:27:EB:F1:32:3B</p></td>
+<td><p>host01</p></td>
+<td><p>0x01</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:6F:45:23</p></td>
+<td><p>host02</p></td>
+<td><p>0x02</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:C7:4F:DE</p></td>
+<td><p>host03</p></td>
+<td><p>0x03</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:1F:C3:23</p></td>
+<td><p>host04</p></td>
+<td><p>0x04</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:7E:F5:D9</p></td>
+<td><p>host05</p></td>
+<td><p>0x05</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:73:CE:79</p></td>
+<td><p>host06</p></td>
+<td><p>0x06</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:39:22:68</p></td>
+<td><p>host07</p></td>
+<td><p>0x07</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:4E:CA:10</p></td>
+<td><p>host08</p></td>
+<td><p>0x08</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:1E:E3:9F</p></td>
+<td><p>host09</p></td>
+<td><p>0x09</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:53:F2:86</p></td>
+<td><p>host10</p></td>
+<td><p>0x0A</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:85:AD:ED</p></td>
+<td><p>host11</p></td>
+<td><p>0x0B</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:81:4C:93</p></td>
+<td><p>host12</p></td>
+<td><p>0x0C</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:A2:47:0F</p></td>
+<td><p>host13</p></td>
+<td><p>0x0D</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:B7:DB:0F</p></td>
+<td><p>host14</p></td>
+<td><p>0x0E</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:52:06:8E</p></td>
+<td><p>host15</p></td>
+<td><p>0x0F</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:81:7A:2D</p></td>
+<td><p>host16</p></td>
+<td><p>0x11</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:BD:11:3E</p></td>
+<td><p>host17</p></td>
+<td><p>0x12</p></td>
+<td><p>Zero</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:74:8E:CC</p></td>
+<td><p>host18</p></td>
+<td><p>0x13</p></td>
+<td><p>Zero</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:37:0F:06</p></td>
+<td><p>host19</p></td>
+<td><p>0x14</p></td>
+<td><p>Zero</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:38:DD:C7</p></td>
+<td><p>host20</p></td>
+<td><p>0x15</p></td>
+<td><p>Zero</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:F6:A8:5D</p></td>
+<td><p>host21</p></td>
+<td><p>0x16</p></td>
+<td><p>Zero</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:8B:31:C7</p></td>
+<td><p>host22</p></td>
+<td><p>0x17</p></td>
+<td><p>Zero</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:FC:7E:24</p></td>
+<td><p>host23</p></td>
+<td><p>0x18</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:07:54:46</p></td>
+<td><p>host24</p></td>
+<td><p>0x19</p></td>
+<td><p>Zero</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:41:EE:0C</p></td>
+<td><p>host25</p></td>
+<td><p>0x1A</p></td>
+<td><p>Zero</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:45:BA:43</p></td>
+<td><p>host26</p></td>
+<td><p>0x1B</p></td>
+<td><p>Zero</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:74:91:F0</p></td>
+<td><p>host27</p></td>
+<td><p>0x1C</p></td>
+<td><p>Zero</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:DC:5E:F8</p></td>
+<td><p>host28</p></td>
+<td><p>0x1D</p></td>
+<td><p>Zero</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:2E:33:17</p></td>
+<td><p>host29</p></td>
+<td><p>0x1E</p></td>
+<td><p>Zero</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:02:84:F0</p></td>
+<td><p>host30</p></td>
+<td><p>0x1F</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:B1:1F:72</p></td>
+<td><p>host31</p></td>
+<td><p>0x21</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:A7:F6:1B</p></td>
+<td><p>host32</p></td>
+<td><p>0x22</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:A9:54:CD</p></td>
+<td><p>host33</p></td>
+<td><p>0x23</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:AF:1A:F3</p></td>
+<td><p>host34</p></td>
+<td><p>0x24</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:5B:8B:77</p></td>
+<td><p>host35</p></td>
+<td><p>0x25</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:78:7B:A3</p></td>
+<td><p>host36</p></td>
+<td><p>0x26</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:FC:01:AF</p></td>
+<td><p>host37</p></td>
+<td><p>0x27</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:EF:D4:D5</p></td>
+<td><p>host38</p></td>
+<td><p>0x28</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:D9:E1:52</p></td>
+<td><p>host39</p></td>
+<td><p>0x29</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:DD:46:06</p></td>
+<td><p>host40</p></td>
+<td><p>0x2A</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:32:AC:5D</p></td>
+<td><p>host41</p></td>
+<td><p>0x2B</p></td>
+<td><p>R3</p></td>
+<td><p>30 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:77:14:97</p></td>
+<td><p>host42</p></td>
+<td><p>0x2C</p></td>
+<td><p>R3</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:C7:CE:08</p></td>
+<td><p>host43</p></td>
+<td><p>0x2D</p></td>
+<td><p>R3</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:BD:D1:8F</p></td>
+<td><p>host44</p></td>
+<td><p>0x2E</p></td>
+<td><p>R3</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:57:6E:2F</p></td>
+<td><p>host45</p></td>
+<td><p>0x2F</p></td>
+<td><p>R3</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:1B:A6:F1</p></td>
+<td><p>host46</p></td>
+<td><p>0x31</p></td>
+<td><p>R3</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:7D:CE:3A</p></td>
+<td><p>host47</p></td>
+<td><p>0x32</p></td>
+<td><p>R3</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:E9:4A:87</p></td>
+<td><p>host48</p></td>
+<td><p>0x33</p></td>
+<td><p>R3</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:87:4D:83</p></td>
+<td><p>host49</p></td>
+<td><p>0x34</p></td>
+<td><p>R3</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:08:2F:DE</p></td>
+<td><p>host50</p></td>
+<td><p>0x35</p></td>
+<td><p>R3</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:F6:50:B8</p></td>
+<td><p>host51</p></td>
+<td><p>0x36</p></td>
+<td><p>R3</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:E8:C2:6A</p></td>
+<td><p>host52</p></td>
+<td><p>0x37</p></td>
+<td><p>R3</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:96:CB:E9</p></td>
+<td><p>host53</p></td>
+<td><p>0x38</p></td>
+<td><p>R3</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:84:75:97</p></td>
+<td><p>host54</p></td>
+<td><p>0x39</p></td>
+<td><p>R3</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:E2:C3:6E</p></td>
+<td><p>host55</p></td>
+<td><p>0x3A</p></td>
+<td><p>R3</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:26:3C:3D</p></td>
+<td><p>host56</p></td>
+<td><p>0x3B</p></td>
+<td><p>R3</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:4C:6F:A5</p></td>
+<td><p>host57</p></td>
+<td><p>0x3C</p></td>
+<td><p>R3</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:09:31:48</p></td>
+<td><p>host58</p></td>
+<td><p>0x3D</p></td>
+<td><p>R3</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-even"><td><p>B8:27:EB:AA:89:FA</p></td>
+<td><p>host59</p></td>
+<td><p>0x3E</p></td>
+<td><p>R3</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>B8:27:EB:D3:C9:CC</p></td>
+<td><p>host60</p></td>
+<td><p>0x3F</p></td>
+<td><p>R3</p></td>
+<td><p>10 MB/s</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="geographical-position">
+<h3>Geographical Position<a class="headerlink" href="#geographical-position" title="Permalink to this headline">¶</a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Bitbar</p></th>
+<th class="head"><p>0</p></th>
+<th class="head"><p>1</p></th>
+<th class="head"><p>2</p></th>
+<th class="head"><p>3</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0x1</p></td>
+<td><p>B8:27:EB:F1:32:3B</p></td>
+<td><p>B8:27:EB:81:7A:2D</p></td>
+<td><p>B8:27:EB:B1:1F:72</p></td>
+<td><p>B8:27:EB:1B:A6:F1</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x2</p></td>
+<td><p>B8:27:EB:6F:45:23</p></td>
+<td><p>B8:27:EB:BD:11:3E</p></td>
+<td><p>B8:27:EB:A7:F6:1B</p></td>
+<td><p>B8:27:EB:7D:CE:3A</p></td>
+</tr>
+<tr class="row-even"><td><p>0x3</p></td>
+<td><p>B8:27:EB:C7:4F:DE</p></td>
+<td><p>B8:27:EB:74:8E:CC</p></td>
+<td><p>B8:27:EB:A9:54:CD</p></td>
+<td><p>B8:27:EB:E9:4A:87</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x4</p></td>
+<td><p>B8:27:EB:1F:C3:23</p></td>
+<td><p>B8:27:EB:37:0F:06</p></td>
+<td><p>B8:27:EB:AF:1A:F3</p></td>
+<td><p>B8:27:EB:87:4D:83</p></td>
+</tr>
+<tr class="row-even"><td><p>0x5</p></td>
+<td><p>B8:27:EB:7E:F5:D9</p></td>
+<td><p>B8:27:EB:38:DD:C7</p></td>
+<td><p>B8:27:EB:5B:8B:77</p></td>
+<td><p>B8:27:EB:08:2F:DE</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x6</p></td>
+<td><p>B8:27:EB:73:CE:79</p></td>
+<td><p>B8:27:EB:F6:A8:5D</p></td>
+<td><p>B8:27:EB:78:7B:A3</p></td>
+<td><p>B8:27:EB:F6:50:B8</p></td>
+</tr>
+<tr class="row-even"><td><p>0x7</p></td>
+<td><p>B8:27:EB:39:22:68</p></td>
+<td><p>B8:27:EB:8B:31:C7</p></td>
+<td><p>B8:27:EB:FC:01:AF</p></td>
+<td><p>B8:27:EB:E8:C2:6A</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x8</p></td>
+<td><p>B8:27:EB:4E:CA:10</p></td>
+<td><p>B8:27:EB:FC:7E:24</p></td>
+<td><p>B8:27:EB:EF:D4:D5</p></td>
+<td><p>B8:27:EB:96:CB:E9</p></td>
+</tr>
+<tr class="row-even"><td><p>0x9</p></td>
+<td><p>B8:27:EB:1E:E3:9F</p></td>
+<td><p>B8:27:EB:07:54:46</p></td>
+<td><p>B8:27:EB:D9:E1:52</p></td>
+<td><p>B8:27:EB:84:75:97</p></td>
+</tr>
+<tr class="row-odd"><td><p>0xA</p></td>
+<td><p>B8:27:EB:53:F2:86</p></td>
+<td><p>B8:27:EB:41:EE:0C</p></td>
+<td><p>B8:27:EB:DD:46:06</p></td>
+<td><p>B8:27:EB:E2:C3:6E</p></td>
+</tr>
+<tr class="row-even"><td><p>0xB</p></td>
+<td><p>B8:27:EB:85:AD:ED</p></td>
+<td><p>B8:27:EB:45:BA:43</p></td>
+<td><p>B8:27:EB:32:AC:5D</p></td>
+<td><p>B8:27:EB:26:3C:3D</p></td>
+</tr>
+<tr class="row-odd"><td><p>0xC</p></td>
+<td><p>B8:27:EB:81:4C:93</p></td>
+<td><p>B8:27:EB:74:91:F0</p></td>
+<td><p>B8:27:EB:77:14:97</p></td>
+<td><p>B8:27:EB:4C:6F:A5</p></td>
+</tr>
+<tr class="row-even"><td><p>0xD</p></td>
+<td><p>B8:27:EB:A2:47:0F</p></td>
+<td><p>B8:27:EB:DC:5E:F8</p></td>
+<td><p>B8:27:EB:C7:CE:08</p></td>
+<td><p>B8:27:EB:09:31:48</p></td>
+</tr>
+<tr class="row-odd"><td><p>0xE</p></td>
+<td><p>B8:27:EB:B7:DB:0F</p></td>
+<td><p>B8:27:EB:2E:33:17</p></td>
+<td><p>B8:27:EB:BD:D1:8F</p></td>
+<td><p>B8:27:EB:AA:89:FA</p></td>
+</tr>
+<tr class="row-even"><td><p>0xF</p></td>
+<td><p>B8:27:EB:52:06:8E</p></td>
+<td><p>B8:27:EB:02:84:F0</p></td>
+<td><p>B8:27:EB:57:6E:2F</p></td>
+<td><p>B8:27:EB:D3:C9:CC</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The numeration starts with 01 for every bar.</p>
+</div>
+</div>
+</div>
+<div class="section" id="known-problems">
+<h2>Known Problems<a class="headerlink" href="#known-problems" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://github.com/raspberrypi/firmware/issues/894">firmware issue</a>,</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="userguide.html" class="btn btn-neutral float-right" title="User Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Christoph Hanauer, Sascha Holzhauer
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
