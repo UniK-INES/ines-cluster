@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Search &mdash; RPi Cluster 0.1 alpha documentation</title>
+  <title>Administration &mdash; RPi Cluster 0.1 alpha documentation</title>
   
 
   
@@ -20,7 +20,6 @@
   
 
   
-    
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -35,9 +34,8 @@
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-    <script type="text/javascript" src="_static/searchtools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="#" /> 
+    <link rel="search" title="Search" href="search.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -68,7 +66,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="#" method="get">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -90,7 +88,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="technical_overview.html">Technical Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="userguide.html">User Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="admin.html">Administration</a></li>
 </ul>
 
             
@@ -137,12 +134,14 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Search</li>
+      <li>Administration</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
+            <a href="_sources/adminstration.rst.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
     
@@ -154,18 +153,34 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <noscript>
-  <div id="fallback" class="admonition warning">
-    <p class="last">
-      Please activate JavaScript to enable the search functionality.
-    </p>
-  </div>
-  </noscript>
+  <div class="section" id="administration">
+<h1>Administration<a class="headerlink" href="#administration" title="Permalink to this headline">¶</a></h1>
+<p>This part gives an overview about the adminstration of the cluster. It’s main focus is on the server module since the nodes are using space on the server module’s sd card to boot. Setting up a test system gives you the opportunity to recreate the system with a minimal amount of Raspberry Pi modules. It provides an insight on the internals of the productive system and can be used (almost) equivalent. Should you run into problems the Diagnosis section should be the first point to start. Troubleshooting lists some error scenarios that occur often while working with the system.</p>
+<p>Important: it is physically not possible to access the client modules’ hdmi output. Nor is it possible to access the kernel logs with the current configuration. The most reliable data about the state of the system is gathered via “side effects”.</p>
+<p>As an example: the GPIO LED of a specific module is off but the logs of the tftp server show the boot partition was sent correctly. Consequently the error happened when the operating system tried to boot so the first point to start would be the nfs server providing the root partiton / operating system.</p>
+<div class="section" id="servermodule">
+<h2>Servermodule<a class="headerlink" href="#servermodule" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="tftp-server">
+<h3>TFTP Server<a class="headerlink" href="#tftp-server" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="dhcp-server">
+<h3>DHCP Server<a class="headerlink" href="#dhcp-server" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="nfs-server">
+<h3>NFS Server<a class="headerlink" href="#nfs-server" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="setting-up-a-testsystem">
+<h2>Setting Up A Testsystem<a class="headerlink" href="#setting-up-a-testsystem" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="diagnosis">
+<h2>Diagnosis<a class="headerlink" href="#diagnosis" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
 
-  
-  <div id="search-results">
-  
-  </div>
 
            </div>
            
@@ -210,14 +225,7 @@
   
   
     
-  
-  <script type="text/javascript">
-    jQuery(function() { Search.loadIndex("searchindex.js"); });
-  </script>
-  
-  <script type="text/javascript" id="searchindexloader"></script>
    
-
 
 </body>
 </html>

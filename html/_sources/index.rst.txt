@@ -9,6 +9,8 @@
 
    technical_overview
    userguide
+   admin
+
 
 Overview
 *********
