@@ -1,38 +1,270 @@
+
+
 <!DOCTYPE html>
-<html>
-
+<html class="writer-html5" lang="en" >
 <head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Overview &mdash; RPi Cluster 0.1 alpha documentation</title>
+  
 
-<meta charset="utf-8">
-<title>INES Cluster documentation</title>
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
 
-<style>
-* {
-	margin:0px;
-	padding:0px;
-	/* box-sizing: border-box; */
-}
+  
+  
+  
+  
 
-.wrapper {
-	width:968px;
-	margin: auto;
-}
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-</style>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Technical Overview" href="technical_overview.html" /> 
 </head>
 
-<body>
+<body class="wy-body-for-nav">
 
-<div class="wrapper">
-	<h3>INES RaspberryPi Cluster</h3>
-	<img src="https://raw.githubusercontent.com/chh456/ines_cluster/master/github_resources/ines_cluster.jpg"></img>
-	<p>This is the main repository for the RaspberryPi cluster located at the University Kassel (Integrierte Energiesysteme). You can learn how to use the cluster <a href="https://unik-ines.github.io/ines-cluster/html/">here</a>. A more detailed guide for 
-	<a href="https://unik-ines.github.io/ines-cluster/html/">employees and students</a> can be found here. Details about the administration and setup have their <a href="https://unik-ines.github.io/ines-cluster/html/">own category</a> aswell.
-	</p>
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="#" class="icon icon-home" alt="Documentation Home"> RPi Cluster
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="technical_overview.html">Technical Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="admin.html">Administration</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">RPi Cluster</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Overview</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="technical_overview.html">Technical Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="technical_overview.html#server-module">Server Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="technical_overview.html#network-interfaces">Network Interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="technical_overview.html#important-services">Important Services</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="technical_overview.html#homematic-module">Homematic Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="technical_overview.html#id1">Network Interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="technical_overview.html#id2">Important Services</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="technical_overview.html#router">Router</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="technical_overview.html#id3">Network Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="technical_overview.html#client-modules">Client Modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="technical_overview.html#hostnames-and-hardwareaddress">Hostnames and Hardwareaddress</a></li>
+<li class="toctree-l3"><a class="reference internal" href="technical_overview.html#geographical-position">Geographical Position</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="technical_overview.html#known-problems">Known Problems</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="userguide.html#powering-on-the-cluster">Powering on the cluster</a></li>
+<li class="toctree-l2"><a class="reference internal" href="userguide.html#routing">Routing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="userguide.html#check-for-a-route">Check for a route</a></li>
+<li class="toctree-l3"><a class="reference internal" href="userguide.html#adding-a-route-manually">Adding a route manually</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="userguide.html#with-a-route">With a route</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="userguide.html#dependencies">Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="userguide.html#without-a-route">Without a route</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="admin.html">Administration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="admin.html#servermodule">Servermodule</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="admin.html#tftp-server">TFTP Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="admin.html#dhcp-server">DHCP Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="admin.html#nfs-server">NFS Server</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="admin.html#setting-up-a-testsystem">Setting Up A Testsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="admin.html#diagnosis">Diagnosis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="admin.html#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
 </div>
 
 
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="technical_overview.html" class="btn btn-neutral float-right" title="Technical Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Christoph Hanauer, Sascha Holzhauer
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
 </body>
-
-
 </html>
