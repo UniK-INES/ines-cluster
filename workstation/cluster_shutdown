@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# This script shuts down the cluster
+
+# Todo: include the server module
+
+# Script that takes a node identifier 1-60 and sends the request to the server module
+PY_SCRIPT="controll.py"
+
+function nodestring {
+	if [ ! -z $1 ]; then
+		local nodestr="node"
+		if [ "$1" -lt 10 ]; then
+			nodestr=""$nodestr"0"
+		fi
+		nodestr="$nodestr$1"
+		echo $nodestr
+	else
+		echo "Invalid usage of nodestring function"
+		exit 1
+	fi
+}
+
+
+for i in $(seq 1 60); do
+	nodename=$(nodestring $i)
+	echo "Stopping $nodename"
+	python $PY_SCRIPT -n $i -a off
+done

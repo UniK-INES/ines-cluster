@@ -1,0 +1,113 @@
+#!/bin/bash
+
+# This script will start the cluster and restart modules that are offline
+
+IP_PATTERN_R3="10.42.0."
+IP_PATTERN_ZERO="192.168.1."
+
+# Script that takes a node identifier 1-60 and sends the request to the server module
+PY_SCRIPT="controll.py"
+
+if [[ ! -f $PY_SCRIPT ]]; then
+	exit 1
+fi
+
+# We need a data structure that holds information if the node was recently restarted. So we can wait for issuing a new restart command.
+# TODO
+
+function nodestring {
+	if [ ! -z $1 ]; then
+		local nodestr="node"
+		if [ "$1" -lt 10 ]; then
+			nodestr=""$nodestr"0"
+		fi
+		nodestr="$nodestr$1"
+		echo $nodestr
+	else
+		echo "Invalid usage of nodestring function"
+		exit 1
+	fi
+}
+
+# Returns an ipaddress for a zero module. $1 hostname
+function get_zero_ip {
+	
+	# A Map for the Zero modules: hostname -> ip address
+	declare -A ZEROS
+	ZEROS[node17]="${IP_PATTERN_ZERO}121"
+	ZEROS[node18]="${IP_PATTERN_ZERO}122"
+	ZEROS[node19]="${IP_PATTERN_ZERO}123"
+	ZEROS[node20]="${IP_PATTERN_ZERO}124"
+	ZEROS[node21]="${IP_PATTERN_ZERO}125"
+	ZEROS[node22]="${IP_PATTERN_ZERO}126"
+
+	ZEROS[node24]="${IP_PATTERN_ZERO}128"
+	ZEROS[node25]="${IP_PATTERN_ZERO}129"
+	ZEROS[node26]="${IP_PATTERN_ZERO}130"
+	ZEROS[node27]="${IP_PATTERN_ZERO}131"
+	ZEROS[node28]="${IP_PATTERN_ZERO}132"
+	ZEROS[node29]="${IP_PATTERN_ZERO}133"
+	
+	echo "${ZEROS[$1]}"
+	
+	
+}
+
+# $1 node $2 {on,off}
+function restart_node {
+
+	[[ $2 = "off" ]] && stateString="Shutdown" || stateString="Start"
+	[[ ${#1} == 1 ]] && node=0$1 || node=$1
+
+	printf '%-14s%-84s' "Issue ${stateString}" " to Node ${node}"
+	
+	python "$PY_SCRIPT" -n "$1" -a "$2"
+	ret=$?
+	if [[ $ret == 0 ]]; then
+		printf '\e[32mOK\e[0m\n'
+	else
+		printf '\e[31mER\e[0m\n'
+	fi
+	return $ret
+}
+
+
+for i in $(seq 1 60); do
+	nodename=$(nodestring $i)
+	
+	ip=""
+	identifier=""
+	
+	# Checks whether the node is R3 or a Zero
+	if [[ $i -gt 16 && $i -lt 23 || $i -gt 23 && $i -lt 30 ]]; then
+		ip=$(get_zero_ip "$nodename")
+		identifier="Zero Module"
+	else
+		ip=$IP_PATTERN_R3$i
+		identifier="R3 Module"
+	fi
+	
+	if [[ $ip != "" ]]; then
+		fping -c1 -a $ip &>/dev/null
+		if [[ $? != 0 ]]; then
+			# printf '%.0s-' {1..100}
+			# printf '\n'
+			echo "$identifier with $ip is offline."
+			restart_node $i "off"
+			if [[ $? == 0 ]]; then
+				# echo "great success"
+				sleep 5
+				restart_node $i "on"
+				wait $!
+				# printf '%.0s-' {1..100}
+				# printf '\n'
+			fi
+			# restart_node $i
+			# wait $!
+		else
+			echo "$identifier with $ip is online."
+		fi
+	fi
+done
+
+# seq -f "10.42.0.%g" 1 60

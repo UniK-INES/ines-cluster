@@ -1,0 +1,140 @@
+#!/bin/bash
+
+# Usage: $0 singleNode (integer in range 1 to 60) or just $0 for all nodes
+
+# Used to iterate over "all" nodes later
+first_node=1
+last_node=60
+
+# Username to ssh into the nodes
+username="pi"
+
+module=${1:-"all"}
+if [[ $module != "all" ]]; then
+	number='^[0-9]+$'
+	if ! [[ "$module" =~ $number && $module -gt $(( first_node - 1 )) && $module -lt $(( last_node + 1 )) ]]; then
+		echo "Invalid input."
+		exit 1
+	fi
+fi
+
+# Path to global functions
+GFUNC="../global_functions"
+
+# Global functions are needed in this script
+source "$GFUNC"
+if [[ $? != 0 ]]; then
+	echo "Global functions are required for this script."
+	exit 1
+fi
+
+# Receives temperature for node $1 and saves it into an ass. array
+declare -A tempNodes
+function get_temp_for_node {
+	current_ip=$(get_ip_for_node $1)
+	# echo $current_ip
+	current_temp=$(ssh $username@$current_ip 'cpu_temp=$(cat /sys/class/thermal/thermal_zone0/temp | sed "s/...$/.&/"); gpu_temp=$(/opt/vc/bin/vcgencmd measure_temp | sed "s/[^0-9.]//g"); echo $cpu_temp/$gpu_temp')
+	# current_temp=$(ssh $username@$current_ip 'vcgencmd measure_temp')
+	tempNodes[$1]=$current_temp
+	echo $current_temp
+}
+
+
+function get_mac {
+
+	current_ip=$(get_ip_for_node $1)
+	interface="eth0"
+	
+	if [[ $current_ip == 192* ]]; then # node is a zero
+		interface="wlan0"
+	fi
+
+	interfacestr="/sys/class/net/$interface/address"
+	# printf -v __ %q "$interfacestr"
+	#echo "3"
+	ret=$(ssh $username@$current_ip "cat $interfacestr")
+	echo $ret
+}
+
+# Headline
+
+# Terminal properties. We need 5 rows and 15 columns
+width=$(tput cols)
+width=$(( width - width % 5 ))
+
+fifth=$(( width / 5 ))
+printf '%-*s%-*s%-*s%-*s%-*s\n' $(( fifth / 2 )) "" $fifth "A" $fifth "B" $fifth "C" $fifth "D"
+
+for (( col=1; col<=15; col++ )); do
+
+	printf '%-*x' $(( fifth / 2 )) $col
+	# printf '%-*s' $fifth $line
+	for (( row=0; row<4; row++ )); do
+		current_node=$(( col + row * 15 ))
+		
+		current_temp=$(get_temp_for_node $current_node)
+		#echo "im here"
+		#echo $current_node
+		#type -t get_mac	
+		# current_temp=$(get_mac $current_node)
+		# echo "im not here anymore"
+		printf '%-*s' $fifth "$current_temp"
+	
+	done
+	printf '\n'
+done
+exit
+
+# takes $1 array of integers and echoes the $2 greatest elements
+function find_max {
+	$( printf "%s\n" "${colNums[@]}" | sort -n )
+	
+}
+
+
+currentip="10.42.0."
+
+startnode=30
+endnode=32
+count=$(( 1 + (endnode-startnode) ))
+
+declare -A nodes
+declare -A sortedNodes
+
+# nodes=()
+average=0
+
+for i in $(seq -s' ' $startnode $endnode); do
+	printf 'Fetching temperature from node%s' $i
+	current_temp=$(ssh $username@$currentip$i 'cat /sys/class/thermal/thermal_zone0/temp')
+	printf ' OK\n'
+	
+	# If temperature is 0 something went wrong
+	
+	# Can't ping the module
+	
+	nodes["node$i"]=$current_temp
+	average=$((average+current_temp))
+	
+done
+
+
+average=$(( average / count ))
+
+echo "Durchschnittliche Temperatur: $average"
+
+# sortedNodes=$( printf "%s\n" "${nodes[@]}" | sort -n -r)
+# printf "%s\n" "${nodes[@]}" | sort -n
+
+for i in "${sortedNodes[@]}"; do
+	echo $i
+done
+
+printf '\n%s %s %s\n' '---------------------------' 'Cluster Temperature' '--------------------------'
+
+
+for i in "${!nodes[@]}"
+do
+    echo $i ' - ' ${nodes[$i]}
+done |
+sort -rn -k3

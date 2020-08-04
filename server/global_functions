@@ -1,0 +1,128 @@
+#!/bin/bash
+
+# /pxe/root/opt/meta/global_functions
+
+# Exit codes
+EX_MOUNT=79		# Something wrong with the mounted volume
+EX_LOG=80		# Log directory or file couldn't be created
+EX_FD=81		# No free filedescriptors left or problems using the next free one
+EX_FUNC=82		# Global functions could not be loaded
+EX_USUAGE=64	# Probably parameters missing
+
+# Local vars
+
+# debugswitch can be set in two different ways. either
+# debugswitch=true source $0
+# or you set it 
+
+if [[ -z $debugswitch ]]; then
+	debugswitch=false
+fi
+
+$debugswitch && echo "debugswitch was set to on"
+
+######################### Node context #########################
+
+CONTENT="/opt/individual_content"
+if [[ ! -d "$CONTENT" ]]; then
+	mkdir -p "$CONTENT"
+	if [[ $? != 0 ]]; then
+		exit $EX_MOUNT
+	fi
+fi
+
+# Get a hostname to integer $1
+function nodestring {
+	if [ ! -z "$1" ]; then
+		local nodestr="node"
+		if [ "$1" -lt 10 ]; then
+			nodestr=""$nodestr"0"
+		fi
+		nodestr="$nodestr$1"
+		echo $nodestr
+	else
+		$debugswitch && echo "Invalid usage of nodestring function"
+		exit $EX_USAGE
+	fi
+}
+
+
+######################### Global context #########################
+
+function test_node_str {
+	local regex='^node[0-9]{1,2}$'
+	if [[ "$1" =~ $regex ]]; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+
+# Returns an ipaddress for a zero module. $1 hostname
+function get_zero_ip {
+	
+	test_node_str $1
+	if [[ $? != 0  ]]; then
+		$debugswitch && echo "Provided nodestring to node function was not valid"
+		return 1
+	fi
+	
+	# A Map for the Zero modules: hostname -> ip address
+	declare -A ZEROS
+	ZEROS[node17]="${IP_PATTERN_ZERO}121"
+	ZEROS[node18]="${IP_PATTERN_ZERO}122"
+	ZEROS[node19]="${IP_PATTERN_ZERO}123"
+	ZEROS[node20]="${IP_PATTERN_ZERO}124"
+	ZEROS[node21]="${IP_PATTERN_ZERO}125"
+	ZEROS[node22]="${IP_PATTERN_ZERO}126"
+
+	ZEROS[node24]="${IP_PATTERN_ZERO}128"
+	ZEROS[node25]="${IP_PATTERN_ZERO}129"
+	ZEROS[node26]="${IP_PATTERN_ZERO}130"
+	ZEROS[node27]="${IP_PATTERN_ZERO}131"
+	ZEROS[node28]="${IP_PATTERN_ZERO}132"
+	ZEROS[node29]="${IP_PATTERN_ZERO}133"
+	
+	
+	
+	echo "${ZEROS[$1]}"
+
+}
+
+# Returns a valid ip from hostname. identifier holds the type if set before.
+function get_ip_for_node {
+	i=$1
+	if [[ $i -gt 16 && $i -lt 23 || $i -gt 23 && $i -lt 30 ]]; then
+		nodename=$(nodestring $i)
+		ip=$(get_zero_ip "$nodename")
+		identifier="Zero Module"
+	else
+		ip=$IP_PATTERN_R3$i
+		identifier="R3 Module"
+	fi
+	
+	echo $ip
+	
+}
+
+# Globals
+IP_PATTERN_R3="10.42.0."
+IP_PATTERN_ZERO="192.168.1."
+
+
+
+######################### Servermodule context #########################
+
+# Looks for a free file descriptor and returns it. If none is found returns -1.
+function find_free_fd {
+	found=-1
+	for fd in $(seq 0 200); do
+    	[[ ! -e /proc/$$/fd/${fd} ]] && found=${fd} && break
+	done
+	echo $found
+}
+
+function register_run {
+	echo "hallo"
+}

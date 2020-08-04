@@ -1,0 +1,83 @@
+#!/bin/bash
+
+# /pxe/meta/sim_start_on_nodes
+
+# init|start
+# init: the starter script prepares the environment and then waits for SIGCONT 
+# start: the starter script gets sent SIGCONT and the $COMMAND will be run
+STAGE="$1"
+
+# a single node that should prepare or start a simulation
+NODE="$2"
+# maybe TODO: range of nodes
+
+# $3 holds either the command you want to run or the pid of the paused starter script. case is further below.
+# COMMAND="$3"
+
+# Global functions (we are in server module context)
+source "/pxe/root/opt/meta/global_functions"
+if [[ $? != 0 ]]; then
+	exit 82 # EX_FUNC
+fi
+# Vars
+# CONTENT = nfs mounted directory for indidividual content
+# Functions
+# find_free_fd = gets the next free file descriptor
+# Exitcodes
+# EX_MOUNT, EX_LOG, EX_FD, EX_FUNC, EX_USAGE
+
+if [[ -z $BDEBUG ]]; then
+	BDEBUG=false # debug switch
+fi
+
+if [[ -z "$STAGE" || -z "$NODE" ]]; then
+	$BDEBUG && echo "Parameter error. Usage: $0 init|start node(integer) <command>"
+	exit $EX_USAGE
+fi
+
+# $1 holds the ip. $2 a command to be run on the node.
+function init {
+	$BDEBUG && echo "Setting up run on $2"
+	printf -v __ %q "$2"
+	ssh -q -o StrictHostKeyChecking=no -tt pi@"$1" "/opt/starter $__"
+	exit
+}
+
+
+# $1 holds the ip to start on. $2 the pid of the pause starter script
+function start {
+	$BDEBUG && echo "Sending SIGCONT to PID $2 on $1"
+    printf -v __ %q "$2"
+    ssh pi@"$1" "kill -18 $__"
+	$BDEBUG && echo "SSH returned with exit code $?" # ssh exits with the last command used in the connection. Unfortunately kill always exits with 0. Maybe TODO
+	exit
+}
+
+# node's hostname
+# nodename=$(nodestring $2)
+ip=$(get_ip_for_node $NODE)
+
+case $STAGE in
+	"init")
+		COMMAND="$3" # Can be bogus. starter script will use a default command if not valid.
+		$BDEBUG && echo "Initialise $COMMAND on $ip"
+		init $ip "$COMMAND"
+	;;
+	"start")
+		pid=$3
+		if [[ -z $pid ]]; then
+			$BDEBUG && echo "There was no valid pid provided in start case."
+			exit $EX_USAGE
+		fi
+		$BDEBUG && echo "Starting $COMMAND on $ip"
+		start $ip $pid
+	;;
+	*)
+		$BDEBUG && echo "Wrong usage of script."
+		exit $EX_USAGE
+	;;
+esac
+
+exit
+
+

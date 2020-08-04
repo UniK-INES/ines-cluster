@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# This script can be used to mount the root partition of the server module or the root partition of the client modules (pxe directory on server module).
+# It creates a temporary directory for mounting and deletes that directory after unmounting again.
+# Usage: $0 pxe|root on|off
+
+# Some functions and datastructures in global_functions are needed for the workstation scripts to properly work. This script will source the global functions file into the current environment. 
+
+# Todo: getting exit codes from global_functions for coherence
+
+SERVER_MODULE="192.168.1.111"
+
+# First part of the directory to mount in. Selected mode is added later on. Deleted on unmount.
+LOCAL_DIRECTORY="./cluster_mnt"
+
+STATE="on"
+MODE="root"
+USER="pi" # on server module
+
+if [[ ! -z $2 && $2 =~ ^(on|off)$ ]]; then
+	STATE=$2
+fi
+
+if [[ ! -z $1 && $1 =~ ^(root|pxe)$ ]]; then
+	MODE=$1
+fi
+
+# Create the directory to mount
+MOUNT_DIR="${LOCAL_DIRECTORY}_$MODE"
+if [[ ! -d "$MOUNT_DIR" ]]; then
+	mkdir -p "$MOUNT_DIR"
+	if [[ $? != 0 ]]; then # Critical it gets created
+		echo "Was not able to create directory to mount into. Exiting."
+		exit 12
+	fi
+fi
+
+ser_dir="/"
+if [[ $MODE == "pxe" ]]; then
+	ser_dir="${ser_dir}pxe/"
+fi
+
+case "$STATE" in
+	on)
+		echo "Mounting $MODE to $MOUNT_DIR"
+		sshfs -o allow_other $USER@$SERVER_MODULE:$ser_dir "$MOUNT_DIR" 2>&1
+		gfunctions="${MOUNT_DIR}/"
+		if [[ $MODE == "root" ]]; then
+			gfunctions="${gfunctions}pxe/"
+		fi
+		gfunctions="${gfunctions}root/opt/meta/global_functions"
+		echo "Sourcing in $gfunctions"
+		source "$gfunctions"
+		if [[ $? != 0 ]]; then
+			echo "Did not work"
+		fi
+		
+		;;
+	
+	off)
+		echo "Unmounting $MODE in $MOUNT_DIR"
+		fusermount -u "$MOUNT_DIR"
+		rm -rf "$MOUNT_DIR"
+		;;
+		
+	*)
+		echo -e "This script mounts the root partition of the server module or the client modules (pxe directory)\n
+		Usuage: $0 root|pxe on|off"
+		;;
+esac

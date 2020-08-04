@@ -1,0 +1,113 @@
+#!/bin/bash
+
+# Christoph.Hanauer@uni-kassel.de
+
+# This script takes a new simulation file and makes it available on multiple ranges of nodes in our cluster
+
+# Parameter
+
+# $1 unique simulation identifier - used for the directory in the individual content folder
+# $2 single node, range of nodes or multiple ranges of nodes seperated by ;
+# example: "13;7-9;1-3;34;22"
+# note: multiple ranges need to be in quotation marks since ; is a bash command
+
+
+# Exitcodes
+
+# Compatible to C/C++ exit codes (/usr/include/sysexits.h)
+# More information available at https://www.tldp.org/LDP/abs/html/exitcodes.html#EXITCODESREF
+
+EX_NOINPUT=66 
+
+IDENTIFIER=$1
+INPUTRANGE=$2
+
+# path to simulation dir where the simulation identified by IDENTIFIER is stored
+SIM_UDIR="/pxe/meta/simulation"
+
+# path to the individual node directories (node01, node02, ..)
+NODEDIR="/pxe/nodes"
+
+# Script will exit if the simulation was not uploaded to the server before
+if [[ ! -d "$SIM_UDIR/$IDENTIFIER" ]]; then
+	echo "log/critical: $IDENTIFIER is not available on server node"
+	exit $EX_NOINPUT
+fi
+
+# Generates the hostname to $1 integer
+function nodestring {
+	local nodestr="node"
+	if [[ "$1" -lt 10 ]]; then
+		nodestr=${nodestr}0
+	fi
+	echo "$nodestr$1"
+}
+
+# TODO: different data structure if there are multiple simulations given for the same node
+# declare -A nodes
+nodes=()
+
+# takes one single range or node and adds it to the nodes data structure
+function extract_nodes {
+
+	local range_provided='([0-9][0-9]?)-([0-9][0-9]?)'
+	if [[ "$1" =~ $range_provided ]]; then
+		lo=$(( ${BASH_REMATCH[1]} + 0 ))
+		hi=$(( ${BASH_REMATCH[2]} + 0 ))
+		for (( i=$lo; i<=$hi; i++ )); do
+			# echo "$i: $(nodestring $i)"
+			nodes+=( $(nodestring $i) )
+		done
+	else
+		# echo $(nodestring $1)
+		nodes+=( $(nodestring $1) )
+	fi
+	
+	# echo ${BASH_REMATCH[2]}
+	# echo "numma: ${#BASH_REMATCH[*]}"
+	#for index in ${BASH_REMATCH[@]}; do
+	#	echo "$index : ${BASH_REMATCH[$index]}"
+	#done
+}
+
+# strips down ranges seperated by semicolon
+function disjoint_range {
+
+	OLDIFS="$IFS"
+	IFS=';' read -r -a tmp <<< "$INPUTRANGE"
+	IFS="$OLDIFS"
+
+	echo "log/information: Generated from $INPUTRANGE"
+	for index in "${!tmp[@]}"; do
+		currentrange="$(echo -e ${tmp[index]} | tr -d '[:space:]')"
+		extract_nodes "$currentrange"
+		#	echo -e "$index\t"
+		#		echo -e "${tmp[index]}" | tr -d '[:space:]'
+		#	echo -e "\n"
+	done
+	
+}
+
+disjoint_range
+
+
+# Count the simulation files
+SIMCOUNT=$(ls "$SIM_UDIR/$IDENTIFIER" | wc -l)
+
+echo "Copying $SIMCOUNT simulation files ($IDENTIFIER) to ${#nodes[@]} nodes."
+for i in ${nodes[@]}; do
+	w_dir="$NODEDIR/$i/simulation"
+	# echo "$i $NODEDIR"
+	if [[ ! -d "$w_dir" ]]; then
+		echo "log/information: Simulation directory for $i had to be created"
+		mkdir -p "$w_dir"
+	fi
+	
+	if [[ -d "$w_dir/$IDENTIFIER" ]]; then
+		# Directory for the simulation already exists on node. TODO
+		echo "Directory for simulation $IDENTIFIER already exists on $i"
+	else
+		mkdir "$w_dir/$IDENTIFIER"
+		cp -R "$SIM_UDIR/$IDENTIFIER/." "$w_dir/$IDENTIFIER"
+	fi
+done
