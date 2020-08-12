@@ -90,13 +90,21 @@
 <li class="toctree-l1"><a class="reference internal" href="technical_overview.html">Technical Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="userguide.html">User Guide</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Administration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#detailed-booting-process">Detailed Booting Process</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#servermodule">Servermodule</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#tftp-server">TFTP Server</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dhcp-server">DHCP Server</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#nfs-server">NFS Server</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#setting-up-a-testsystem">Setting Up A Testsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setting-up-a-testsystem">Setting Up A Testsystem</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#preparing-the-sd-cards-and-installing-raspbian">Preparing the SD cards and installing Raspbian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#generate-and-set-locale">Generate and set locale</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-wifi-module">The WiFi module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-server-module">The Server Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-client-modules">The client modules</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#diagnosis">Diagnosis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
 </ul>
@@ -168,9 +176,21 @@
             
   <div class="section" id="administration">
 <h1>Administration<a class="headerlink" href="#administration" title="Permalink to this headline">¶</a></h1>
-<p>This part gives an overview about the adminstration of the cluster. It’s main focus is on the server module since the nodes are using space on the server module’s sd card to boot. Setting up a test system gives you the opportunity to recreate the system with a minimal amount of Raspberry Pi modules. It provides an insight on the internals of the productive system and can be used (almost) equivalent. Should you run into problems the Diagnosis section should be the first point to start. Troubleshooting lists some error scenarios that occur often while working with the system.</p>
-<p>Important: it is physically not possible to access the client modules’ hdmi output. Nor is it possible to access the kernel logs with the current configuration. The most reliable data about the state of the system is gathered via “side effects”.</p>
-<p>As an example: the GPIO LED of a specific module is off but the logs of the tftp server show the boot partition was sent correctly. Consequently the error happened when the operating system tried to boot so the first point to start would be the nfs server providing the root partiton / operating system.</p>
+<p>This part gives an overview about the adminstration of the cluster. Main focus is on the server module since the nodes are using space on the server module’s sd card to boot. Setting up a test system gives you the opportunity to recreate the system with a minimal amount of Raspberry Pi modules. It provides an insight into the internals and can be used (almost) equivalent to the productive system. Should you run into problems the Diagnosis section should be the first point to start. Troubleshooting lists some error scenarios that occur often while working with the system.</p>
+<div class="section" id="detailed-booting-process">
+<h2>Detailed Booting Process<a class="headerlink" href="#detailed-booting-process" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>All modules are started</p></li>
+<li><p>The server module performs tests on the client modules, turns them all out again and starts them according to their <a class="reference internal" href="technical_overview.html#geographical-position"><span class="std std-ref">geographical position</span></a> (1-60)</p></li>
+<li><p>When the clients start t</p></li>
+<li><p>After receiving an ip address they request the boot partition via tftp</p></li>
+<li><p>When the firmware was loaded on the clients they try to mount the root partition</p></li>
+<li><p>The root partition is provided by the server module’s nfs server</p></li>
+<li><p>When mounting was successful the client modules start the operating system</p></li>
+<li><p>The LED on a client module is powered on when all services were started</p></li>
+<li><p>The client will additionally mount its individual content directory</p></li>
+</ul>
+</div>
 <div class="section" id="servermodule">
 <h2>Servermodule<a class="headerlink" href="#servermodule" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="tftp-server">
@@ -185,12 +205,559 @@
 </div>
 <div class="section" id="setting-up-a-testsystem">
 <h2>Setting Up A Testsystem<a class="headerlink" href="#setting-up-a-testsystem" title="Permalink to this headline">¶</a></h2>
+<p>In most use cases it’s beneficial to have a test system that works equivalent to the cluster where changes are made locally before they get introduced to all modules on the cluster eg our productive system.
+In this section we go through the necessary steps to create a system that provides that functionality. Overall there are four RaspberryPi modules needed.</p>
+<ul class="simple">
+<li><p>A RaspberryPi 3+ (or comparable) with SD card for providing the WiFi</p></li>
+<li><p>A RaspberryPi 3+ with SD card acting as the server module</p></li>
+<li><p>A RaspberryPi 3+ acting as client module</p></li>
+<li><p>A RaspberryPi Zero with SD card acting as client module</p></li>
+</ul>
+<div class="section" id="preparing-the-sd-cards-and-installing-raspbian">
+<h3>Preparing the SD cards and installing Raspbian<a class="headerlink" href="#preparing-the-sd-cards-and-installing-raspbian" title="Permalink to this headline">¶</a></h3>
+<p>1. Get the latest raspbian lite image</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="o">~/</span><span class="n">raspbian</span><span class="o">-</span><span class="n">lite</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="s2">&quot;$_&quot;</span>
+<span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">downloads</span><span class="o">.</span><span class="n">raspberrypi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">raspbian_lite_latest</span>
+</pre></div>
+</div>
+<p>2. Unzip it. There should be an img-file in your current directory now.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">unzip</span> <span class="n">raspbian_lite_latest</span>
+</pre></div>
+</div>
+<p>2. Insert your sd card and check out its name.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>lsblk
+
+mmcblk0     179:0    0  29,8G  0 disk
+└─mmcblk0p1 179:1    0  29,8G  0 part
+</pre></div>
+</div>
+<p>3. Sometimes the partitions of the card get auto mounted. We need them unmounted.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mount</span> <span class="c1"># look for your sd card</span>
+<span class="n">umount</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">mmcblk0p1</span>
+</pre></div>
+</div>
+<p>4. Copy the operating system to the sd card</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">dd</span> <span class="n">bs</span><span class="o">=</span><span class="mi">4</span><span class="n">M</span> <span class="k">if</span><span class="o">=</span><span class="mi">2019</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="n">raspbian</span><span class="o">-</span><span class="n">stretch</span><span class="o">-</span><span class="n">lite</span><span class="o">.</span><span class="n">img</span> <span class="n">of</span><span class="o">=/</span><span class="n">dev</span><span class="o">/</span><span class="n">mmcblk0</span> <span class="n">conv</span><span class="o">=</span><span class="n">fsync</span> <span class="n">status</span><span class="o">=</span><span class="n">progress</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The dd-command expects the device name not a partition name.</p>
+</div>
+<p>5. Mount the root filesystem and enable ssh</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">rasp_root</span>
+<span class="n">sudo</span> <span class="n">mount</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">mmcblk0p2</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">rasp_root</span>
+<span class="n">touch</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">rasp_root</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">ssh</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="6">
+<li><p>Expanding the file system</p></li>
+</ol>
+<p>Open the sd card in fdisk and print the partition table:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">fdisk</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">mmcblk0</span>
+<span class="n">Press</span> <span class="n">p</span>
+</pre></div>
+</div>
+<p>Sample output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Device</span>         <span class="n">Boot</span> <span class="n">Start</span>     <span class="n">End</span> <span class="n">Sectors</span>  <span class="n">Size</span> <span class="n">Id</span> <span class="n">Type</span>
+<span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">mmcblk0p1</span>       <span class="mi">8192</span>   <span class="mi">96042</span>   <span class="mi">87851</span> <span class="mi">42</span><span class="p">,</span><span class="mi">9</span><span class="n">M</span>  <span class="n">c</span> <span class="n">W95</span> <span class="n">FAT32</span> <span class="p">(</span><span class="n">LBA</span><span class="p">)</span>
+<span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">mmcblk0p2</span>      <span class="mi">98304</span> <span class="mi">3522559</span> <span class="mi">3424256</span>  <span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="n">G</span> <span class="mi">83</span> <span class="n">Linux</span>
+</pre></div>
+</div>
+<p>Save the root partition Start value (98304 in sample output), delete the partition and recreate it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Press</span> <span class="n">d</span> <span class="k">for</span> <span class="n">delete</span>
+<span class="n">Press</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">partition</span> <span class="mi">2</span>
+<span class="n">Press</span> <span class="n">n</span> <span class="k">for</span> <span class="n">new</span> <span class="n">partition</span>
+<span class="n">Press</span> <span class="n">p</span> <span class="k">for</span> <span class="n">primary</span> <span class="n">partition</span>
+<span class="n">Press</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">partition</span> <span class="mi">2</span>
+<span class="n">Enter</span> <span class="n">the</span> <span class="n">start</span> <span class="n">value</span> <span class="mi">98304</span> <span class="kn">from</span> <span class="nn">above</span>
+<span class="n">Press</span> <span class="n">Enter</span> <span class="k">for</span> <span class="n">default</span> <span class="p">(</span><span class="n">partition</span> <span class="n">will</span> <span class="n">use</span> <span class="n">available</span> <span class="n">space</span><span class="p">)</span>
+<span class="n">Answer</span> <span class="n">no</span> <span class="n">when</span> <span class="n">asked</span> <span class="k">if</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">remove</span> <span class="n">the</span> <span class="n">partition</span><span class="s1">&#39;s signature</span>
+<span class="n">Press</span> <span class="n">w</span> <span class="n">to</span> <span class="n">write</span> <span class="n">out</span> <span class="n">the</span> <span class="n">partition</span> <span class="n">table</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This works because we don’t format the partition so the data on the card is not overwritten and remains readable.</p>
+</div>
+</div>
+<div class="section" id="generate-and-set-locale">
+<h3>Generate and set locale<a class="headerlink" href="#generate-and-set-locale" title="Permalink to this headline">¶</a></h3>
+<p>1. Boot the module and connect via ssh</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="n">pi</span><span class="o">@</span><span class="mf">192.168</span><span class="o">.</span><span class="mf">0.123</span>
+
+<span class="n">Login</span> <span class="k">with</span> <span class="n">pi</span><span class="o">/</span><span class="n">raspberry</span>
+</pre></div>
+</div>
+<p>2. Generate the locale</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">sed</span> <span class="o">-</span><span class="n">r</span> <span class="o">-</span><span class="n">i</span> <span class="s1">&#39;s/# (de_DE.UTF-8 UTF-8)/</span><span class="se">\1</span><span class="s1">/&#39;</span> <span class="n">locale</span><span class="o">.</span><span class="n">gen</span>
+<span class="n">sudo</span> <span class="n">locale</span><span class="o">-</span><span class="n">gen</span> <span class="n">de_DE</span><span class="o">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span>
+</pre></div>
+</div>
+<p>3. Check that it was generated and update</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">locale</span> <span class="o">-</span><span class="n">a</span> <span class="o">|</span> <span class="n">grep</span> <span class="o">-</span><span class="n">i</span> <span class="n">de_DE</span><span class="o">.</span><span class="n">utf8</span>
+<span class="n">sudo</span> <span class="n">update</span><span class="o">-</span><span class="n">locale</span> <span class="n">LANG</span><span class="o">=</span><span class="n">de_DE</span><span class="o">.</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span> <span class="n">LC_MESSAGES</span><span class="o">=</span><span class="n">POSIX</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We set LC_MESSAGES=POSIX so the system messages don’t get translated. The updated locale will be available after the next reboot. If you run into problems setting the locale correctly you
+can set LC_ALL to the locale of your choice. All other LC variables will be overwritten by that value.</p>
+</div>
+<p>4. In recent Raspbian versions the Wifi interface will be disabled if the country variable is not set in /etc/wpa_supplicant/wpa_supplicant.conf</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">sed</span> <span class="o">-</span><span class="n">i</span> <span class="s1">&#39;1i country=DE&#39;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">wpa_supplicant</span><span class="o">/</span><span class="n">wpa_supplicant</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div>
+<p>At this point we have an image containing Raspbian that can be used to boot any of the R3 modules. We backup the image and distribute it to the server module. The other R3 module left will be
+booted over Netboot (TFTP) and NFS so it does not need an sd card present.</p>
+<p>1. Create a directory for storing the images and change to it</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mkdir -p ~/testsystem/images &amp;&amp; cd $_
+</pre></div>
+</div>
+<p>2. Find the name of your sd card</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lsblk</span>
+</pre></div>
+</div>
+<p>3. Backup the content (your sd card’s name may differ)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">dd</span> <span class="n">bs</span><span class="o">=</span><span class="mi">1</span><span class="n">M</span> <span class="k">if</span><span class="o">=/</span><span class="n">dev</span><span class="o">/</span><span class="n">mmcblk0</span> <span class="n">of</span><span class="o">=./</span><span class="n">raspbian</span><span class="o">-</span><span class="n">testsystem</span><span class="o">-</span><span class="n">generic</span><span class="o">.</span><span class="n">img</span> <span class="n">conv</span><span class="o">=</span><span class="n">fsync</span> <span class="n">status</span><span class="o">=</span><span class="n">progress</span>
+</pre></div>
+</div>
+<p>This image can be used to restore any unwanted changes. You can use the last three steps to make backups of your work at any time desired. Restoring is pretty simple but takes time.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">dd</span> <span class="n">bs</span><span class="o">=</span><span class="mi">1</span><span class="n">M</span> <span class="k">if</span><span class="o">=./</span><span class="n">raspbian</span><span class="o">-</span><span class="n">testsystem</span><span class="o">-</span><span class="n">generic</span><span class="o">.</span><span class="n">img</span> <span class="n">of</span><span class="o">=/</span><span class="n">dev</span><span class="o">/</span><span class="n">mmcblk0</span> <span class="n">conv</span><span class="o">=</span><span class="n">fsync</span> <span class="n">status</span><span class="o">=</span><span class="n">progress</span>
+</pre></div>
+</div>
+<p>4. Changing the image without transfering and booting it to/from sd card
+.. todo:: todo</p>
+<p>General steps for the server and the wifi module</p>
+<p>Connect via ssh</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="n">pi</span><span class="o">@</span><span class="mf">192.168</span><span class="o">.</span><span class="mf">0.123</span>
+<span class="n">Login</span> <span class="k">with</span> <span class="n">pi</span><span class="o">/</span><span class="n">raspberry</span>
+</pre></div>
+</div>
+<p>1. Get a root shell and change the root account’s passwd</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">su</span>
+<span class="n">passwd</span> <span class="n">root</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We assume the password for the root account was set to unikassel.</p>
+</div>
+<p>2. Update the operating system</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span> <span class="o">-</span><span class="n">y</span> <span class="o">&amp;&amp;</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">upgrade</span> <span class="o">-</span><span class="n">y</span>
+</pre></div>
+</div>
+<p>3. Create a new user. It is important to set a unique user id since NFS and consequently netboot will rely on having matching user ids on clients and server.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">getent</span> <span class="n">passwd</span> <span class="mi">1234</span> <span class="c1"># Should return an empty line meaning the userid is not present</span>
+<span class="n">useradd</span> <span class="o">-</span><span class="n">u</span> <span class="mi">1234</span> <span class="o">-</span><span class="n">G</span> <span class="n">adm</span><span class="p">,</span><span class="n">dialout</span><span class="p">,</span><span class="n">sudo</span><span class="p">,</span><span class="n">plugdev</span><span class="p">,</span><span class="n">users</span><span class="p">,</span><span class="nb">input</span><span class="p">,</span><span class="n">netdev</span> <span class="o">-</span><span class="n">s</span> <span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">bash</span> <span class="n">nfsuser</span>
+<span class="n">mkhomedir_helper</span> <span class="n">nfsuser</span>
+<span class="n">passwd</span> <span class="n">nfsuser</span> <span class="c1"># Set the new user&#39;s password. We assume unikassel.</span>
+</pre></div>
+</div>
+<p>4. Soft disable the pi user account.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usermod</span> <span class="o">-</span><span class="n">s</span> <span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">false</span> <span class="n">pi</span>
+<span class="n">passwd</span> <span class="o">-</span><span class="n">l</span> <span class="n">pi</span>
+</pre></div>
+</div>
+<p>At this point the default user pi won’t be able to login anymore. You might want to reconnect with the newly created user.</p>
+</div>
+<div class="section" id="the-wifi-module">
+<h3>The WiFi module<a class="headerlink" href="#the-wifi-module" title="Permalink to this headline">¶</a></h3>
+<p>The server module uses its ethernet interface for communicating with the R3 client modules. As consequence we use the wireless interface for communicating with it. The wifi itself is provided by an additional
+RaspberryPi module that is set up with packages hostapd and dnsmasq. There are multiple ways to go on from here.</p>
+<ol class="arabic simple">
+<li><p>Emulating the RaspberryPi with qemu and make changes locally</p></li>
+<li><p>A container solution like systemd-nspawn</p></li>
+<li><p>Native chroot with additional libs</p></li>
+<li><p>Working on the module itself via ssh</p></li>
+<li><p>Working on the module locally</p></li>
+</ol>
+<p>Options 1 to 3 require a complicated setup before we are able to start therefor we focus on options 4 and 5. Insert one of the prepared sd cards into one of the R3 modules and connect it to your local setup via
+ethernet interface. Find out its IP address and connect via ssh. For easier reading we assume that address to be 192.168.0.123.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="n">pi</span><span class="o">@</span><span class="mf">192.168</span><span class="o">.</span><span class="mf">0.123</span>
+<span class="n">Login</span> <span class="k">with</span> <span class="n">pi</span><span class="o">/</span><span class="n">raspberry</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Sometimes the locale isn’t set correctly on first boot so you are writting with an English keyboard layout (y -&gt; z)</p>
+</div>
+<p>1. Get a root shell and set the hostname.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">su</span>
+<span class="n">echo</span> <span class="s2">&quot;testwifi&quot;</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">hostname</span>
+<span class="n">echo</span> <span class="o">-</span><span class="n">e</span> <span class="s2">&quot;127.0.0.1</span><span class="se">\t</span><span class="s2">testwifi&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">hosts</span>
+</pre></div>
+</div>
+<p>2. Update Raspbian and install the required packages.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span> <span class="o">-</span><span class="n">y</span> <span class="o">&amp;&amp;</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">upgrade</span> <span class="o">-</span><span class="n">y</span>
+<span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">dnsmasq</span> <span class="n">hostapd</span> <span class="n">nmap</span> <span class="o">-</span><span class="n">y</span>
+</pre></div>
+</div>
+<p>3. In recent Raspbian versions hostapd gets masked by systemd (bug filed at <a class="reference external" href="https://github.com/raspberrypi/documentation/issues/1018">https://github.com/raspberrypi/documentation/issues/1018</a>) so we need to unmask and enable it</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">systemctl</span> <span class="n">unmask</span> <span class="n">hostapd</span>
+<span class="n">systemctl</span> <span class="n">enable</span> <span class="n">hostapd</span>
+</pre></div>
+</div>
+<p>4. Make sure both services are stopped and reboot</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">systemctl</span> <span class="n">stop</span> <span class="n">dnsmasq</span> <span class="n">hostapd</span>
+<span class="n">reboot</span>
+</pre></div>
+</div>
+<p>6. Configure a static IP for the wireless interface</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">echo</span> <span class="o">-</span><span class="n">e</span> <span class="s2">&quot;# Static IP for wifi interface</span><span class="se">\n</span><span class="s2">interface wlan0</span><span class="se">\n\t</span><span class="s2">static ip_address=192.168.0.1/24</span><span class="se">\n\t</span><span class="s2">nohook wpa_supplicant&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">dhcpcd</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div>
+<p>Alternatively by hand with nano</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nano</span> <span class="o">-</span><span class="n">w</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">dhcpcd</span><span class="o">.</span><span class="n">conf</span>
+<span class="c1"># Add these lines at the end of the file</span>
+<span class="n">interface</span> <span class="n">wlan0</span>
+        <span class="n">static</span> <span class="n">ip_address</span><span class="o">=</span><span class="mf">192.168</span><span class="o">.</span><span class="mf">0.1</span><span class="o">/</span><span class="mi">24</span>
+        <span class="n">nohook</span> <span class="n">wpa_supplicant</span>
+</pre></div>
+</div>
+<p>7. Reload and restart dhcpcd</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">su</span>
+<span class="n">systemctl</span> <span class="n">daemon</span><span class="o">-</span><span class="n">reload</span>
+<span class="n">service</span> <span class="n">dhcpcd</span> <span class="n">restart</span>
+</pre></div>
+</div>
+<p>8. Backup the old dnsmasq config and set up the basics</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mv</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">dnsmasq</span><span class="o">.</span><span class="n">conf</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">dnsmasq</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">orig</span>
+<span class="n">echo</span> <span class="o">-</span><span class="n">e</span> <span class="s2">&quot;interface=wlan0</span><span class="se">\n\t</span><span class="s2">dhcp-range=192.168.0.1,192.168.0.20,255.255.255.0,infinite&quot;</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">dnsmasq</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div>
+<p>Alternatively by hand with nano</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nano</span> <span class="o">-</span><span class="n">w</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">dnsmasq</span><span class="o">.</span><span class="n">conf</span>
+<span class="c1"># Add these lines</span>
+<span class="n">interface</span><span class="o">=</span><span class="n">wlan0</span>
+        <span class="n">dhcp</span><span class="o">-</span><span class="nb">range</span><span class="o">=</span><span class="mf">192.168</span><span class="o">.</span><span class="mf">1.1</span><span class="p">,</span><span class="mf">192.168</span><span class="o">.</span><span class="mf">1.20</span><span class="p">,</span><span class="mf">255.255</span><span class="o">.</span><span class="mf">255.0</span><span class="p">,</span><span class="n">infinite</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In our productive system the Zero modules are connected to this wifi and use its dhcp server to get their hostnames. They are identified by their physical address. Since we only have one Zero
+module in the test system changes are made easily by hand. In the productive system however an automatic approach is more convenient. You can look up the details in the corresponding section.</p>
+</div>
+<p>9. Configure hostapd base configuration and logging</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">hostapd</span><span class="o">/</span><span class="n">hostapd</span><span class="o">.</span><span class="n">conf</span>
+<span class="c1"># Add these lines</span>
+<span class="n">interface</span><span class="o">=</span><span class="n">wlan0</span>
+<span class="n">driver</span><span class="o">=</span><span class="n">nl80211</span>
+<span class="n">ssid</span><span class="o">=</span><span class="n">testwifi</span>
+<span class="n">hw_mode</span><span class="o">=</span><span class="n">g</span>
+<span class="n">channel</span><span class="o">=</span><span class="mi">7</span>
+<span class="n">wmm_enabled</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">macaddr_acl</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">auth_algs</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">ignore_broadcast_ssid</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">wpa</span><span class="o">=</span><span class="mi">2</span>
+<span class="n">wpa_passphrase</span><span class="o">=</span><span class="n">unikassel</span>
+<span class="n">wpa_key_mgmt</span><span class="o">=</span><span class="n">WPA</span><span class="o">-</span><span class="n">PSK</span>
+<span class="n">wpa_pairwise</span><span class="o">=</span><span class="n">TKIP</span>
+<span class="n">rsn_pairwise</span><span class="o">=</span><span class="n">CCMP</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>touch /var/log/hostapd.log
+chmod 666 !$
+nano /etc/default/hostapd
+# Look for #DAEMON_CONF
+DAEMON_CONF=&quot;/etc/hostapd/hostapd.conf&quot;
+# Look for #DAEMON_OPTS
+DAEMON_OPTS=&quot;-dd -t -f /var/log/hostapd.log&quot;
+</pre></div>
+</div>
+<p>10. Start both services</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">systemctl</span> <span class="n">start</span> <span class="n">hostapd</span> <span class="n">dnsmasq</span>
+</pre></div>
+</div>
+<p>11. IP Forwarding and necessary iptables rules</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sed</span> <span class="o">-</span><span class="n">i</span> <span class="s1">&#39;/#net\.ipv4\.ip\_forward\=1/c</span><span class="se">\n</span><span class="s1">et\.ipv4\.ip\_forward\=1&#39;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">sysctl</span><span class="o">.</span><span class="n">conf</span> <span class="c1"># activates ip forwarding in /etc/sysctl.conf</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">t</span> <span class="n">nat</span> <span class="o">-</span><span class="n">A</span>  <span class="n">POSTROUTING</span> <span class="o">-</span><span class="n">o</span> <span class="n">eth0</span> <span class="o">-</span><span class="n">j</span> <span class="n">MASQUERADE</span>
+<span class="n">sh</span> <span class="o">-</span><span class="n">c</span> <span class="s2">&quot;iptables-save &gt; /etc/iptables.ipv4.nat&quot;</span>
+<span class="n">sed</span> <span class="o">-</span><span class="n">r</span> <span class="o">-</span><span class="n">i</span> <span class="s1">&#39;s/^(exit 0)/\iptables-restore \&lt; \/etc\/iptables\.ipv4\.nat</span><span class="se">\n\1</span><span class="s1">/&#39;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">rc</span><span class="o">.</span><span class="n">local</span>
+<span class="n">iptables</span> <span class="o">-</span><span class="n">t</span> <span class="n">nat</span> <span class="o">-</span><span class="n">L</span> <span class="c1"># this will check if the rules were applied</span>
+</pre></div>
+</div>
+<p>At this point devices can connect to a wifi (ssid: testwifi) and get their packages rerouted to the ethernet interface of that module.</p>
+</div>
+<div class="section" id="the-server-module">
+<h3>The Server Module<a class="headerlink" href="#the-server-module" title="Permalink to this headline">¶</a></h3>
+<p>We have the wifi working and can move on to the server module. Remember the server module uses its ethernet interface supplying the R3 client modules with their operating system and its
+wireless interface for communicating with the outside world. So our goals in this section is preparing the ethernet interface and setup an nfs server.</p>
+<p>1. For that we copy our generic image to an sd card.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">su</span>
+<span class="n">mount</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">mmcblk0p2</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">rasp_root</span>
+</pre></div>
+</div>
+<p>2. Edit /etc/wpa_supplicant/wpa_supplicant.conf</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">echo</span> <span class="o">-</span><span class="n">e</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">network={</span><span class="se">\n\t</span><span class="s2">ssid=</span><span class="se">\&quot;</span><span class="s2">testwifi</span><span class="se">\&quot;\n\t</span><span class="s2">psk=</span><span class="se">\&quot;</span><span class="s2">unikassel</span><span class="se">\&quot;\n</span><span class="s2">}&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">rasp_root</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">wpa_supplicant</span><span class="o">/</span><span class="n">wpa_supplicant</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div>
+<p>Alternatively by hand with nano</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nano</span> <span class="o">-</span><span class="n">w</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">rasp_root</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">wpa_supplicant</span><span class="o">/</span><span class="n">wpa_supplicant</span><span class="o">.</span><span class="n">conf</span>
+<span class="c1"># Add these lines</span>
+<span class="n">network</span><span class="o">=</span><span class="p">{</span>
+        <span class="n">ssid</span><span class="o">=</span><span class="s2">&quot;testwifi&quot;</span>
+        <span class="n">psk</span><span class="o">=</span><span class="s2">&quot;unikassel&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>3. Create a directory structure for the client modules’ operating system.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">rasp_root</span><span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="p">{</span><span class="n">root</span><span class="p">,</span><span class="n">boot</span><span class="p">,</span><span class="n">nodes</span><span class="p">,</span><span class="n">meta</span><span class="o">/</span><span class="p">{</span><span class="n">data</span><span class="p">,</span><span class="n">scripts</span><span class="p">}}</span>
+</pre></div>
+</div>
+<p>4. Create directories for mounting the partitions</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">testsystem</span>
+<span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="n">mnt</span><span class="o">/</span><span class="p">{</span><span class="n">boot</span><span class="p">,</span><span class="n">root</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>5. Find out where the partitions start.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fdisk</span> <span class="o">-</span><span class="n">l</span> <span class="n">raspbian</span><span class="o">-</span><span class="n">testsystem</span><span class="o">-</span><span class="n">generic</span><span class="o">.</span><span class="n">img</span>
+<span class="c1"># Output</span>
+<span class="n">Device</span>                           <span class="n">Boot</span> <span class="n">Start</span>      <span class="n">End</span>  <span class="n">Sectors</span>  <span class="n">Size</span> <span class="n">Id</span> <span class="n">Type</span>
+<span class="n">raspbian</span><span class="o">-</span><span class="n">testsystem</span><span class="o">-</span><span class="n">generic</span><span class="o">.</span><span class="n">img1</span>       <span class="mi">8192</span>    <span class="mi">96042</span>    <span class="mi">87851</span> <span class="mi">42</span><span class="p">,</span><span class="mi">9</span><span class="n">M</span>  <span class="n">c</span> <span class="n">W95</span> <span class="n">FAT32</span> <span class="p">(</span><span class="n">LBA</span><span class="p">)</span>
+<span class="n">raspbian</span><span class="o">-</span><span class="n">testsystem</span><span class="o">-</span><span class="n">generic</span><span class="o">.</span><span class="n">img2</span>      <span class="mi">98304</span> <span class="mi">62521343</span> <span class="mi">62423040</span> <span class="mi">29</span><span class="p">,</span><span class="mi">8</span><span class="n">G</span> <span class="mi">83</span> <span class="n">Linux</span>
+
+<span class="c1"># Take the values in the Start row and multiply them with the sector size</span>
+<span class="n">expr</span> <span class="mi">8192</span> \<span class="o">*</span> <span class="mi">512</span>
+<span class="c1"># 4194304</span>
+
+<span class="n">expr</span> <span class="mi">98304</span> \<span class="o">*</span> <span class="mi">512</span>
+<span class="c1"># 50331648</span>
+</pre></div>
+</div>
+<p>6. Mount the boot partition and copy it to the server module’s pxe directory</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">mount</span> <span class="o">-</span><span class="n">o</span> <span class="n">loop</span><span class="p">,</span><span class="n">offset</span><span class="o">=</span><span class="mi">4194304</span> <span class="n">raspbian</span><span class="o">-</span><span class="n">testsystem</span><span class="o">-</span><span class="n">generic</span><span class="o">.</span><span class="n">img</span> <span class="n">mnt</span><span class="o">/</span><span class="n">boot</span>
+<span class="n">sudo</span> <span class="n">rsync</span> <span class="o">-</span><span class="n">xa</span> <span class="o">--</span><span class="n">progress</span> <span class="o">~/</span><span class="n">testsystem</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">boot</span><span class="o">/*</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">rasp_root</span><span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Without additional software you won’t be able to mount both partitions at the same time.</p>
+</div>
+<p>7. Tell the R3 client modules where to find their root partition after booting by editing the cmdline.txt</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nano</span> <span class="o">-</span><span class="n">w</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">rasp_root</span><span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">cmdline</span><span class="o">.</span><span class="n">txt</span>
+<span class="c1"># Replace content with (twice ctrl + k)</span>
+<span class="n">dwc_otg</span><span class="o">.</span><span class="n">lpm_enable</span><span class="o">=</span><span class="mi">0</span> <span class="n">console</span><span class="o">=</span><span class="n">serial0</span><span class="p">,</span><span class="mi">115200</span> <span class="n">console</span><span class="o">=</span><span class="n">tty1</span> <span class="n">root</span><span class="o">=/</span><span class="n">dev</span><span class="o">/</span><span class="n">nfs</span> <span class="n">nfsroot</span><span class="o">=</span><span class="mf">10.42</span><span class="o">.</span><span class="mf">0.250</span><span class="p">:</span><span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">root</span><span class="p">,</span><span class="n">vers</span><span class="o">=</span><span class="mi">3</span> <span class="n">rw</span> <span class="n">ip</span><span class="o">=</span><span class="n">dhcp</span> <span class="n">elevator</span><span class="o">=</span><span class="n">deadline</span> <span class="n">rootwait</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Be very careful with special characters in this file. Avoid using any unnecessary white spaces especially new line n or tab t.</p>
+</div>
+<p>8. Unmount the boot partition, mount the root partition copy the contents and unmount it again.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">umount</span> <span class="o">~/</span><span class="n">testsystem</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">boot</span>
+<span class="n">sudo</span> <span class="n">mount</span> <span class="o">-</span><span class="n">o</span> <span class="n">loop</span><span class="p">,</span><span class="n">offset</span><span class="o">=</span><span class="mi">50331648</span> <span class="n">raspbian</span><span class="o">-</span><span class="n">testsystem</span><span class="o">-</span><span class="n">generic</span><span class="o">.</span><span class="n">img</span> <span class="n">mnt</span><span class="o">/</span><span class="n">root</span>
+<span class="n">sudo</span> <span class="n">rsync</span> <span class="o">-</span><span class="n">xa</span> <span class="o">--</span><span class="n">progress</span> <span class="o">~/</span><span class="n">testsystem</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">root</span><span class="o">/*</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">rasp_root</span><span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">root</span>
+<span class="n">umount</span> <span class="o">~/</span><span class="n">testsystem</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">root</span>
+</pre></div>
+</div>
+<p>9. Enable SSH on the clients</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">touch</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">rasp_root</span><span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">root</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">ssh</span>
+</pre></div>
+</div>
+<p>10. Make sure no process is still using the mount point and unmount the server module’s sd card.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">unmount</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">rasp_root</span>
+</pre></div>
+</div>
+<p>At this point the server module’s sd card is prepared for booting it up in one of our R3 modules. For connecting to it we use our already set up wifi. Connect your computer to the wifi, insert the
+server module’s sd card in one of the R3 modules and boot it.</p>
+<p>We can insert the sd card into one of the R3 modules now and boot it. Connect to our new wifi and find out the server module’s ip address. We assume its 192.168.1.4 going forward.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="n">nfsuser</span><span class="o">@</span><span class="mf">192.168</span><span class="o">.</span><span class="mf">1.4</span>
+</pre></div>
+</div>
+<p>1. Create necessary directories and install packages</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="p">{</span><span class="n">root</span><span class="p">,</span><span class="n">boot</span><span class="p">,</span><span class="n">nodes</span><span class="p">,</span><span class="n">meta</span><span class="o">/</span><span class="p">{</span><span class="n">data</span><span class="p">,</span><span class="n">scripts</span><span class="p">}}</span>
+<span class="n">sudo</span> <span class="n">su</span>
+<span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">tcpdump</span> <span class="n">nmap</span> <span class="n">dnsmasq</span> <span class="n">nfs</span><span class="o">-</span><span class="n">kernel</span><span class="o">-</span><span class="n">server</span> <span class="o">-</span><span class="n">y</span>
+</pre></div>
+</div>
+<p>2. Set the hostname.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">echo</span> <span class="s2">&quot;testserver&quot;</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">hostname</span>
+<span class="n">echo</span> <span class="o">-</span><span class="n">e</span> <span class="s2">&quot;127.0.0.1</span><span class="se">\t</span><span class="s2">testserver&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">hosts</span>
+</pre></div>
+</div>
+<p>3. Configure a static ip address for the ethernet interface</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">echo</span> <span class="o">-</span><span class="n">e</span> <span class="s2">&quot;# Static IP for ethernet interface</span><span class="se">\n</span><span class="s2">interface eth0</span><span class="se">\n</span><span class="s2">static ip_address=10.42.0.250/24&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">dhcpcd</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div>
+<p>4. Configure dnsmasq</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mv</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">dnsmasq</span><span class="o">.</span><span class="n">conf</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">dnsmasq</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">orig</span>
+<span class="n">nano</span> <span class="o">-</span><span class="n">w</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">dnsmasq</span><span class="o">.</span><span class="n">conf</span>
+<span class="c1"># Add these lines</span>
+<span class="n">interface</span><span class="o">=</span><span class="n">eth0</span> <span class="c1"># the interface the dhcp server should listen on</span>
+<span class="n">port</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">dhcp</span><span class="o">-</span><span class="nb">range</span><span class="o">=</span><span class="mf">10.42</span><span class="o">.</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">10.42</span><span class="o">.</span><span class="mf">0.150</span><span class="p">,</span><span class="mf">255.255</span><span class="o">.</span><span class="mf">255.0</span><span class="p">,</span><span class="n">infinite</span>
+<span class="n">log</span><span class="o">-</span><span class="n">queries</span>
+<span class="n">log</span><span class="o">-</span><span class="n">dhcp</span>
+<span class="n">enable</span><span class="o">-</span><span class="n">tftp</span> <span class="c1"># the tftp server will supply the boot partition for the clients</span>
+<span class="n">tftp</span><span class="o">-</span><span class="n">root</span><span class="o">=/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span> <span class="c1"># the directory where the tftp server will look for the boot partition</span>
+<span class="n">pxe</span><span class="o">-</span><span class="n">service</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;Raspberry Pi Boot&quot;</span>
+</pre></div>
+</div>
+<p>5. Export the pxe directory where the clients find their root partition</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">echo</span> <span class="o">-</span><span class="n">e</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">/pxe</span><span class="se">\t\t</span><span class="s2">10.42.0.0/255.255.255.0(rw,sync,no_subtree_check,no_root_squash) 192.168.1.0/255.255.255.0(rw,sync,no_subtree_check,no_root_squash)&quot;</span> <span class="o">&gt;&gt;</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">exports</span>
+</pre></div>
+</div>
+<p>Alternatively by hand via nano</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nano</span> <span class="o">-</span><span class="n">w</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">exports</span>
+<span class="c1"># Add these line</span>
+<span class="o">/</span><span class="n">pxe</span>            <span class="mf">10.42</span><span class="o">.</span><span class="mf">0.0</span><span class="o">/</span><span class="mf">255.255</span><span class="o">.</span><span class="mf">255.0</span><span class="p">(</span><span class="n">rw</span><span class="p">,</span><span class="n">sync</span><span class="p">,</span><span class="n">no_subtree_check</span><span class="p">,</span><span class="n">no_root_squash</span><span class="p">)</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">255.255</span><span class="o">.</span><span class="mf">255.0</span><span class="p">(</span><span class="n">rw</span><span class="p">,</span><span class="n">sync</span><span class="p">,</span><span class="n">no_subtree_check</span><span class="p">,</span><span class="n">no_root_squash</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The no_root_squash parameter can be a security flaw. Without it, the clients will run into a kernel panic when they try to mount the root partition. We include
+the 192.168.1.0 range because the Zero modules will mount their directories via the wireless interface. If you set different ips for your wifi module you need to change
+the second part of the line.</p>
+</div>
+<p>6. Whenever you change the /etc/exports you need to reimport it</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">exportfs</span> <span class="o">-</span><span class="n">ra</span>
+<span class="c1"># -a = export or deexport all directories</span>
+<span class="c1"># -r = reexport all directories and synchronize /var/lib/nfs/etab with /etc/exports</span>
+</pre></div>
+</div>
+<p>7. Finally we remove the references to the sd card in our clients’ /etc/fstab</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">-</span><span class="n">w</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">root</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">fstab</span>
+<span class="c1"># Remove all lines except the one starting with /proc</span>
+</pre></div>
+</div>
+<p>Debugging the netboot</p>
+</div>
+<div class="section" id="the-client-modules">
+<h3>The client modules<a class="headerlink" href="#the-client-modules" title="Permalink to this headline">¶</a></h3>
+<p>You are now able to netboot an R3 client module with its ethernet interface connected to our server module. Connect the client’s ethernet interface to
+the server module.</p>
+<p>After that the client will go through its RaspberryPi <a class="reference external" href="https://www.raspberrypi.org/documentation/hardware/raspberrypi/bootmodes/bootflow.md">boot order</a> and boot
+from the first device in the list that it finds.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The module will boot from the first device it is able to identify and disregards entries lower in the list. Be careful when sd cards are present even if they don’t have
+the right partition scheme or file systems. If you encounter problems at this point, try removing the sd card.</p>
+</div>
+<p>The booting itself is done over Trivial File Transfer Protocol after the client received an ip address from the first DHCP server it encounters on the network. The package dnsmasq is responsible for both TFTP and DHCP and logs to
+/var/log/daemon.log.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Connect to the server module</span>
+<span class="n">cd</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span>
+<span class="n">tail</span> <span class="o">-</span><span class="n">n</span> <span class="mi">50</span> <span class="n">daemon</span><span class="o">.</span><span class="n">log</span>
+<span class="c1"># or if you need more lines</span>
+<span class="n">nano</span> <span class="n">daemon</span><span class="o">.</span><span class="n">log</span>
+
+<span class="c1"># Output</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">45</span> <span class="n">testserver</span> <span class="o">*</span><span class="n">dnsmasq</span><span class="o">-</span><span class="n">dhcp</span><span class="o">*</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="mi">653460281</span> <span class="n">DHCPDISCOVER</span><span class="p">(</span><span class="n">eth0</span><span class="p">)</span> <span class="n">b8</span><span class="p">:</span><span class="mi">27</span><span class="p">:</span><span class="n">eb</span><span class="p">:</span><span class="mi">76</span><span class="p">:</span><span class="n">a6</span><span class="p">:</span><span class="mi">1</span><span class="n">a</span>
+<span class="o">..</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">45</span> <span class="n">testserver</span> <span class="o">*</span><span class="n">dnsmasq</span><span class="o">-</span><span class="n">dhcp</span><span class="o">*</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="mi">653460281</span> <span class="n">DHCPOFFER</span><span class="p">(</span><span class="n">eth0</span><span class="p">)</span> <span class="mf">10.42</span><span class="o">.</span><span class="mf">0.17</span> <span class="n">b8</span><span class="p">:</span><span class="mi">27</span><span class="p">:</span><span class="n">eb</span><span class="p">:</span><span class="mi">76</span><span class="p">:</span><span class="n">a6</span><span class="p">:</span><span class="mi">1</span><span class="n">a</span>
+<span class="o">..</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">55</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">file</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">b876a61a</span><span class="o">/</span><span class="n">start</span><span class="o">.</span><span class="n">elf</span> <span class="ow">not</span> <span class="n">found</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">55</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">file</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">autoboot</span><span class="o">.</span><span class="n">txt</span> <span class="ow">not</span> <span class="n">found</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">55</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">sent</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">config</span><span class="o">.</span><span class="n">txt</span> <span class="n">to</span> <span class="mf">10.42</span><span class="o">.</span><span class="mf">0.17</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">55</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">file</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">recovery</span><span class="o">.</span><span class="n">elf</span> <span class="ow">not</span> <span class="n">found</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">56</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">sent</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">start</span><span class="o">.</span><span class="n">elf</span> <span class="n">to</span> <span class="mf">10.42</span><span class="o">.</span><span class="mf">0.17</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">56</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">sent</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">fixup</span><span class="o">.</span><span class="n">dat</span> <span class="n">to</span> <span class="mf">10.42</span><span class="o">.</span><span class="mf">0.17</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">57</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">file</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">recovery</span><span class="o">.</span><span class="n">elf</span> <span class="ow">not</span> <span class="n">found</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">57</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">sent</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">config</span><span class="o">.</span><span class="n">txt</span> <span class="n">to</span> <span class="mf">10.42</span><span class="o">.</span><span class="mf">0.17</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">57</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">file</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">dt</span><span class="o">-</span><span class="n">blob</span><span class="o">.</span><span class="n">bin</span> <span class="ow">not</span> <span class="n">found</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">57</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">file</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">recovery</span><span class="o">.</span><span class="n">elf</span> <span class="ow">not</span> <span class="n">found</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">57</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">sent</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">config</span><span class="o">.</span><span class="n">txt</span> <span class="n">to</span> <span class="mf">10.42</span><span class="o">.</span><span class="mf">0.17</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">57</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">file</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">bootcfg</span><span class="o">.</span><span class="n">txt</span> <span class="ow">not</span> <span class="n">found</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">57</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">sent</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">cmdline</span><span class="o">.</span><span class="n">txt</span> <span class="n">to</span> <span class="mf">10.42</span><span class="o">.</span><span class="mf">0.17</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">57</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">file</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">recovery8</span><span class="o">.</span><span class="n">img</span> <span class="ow">not</span> <span class="n">found</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">57</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">file</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">recovery8</span><span class="o">-</span><span class="mf">32.</span><span class="n">img</span> <span class="ow">not</span> <span class="n">found</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">57</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">file</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">recovery7</span><span class="o">.</span><span class="n">img</span> <span class="ow">not</span> <span class="n">found</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">57</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">file</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">recovery</span><span class="o">.</span><span class="n">img</span> <span class="ow">not</span> <span class="n">found</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">57</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">file</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">kernel8</span><span class="o">.</span><span class="n">img</span> <span class="ow">not</span> <span class="n">found</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">57</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">file</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">kernel8</span><span class="o">-</span><span class="mf">32.</span><span class="n">img</span> <span class="ow">not</span> <span class="n">found</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">57</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">file</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">armstub8</span><span class="o">.</span><span class="n">bin</span> <span class="ow">not</span> <span class="n">found</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">57</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">file</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">armstub8</span><span class="o">-</span><span class="mf">32.</span><span class="n">bin</span> <span class="ow">not</span> <span class="n">found</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">57</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">file</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">armstub7</span><span class="o">.</span><span class="n">bin</span> <span class="ow">not</span> <span class="n">found</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">40</span><span class="p">:</span><span class="mi">57</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">file</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">armstub</span><span class="o">.</span><span class="n">bin</span> <span class="ow">not</span> <span class="n">found</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">41</span><span class="p">:</span><span class="mi">00</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">sent</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">kernel7</span><span class="o">.</span><span class="n">img</span> <span class="n">to</span> <span class="mf">10.42</span><span class="o">.</span><span class="mf">0.17</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">41</span><span class="p">:</span><span class="mi">00</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">sent</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">bcm2710</span><span class="o">-</span><span class="n">rpi</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="n">b</span><span class="o">.</span><span class="n">dtb</span> <span class="n">to</span> <span class="mf">10.42</span><span class="o">.</span><span class="mf">0.17</span>
+<span class="n">May</span>  <span class="mi">3</span> <span class="mi">10</span><span class="p">:</span><span class="mi">41</span><span class="p">:</span><span class="mi">00</span> <span class="n">testserver</span> <span class="n">dnsmasq</span><span class="o">-</span><span class="n">tftp</span><span class="p">[</span><span class="mi">496</span><span class="p">]:</span> <span class="n">sent</span> <span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">config</span><span class="o">.</span><span class="n">txt</span> <span class="n">to</span> <span class="mf">10.42</span><span class="o">.</span><span class="mf">0.17</span>
+</pre></div>
+</div>
+<p>Problems with dnsmasq-dhcp can be debugged with tcpdump</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Connect to the server module</span>
+<span class="n">sudo</span> <span class="n">tcpdump</span> <span class="o">-</span><span class="n">i</span> <span class="n">eth0</span> <span class="n">port</span> <span class="n">bootpc</span>
+<span class="c1"># Start the client module</span>
+
+<span class="c1"># Output</span>
+<span class="mi">10</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="mf">37.895478</span> <span class="n">IP</span> <span class="mf">0.0</span><span class="o">.</span><span class="mf">0.0</span><span class="o">.</span><span class="n">bootpc</span> <span class="o">&gt;</span> <span class="mf">255.255</span><span class="o">.</span><span class="mf">255.255</span><span class="o">.</span><span class="n">bootps</span><span class="p">:</span> <span class="n">BOOTP</span><span class="o">/</span><span class="n">DHCP</span><span class="p">,</span> <span class="n">Request</span> <span class="kn">from</span> <span class="nn">b8</span><span class="p">:</span><span class="mi">27</span><span class="p">:</span><span class="n">eb</span><span class="p">:</span><span class="mi">76</span><span class="p">:</span><span class="n">a6</span><span class="p">:</span><span class="mi">1</span><span class="n">a</span> <span class="p">(</span><span class="n">oui</span> <span class="n">Unknown</span><span class="p">),</span> <span class="n">length</span> <span class="mi">320</span>
+<span class="mi">10</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="mf">40.732978</span> <span class="n">IP</span> <span class="mf">0.0</span><span class="o">.</span><span class="mf">0.0</span><span class="o">.</span><span class="n">bootpc</span> <span class="o">&gt;</span> <span class="mf">255.255</span><span class="o">.</span><span class="mf">255.255</span><span class="o">.</span><span class="n">bootps</span><span class="p">:</span> <span class="n">BOOTP</span><span class="o">/</span><span class="n">DHCP</span><span class="p">,</span> <span class="n">Request</span> <span class="kn">from</span> <span class="nn">b8</span><span class="p">:</span><span class="mi">27</span><span class="p">:</span><span class="n">eb</span><span class="p">:</span><span class="mi">76</span><span class="p">:</span><span class="n">a6</span><span class="p">:</span><span class="mi">1</span><span class="n">a</span> <span class="p">(</span><span class="n">oui</span> <span class="n">Unknown</span><span class="p">),</span> <span class="n">length</span> <span class="mi">320</span>
+<span class="mi">10</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="mf">44.815790</span> <span class="n">IP</span> <span class="mf">0.0</span><span class="o">.</span><span class="mf">0.0</span><span class="o">.</span><span class="n">bootpc</span> <span class="o">&gt;</span> <span class="mf">255.255</span><span class="o">.</span><span class="mf">255.255</span><span class="o">.</span><span class="n">bootps</span><span class="p">:</span> <span class="n">BOOTP</span><span class="o">/</span><span class="n">DHCP</span><span class="p">,</span> <span class="n">Request</span> <span class="kn">from</span> <span class="nn">b8</span><span class="p">:</span><span class="mi">27</span><span class="p">:</span><span class="n">eb</span><span class="p">:</span><span class="mi">76</span><span class="p">:</span><span class="n">a6</span><span class="p">:</span><span class="mi">1</span><span class="n">a</span> <span class="p">(</span><span class="n">oui</span> <span class="n">Unknown</span><span class="p">),</span> <span class="n">length</span> <span class="mi">320</span>
+<span class="mi">10</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="mf">44.817322</span> <span class="n">IP</span> <span class="mf">10.42</span><span class="o">.</span><span class="mf">0.250</span><span class="o">.</span><span class="n">bootps</span> <span class="o">&gt;</span> <span class="mf">10.42</span><span class="o">.</span><span class="mf">0.17</span><span class="o">.</span><span class="n">bootpc</span><span class="p">:</span> <span class="n">BOOTP</span><span class="o">/</span><span class="n">DHCP</span><span class="p">,</span> <span class="n">Reply</span><span class="p">,</span> <span class="n">length</span> <span class="mi">344</span>
+</pre></div>
+</div>
+<p>No activity on the server’s ethernet interface while you try netbooting an R3 client points to network issues. There is a <a class="reference external" href="https://github.com/raspberrypi/firmware/issues/764">known bug</a> where the
+RaspberryPi ignores answers from the DHCP server. Sending a broadcast ping can help.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ping</span> <span class="o">-</span><span class="n">b</span> <span class="mf">10.42</span><span class="o">.</span><span class="mf">0.255</span>
+</pre></div>
+</div>
+<p>On older modules netboot needs to be <a class="reference external" href="https://www.raspberrypi.org/documentation/hardware/raspberrypi/bootmodes/net_tutorial.md">enabled explicitly</a>.
+Sometimes it helps setting the program_usb_boot_mode even if R3+ modules should have it set already.</p>
+<p>Problems with dnsmasq-tftp could have their reason in misconfiguration of the dnsmasq package. Check the corresponding sections and copy a clean boot
+partition to the server’s /pxe/boot directory again.</p>
+<p>When the logs show the desired output but the client module still does not show up</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Connect to the server module</span>
+<span class="n">nmap</span> <span class="o">-</span><span class="n">sP</span> <span class="mf">10.42</span><span class="o">.</span><span class="mf">0.0</span><span class="o">/</span><span class="mi">24</span>
+<span class="c1"># Output only the server module was found</span>
+</pre></div>
+</div>
+<p>something could have gone wrong with mounting the root partition. The easiest way from here is connecting the module with an HDMI cable to a monitor and check the output. Additionally (or in the case you
+can’t simply connect a cable like in our productive system) you can debug the nfs server.</p>
+<ul class="simple">
+<li><p>Check if your directories were exported correctly</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Connect to testwifi with your working machine. We assume the testserver&#39;s ip to be 192.168.1.4</span>
+<span class="n">showmount</span> <span class="o">-</span><span class="n">e</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">1.4</span>
+<span class="c1"># On the server locally</span>
+<span class="n">showmount</span> <span class="o">-</span><span class="n">e</span>
+
+<span class="c1"># Output should look similar</span>
+<span class="n">Export</span> <span class="nb">list</span> <span class="k">for</span> <span class="n">testserver</span><span class="p">:</span>
+<span class="o">/</span><span class="n">pxe</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">255.255</span><span class="o">.</span><span class="mf">255.0</span><span class="p">,</span><span class="mf">10.42</span><span class="o">.</span><span class="mf">0.0</span><span class="o">/</span><span class="mf">255.255</span><span class="o">.</span><span class="mf">255.0</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Check if the nfsuser can mount the root partition</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Connect to testwifi with your working machine. Next two lines only if you didn&#39;t already create nfsuser on your working machine.</span>
+<span class="n">sudo</span> <span class="n">useradd</span> <span class="o">-</span><span class="n">u</span> <span class="mi">1234</span> <span class="n">nfsuser</span>
+<span class="n">sudo</span> <span class="n">passwd</span> <span class="n">nfsuser</span>
+<span class="n">mkdir</span> <span class="n">mnt</span>
+<span class="n">sudo</span> <span class="o">-</span><span class="n">u</span> <span class="n">nfsuser</span> <span class="n">sudo</span> <span class="n">mount</span> <span class="o">-</span><span class="n">o</span> <span class="n">hard</span><span class="p">,</span><span class="n">nolock</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">1.4</span><span class="p">:</span><span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">root</span> <span class="n">mnt</span>
+<span class="c1"># output should list the nfs directory</span>
+<span class="n">mount</span>
+<span class="c1"># check the content</span>
+<span class="n">ls</span> <span class="n">mnt</span>
+</pre></div>
+</div>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Cut that here.</p>
+</div>
+<p>Reconfigure the wireless interface</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wpa_cli</span> <span class="o">-</span><span class="n">i</span> <span class="n">wlan0</span> <span class="n">reconfigure</span>
+<span class="n">iwconfig</span> <span class="n">wlan0</span> <span class="c1"># output should show our access point ESSID=&quot;testwifi&quot;</span>
+<span class="n">ifconfig</span> <span class="n">wlan0</span> <span class="c1"># output should show an ip address 192.168.1.x</span>
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="diagnosis">
 <h2>Diagnosis<a class="headerlink" href="#diagnosis" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="troubleshooting">
 <h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
+<p>It is physically impossible to access the client modules’ hdmi output because of the way the cluster is assembled. When all nodes are running it is also impossible to access the kernel logs with the current configuration since the nodes work concurrently on the same data stock.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p>After booting the LED of a module stays off but the module is pingable.</p>
+</dd>
+<dt class="field-even">Conclusion</dt>
+<dd class="field-even"><p>The problem occured between initiating the network interfaces and running /etc/rc.local (the location where the led is powered on)</p>
+</dd>
+</dl>
 </div>
 </div>
 
