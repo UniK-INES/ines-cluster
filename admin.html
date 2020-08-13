@@ -92,6 +92,11 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Administration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#detailed-booting-process">Detailed Booting Process</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#servermodule">Servermodule</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#backup-and-restore">Backup and Restore</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#backup">Backup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#restore">Restore</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#tftp-server">TFTP Server</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dhcp-server">DHCP Server</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#nfs-server">NFS Server</a></li>
@@ -193,6 +198,47 @@
 </div>
 <div class="section" id="servermodule">
 <h2>Servermodule<a class="headerlink" href="#servermodule" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="backup-and-restore">
+<h3>Backup and Restore<a class="headerlink" href="#backup-and-restore" title="Permalink to this headline">¶</a></h3>
+<p>The contents of the server module are regularly backuped onto the department’s disk station. The images are named after their backup date. The easiest way to backup and restore is by using img-files containing the boot and
+root partition. Please note: the older backups were done with rsync in combination with tar and gunzip. When you intend to restore an older image (for example the factory default image) a lot of additional work like modifying fstab, setting missing symlinks, etc will be required.</p>
+<p>For both backup and restore procedures:</p>
+<ul class="simple">
+<li><p>Shutdown the client modules by either ssh’ing into the running ones and shutting them down or using the provided bash scripts</p></li>
+<li><p>Shutdown the server module</p></li>
+<li><p>Open the Homematic control panel in your web browser</p></li>
+<li><p>Deactivate the electrical outlet</p></li>
+<li><p>Remove the sd card from the server module</p></li>
+</ul>
+<p>On your workstation:</p>
+<ul class="simple">
+<li><p>Insert the server module’s sd card</p></li>
+<li><p>Find out its name</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lsblk
+<span class="c1"># We assume it is /dev/sdb</span>
+</pre></div>
+</div>
+<div class="section" id="backup">
+<h4>Backup<a class="headerlink" href="#backup" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><p>We use dd to backup both partitions. You can add the partitions name at the end (for example <code class="docutils literal notranslate"><span class="pre">/dev/sdb1</span></code>) if you are only interested in a particular partition.</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo dd <span class="nv">bs</span><span class="o">=</span>4M <span class="nv">of</span><span class="o">=</span>/dev/sdb <span class="nv">status</span><span class="o">=</span>progress <span class="p">|</span> gzip &gt; <span class="s2">&quot;</span><span class="k">$(</span>date <span class="s1">&#39;+%Y-%m-%d server module backup&#39;</span><span class="k">)</span><span class="s2">.img.gz&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Upload the created image to the disk station</p></li>
+</ul>
+</div>
+<div class="section" id="restore">
+<h4>Restore<a class="headerlink" href="#restore" title="Permalink to this headline">¶</a></h4>
+<p>When you intend to use a new sd card and restore an older image, take a look into the <code class="docutils literal notranslate"><span class="pre">/etc/fstab</span></code> and overwrite the old identifier. Usually the identifier of the card keeps the name when exchanged between different modules.</p>
+<ul class="simple">
+<li><p>Mount the directory on the disk station</p></li>
+</ul>
+</div>
+</div>
 <div class="section" id="tftp-server">
 <h3>TFTP Server<a class="headerlink" href="#tftp-server" title="Permalink to this headline">¶</a></h3>
 </div>

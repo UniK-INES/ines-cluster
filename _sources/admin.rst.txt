@@ -20,6 +20,55 @@ Detailed Booting Process
 Servermodule
 ------------------------------
 
+Backup and Restore
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The contents of the server module are regularly backuped onto the department's disk station. The images are named after their backup date. The easiest way to backup and restore is by using img-files containing the boot and 
+root partition. Please note: the older backups were done with rsync in combination with tar and gunzip. When you intend to restore an older image (for example the factory default image) a lot of additional work like modifying fstab, setting missing symlinks, etc will be required.
+
+For both backup and restore procedures:
+
+* Shutdown the client modules by either ssh'ing into the running ones and shutting them down or using the provided bash scripts
+ 
+* Shutdown the server module
+
+* Open the Homematic control panel in your web browser
+* Deactivate the electrical outlet
+* Remove the sd card from the server module
+
+On your workstation:
+
+* Insert the server module's sd card
+* Find out its name
+
+.. code-block:: bash
+
+	lsblk
+	# We assume it is /dev/sdb
+
+Backup
+=================
+
+* We use dd to backup both partitions. You can add the partitions name at the end (for example ``/dev/sdb1``) if you are only interested in a particular partition.
+
+.. code-block:: bash
+
+	sudo dd bs=4M of=/dev/sdb status=progress | gzip > "$(date '+%Y-%m-%d server module backup').img.gz"
+
+* Upload the created image to the disk station
+
+	
+
+Restore
+=================
+
+When you intend to use a new sd card and restore an older image, take a look into the ``/etc/fstab`` and overwrite the old identifier. Usually the identifier of the card keeps the name when exchanged between different modules. 
+
+* Mount the directory on the disk station
+
+
+
+
 
 TFTP Server
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
