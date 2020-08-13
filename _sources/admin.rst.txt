@@ -62,12 +62,58 @@ Backup
 Restore
 =================
 
-When you intend to use a new sd card and restore an older image, take a look into the ``/etc/fstab`` and overwrite the old identifier. Usually the identifier of the card keeps the name when exchanged between different modules. 
+When you intend to use a new sd card and restore an older image, take a look into the ``/etc/fstab`` and overwrite the old identifier. Usually the identifier of the card keeps the name when exchanged between different modules.
 
-* Mount the directory on the disk station
+* Download the image from the department's diskstation. The samba mount requires root permission so open a root shell and install the dependencies.
+
+.. code-block:: bash
+
+	sudo /bin/bash
+	apt-get install cifs-utils keyutils -Y
+
+* Create a directory for mounting.
+
+.. code-block:: bash
+
+	mkdir mnt_diskstation
+
+* Create a credential file.
+
+.. code-block:: bash
+
+	touch .smbcredentials
+	echo -e "username=YOURUSERNAME\npassword=YOURPASSWORD\ndomain=its-ad"
+
+* Mount the directory with your credentials.
+
+.. code-block:: bash
+
+	sudo mount -t cifs //141.51.123.2/ines-cluster ~/mnt_diskstation/ -o credentials=~/.smbcredentials,iocharset=utf8,file_mode=0777,dir_mode=0777,vers=2.0
+
+Troubleshooting since we are talking to a windows service: add -vvv as parameter to the mount command and check the syslog with dmesg
+
+* The images of the server node are found in the server_node_backup directory. Download it to your workstation and unzip it.
+
+.. code-block:: bash
+
+	mkdir ~/tmp_img
+	cp ~/mnt_diskstation/server_node_backup/'2020-08-13 server module backup.img.gz' ~/tmp_img
+	cd ~/tmp_img
+	gunzip '2020-08-13 server module backup.img.gz'
+
+* Extract the partions and copy it to the new sd card
+
+.. code-block:: bash
+
+	sudo dd bs=4M if=imagefile.img of=/dev/sdb status=progress
+
+* Mount the root partition of the sd card and make sure the identifier of the sd card in ``/etc/fstab`` is identical.
 
 
+Troubleshooting
 
+dmesg output
+bad geometry: block count 7748608 exceeds size of device
 
 
 TFTP Server

@@ -235,8 +235,53 @@ root partition. Please note: the older backups were done with rsync in combinati
 <h4>Restore<a class="headerlink" href="#restore" title="Permalink to this headline">¶</a></h4>
 <p>When you intend to use a new sd card and restore an older image, take a look into the <code class="docutils literal notranslate"><span class="pre">/etc/fstab</span></code> and overwrite the old identifier. Usually the identifier of the card keeps the name when exchanged between different modules.</p>
 <ul class="simple">
-<li><p>Mount the directory on the disk station</p></li>
+<li><p>Download the image from the department’s diskstation. The samba mount requires root permission so open a root shell and install the dependencies.</p></li>
 </ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo /bin/bash
+apt-get install cifs-utils keyutils -Y
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Create a directory for mounting.</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir mnt_diskstation
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Create a credential file.</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>touch .smbcredentials
+<span class="nb">echo</span> -e <span class="s2">&quot;username=YOURUSERNAME\npassword=YOURPASSWORD\ndomain=its-ad&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Mount the directory with your credentials.</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo mount -t cifs //141.51.123.2/ines-cluster ~/mnt_diskstation/ -o <span class="nv">credentials</span><span class="o">=</span>~/.smbcredentials,iocharset<span class="o">=</span>utf8,file_mode<span class="o">=</span><span class="m">0777</span>,dir_mode<span class="o">=</span><span class="m">0777</span>,vers<span class="o">=</span><span class="m">2</span>.0
+</pre></div>
+</div>
+<p>Troubleshooting since we are talking to a windows service: add -vvv as parameter to the mount command and check the syslog with dmesg</p>
+<ul class="simple">
+<li><p>The images of the server node are found in the server_node_backup directory. Download it to your workstation and unzip it.</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir ~/tmp_img
+cp ~/mnt_diskstation/server_node_backup/<span class="s1">&#39;2020-08-13 server module backup.img.gz&#39;</span> ~/tmp_img
+<span class="nb">cd</span> ~/tmp_img
+gunzip <span class="s1">&#39;2020-08-13 server module backup.img.gz&#39;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Extract the partions and copy it to the new sd card</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo dd <span class="nv">bs</span><span class="o">=</span>4M <span class="k">if</span><span class="o">=</span>imagefile.img <span class="nv">of</span><span class="o">=</span>/dev/sdb <span class="nv">status</span><span class="o">=</span>progress
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Mount the root partition of the sd card and make sure the identifier of the sd card in <code class="docutils literal notranslate"><span class="pre">/etc/fstab</span></code> is identical.</p></li>
+</ul>
+<p>Troubleshooting</p>
+<p>dmesg output
+bad geometry: block count 7748608 exceeds size of device</p>
 </div>
 </div>
 <div class="section" id="tftp-server">
