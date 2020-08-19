@@ -33,7 +33,7 @@ Important Services
 Homematic Module
 ----------------------------
 
-The Homematic module is used to power the cluster. Additionally we use it when you are not able to create a direct route into the cluster.
+The Homematic module is used to power the cluster. Additionally we use it in case one is not able to create a direct route into the cluster.
 
 Network Interfaces
 ^^^^^^^^^^^^^^^^^^^^
@@ -72,7 +72,7 @@ Network Interfaces
 Client Modules
 ----------------------------
 
-Hostnames and Hardwareaddress
+Hostnames and Hardware Address
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 +---------------------+--------------+---------------------+--------+-----------+
