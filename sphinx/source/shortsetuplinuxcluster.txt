@@ -1,0 +1,23 @@
+141.51.123.4		Router			vlan2		B0:C7:45:3F:86:1B
+141.51.123.42 		Homematic(R4) 	eth0		DC:A6:32:36:33:2D
+141.51.123.55		Servermodul		eth1		D0:37:45:88:8C:EF
+
+Server:
+pi/unikassel
+outsider/outsider
+
+Homematic:
+pi/unikassel
+
+Router:
+root/unikassel
+
+cluster_start:
+https://pypi.org/project/websocket_client/
+pip install websocket-client
+
+Homematic Setup:
+sudo /bin/bash
+apt-get install fping
+echo "ip route add 10.42.0.0/24 via 192.168.1.111" > /lib/dhcpcd/dhcpcd-hooks/40-route
+
