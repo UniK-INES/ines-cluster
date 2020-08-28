@@ -98,9 +98,16 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#with-a-route">With a route</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#dependencies">Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#starting-the-remaining-modules">Starting the remaining modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#shutting-down-the-cluster">Shutting down the cluster</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#without-a-route">Without a route</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#executing-commands-on-the-server-module">Executing commands on the server module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#executing-commands-on-client-modules">Executing commands on client modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#one-time">One time</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="admin.html">Administration</a></li>
@@ -188,7 +195,7 @@
 <div class="section" id="routing">
 <h2>Routing<a class="headerlink" href="#routing" title="Permalink to this headline">¶</a></h2>
 <p>In order to communicate with the client modules directly you need a route into the cluster. This means, the packages from your workstation addressed to the client modules (10.42.0.x) need a route to the server module. Under some circumstances
-it is not possible to add a direct route into the cluster. For that we have a workaround that you can find in section “Without Route”.</p>
+it is not possible to add a direct route into the cluster. For that we have a workaround that you can find in section <a class="reference internal" href="#without-a-route"><span class="std std-ref">Without Route</span></a>.</p>
 <div class="section" id="check-for-a-route">
 <h3>Check for a route<a class="headerlink" href="#check-for-a-route" title="Permalink to this headline">¶</a></h3>
 <p>On linux based operating systems you can use one of the following commands:</p>
@@ -246,11 +253,86 @@ sudo ip route add <span class="m">10</span>.42.0.0/24 via <span class="m">141</s
 pip install websocket-client
 </pre></div>
 </div>
+</div>
+<div class="section" id="starting-the-remaining-modules">
+<h3>Starting the remaining modules<a class="headerlink" href="#starting-the-remaining-modules" title="Permalink to this headline">¶</a></h3>
 <p>Change into the workstation directory and run <code class="docutils literal notranslate"><span class="pre">./cluster_start</span></code>. The script will now boot the remaining client modules.</p>
+</div>
+<div class="section" id="shutting-down-the-cluster">
+<h3>Shutting down the cluster<a class="headerlink" href="#shutting-down-the-cluster" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Shut down the client modules</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># workstation directory</span>
+./cluster_shutdown
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Wait until the client modules are turned off. You can check with nmap</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nmap -sP <span class="m">10</span>.42.0.0/24
+<span class="c1"># Output should not list any ips in range 10.42.0.1 - 10.42.0.60</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Shut down the server module</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh pi@141.51.123.55
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Use the Homematic module to power off the socket.</p></li>
+</ul>
 </div>
 </div>
 <div class="section" id="without-a-route">
 <h2>Without a route<a class="headerlink" href="#without-a-route" title="Permalink to this headline">¶</a></h2>
+<p>Since we don’t have a direct route into the cluster and to the client modules we connect to the Homematic module first where a static route to the server module exists.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>route
+<span class="c1"># 10.42.0.0       141.51.123.55   255.255.255.0   UG    0      0        0 eth0</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">/opt/cluster_scripts</span></code> directory contains all necessary scripts for managing the cluster.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 73%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Command</p></th>
+<th class="head"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>./c_start</p></td>
+<td><p>Starts the remaining client modules</p></td>
+</tr>
+<tr class="row-odd"><td><p>./c_shutdown</p></td>
+<td><p>Shuts down the client modules</p></td>
+</tr>
+<tr class="row-even"><td><p>./c_temperature</p></td>
+<td><p>Provides you CPU/GPU temperature of the clients</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The Raspberry Pi modules have a hard limit of 85°C and a soft limit of 60°C. After reaching 60°C the <a class="reference external" href="https://www.raspberrypi.org/documentation/hardware/raspberrypi/frequency-management.md">clock speed is reduced by 200MHz and the operating voltage is slightly reduced</a>.</p>
+</div>
+</div>
+<div class="section" id="executing-commands-on-the-server-module">
+<h2>Executing commands on the server module<a class="headerlink" href="#executing-commands-on-the-server-module" title="Permalink to this headline">¶</a></h2>
+<p>Connect to the University’s VPN and ssh into the server module</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh pi@141.51.123.55
+<span class="c1"># Single command</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="executing-commands-on-client-modules">
+<h2>Executing commands on client modules<a class="headerlink" href="#executing-commands-on-client-modules" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="one-time">
+<h3>One time<a class="headerlink" href="#one-time" title="Permalink to this headline">¶</a></h3>
+</div>
 </div>
 </div>
 

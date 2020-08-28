@@ -19,7 +19,7 @@ Routing
 ----------------
 
 In order to communicate with the client modules directly you need a route into the cluster. This means, the packages from your workstation addressed to the client modules (10.42.0.x) need a route to the server module. Under some circumstances 
-it is not possible to add a direct route into the cluster. For that we have a workaround that you can find in section "Without Route".
+it is not possible to add a direct route into the cluster. For that we have a workaround that you can find in section :ref:`Without Route <Without a route>`.
 
 Check for a route
 ^^^^^^^^^^^^^^^^^^^^^
@@ -98,8 +98,79 @@ We install the dependencies
 	sudo apt-get install python python-pip fping -y
 	pip install websocket-client
 
+Starting the remaining modules
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 Change into the workstation directory and run ``./cluster_start``. The script will now boot the remaining client modules.
 
 
+Shutting down the cluster
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Shut down the client modules
+
+.. code-block:: bash
+
+	# workstation directory
+	./cluster_shutdown
+
+* Wait until the client modules are turned off. You can check with nmap
+
+.. code-block:: bash
+
+	nmap -sP 10.42.0.0/24
+	# Output should not list any ips in range 10.42.0.1 - 10.42.0.60
+
+* Shut down the server module
+
+.. code-block:: bash
+
+	ssh pi@141.51.123.55
+
+* Use the Homematic module to power off the socket.
+
 Without a route
 -------------------
+
+Since we don't have a direct route into the cluster and to the client modules we connect to the Homematic module first where a static route to the server module exists.
+
+.. code-block:: bash
+
+	route
+	# 10.42.0.0       141.51.123.55   255.255.255.0   UG    0      0        0 eth0
+
+
+The ``/opt/cluster_scripts`` directory contains all necessary scripts for managing the cluster.
+
++---------------------+---------------------------------------------------------+
+| Command             |                                                         |
++=====================+=========================================================+
+| ./c_start           | Starts the remaining client modules                     |
++---------------------+---------------------------------------------------------+
+| ./c_shutdown        | Shuts down the client modules                           |
++---------------------+---------------------------------------------------------+
+| ./c_temperature     | Provides you CPU/GPU temperature of the clients         |
++---------------------+---------------------------------------------------------+
+
+.. note:: The Raspberry Pi modules have a hard limit of 85°C and a soft limit of 60°C. After reaching 60°C the `clock speed is reduced by 200MHz and the operating voltage is slightly reduced <https://www.raspberrypi.org/documentation/hardware/raspberrypi/frequency-management.md>`_.
+
+
+Executing commands on the server module
+----------------------------------------
+
+Connect to the University's VPN and ssh into the server module
+
+.. code-block:: bash
+
+	ssh pi@141.51.123.55
+	# Single command
+
+
+
+
+
+Executing commands on client modules
+-------------------------------------
+
+One time
+^^^^^^^^

@@ -33,7 +33,7 @@ Important Services
 Homematic Module
 ----------------------------
 
-The Homematic module is used to power the cluster. Additionally we use it when you are not able to create a direct route into the cluster.
+The Homematic module is used to power the cluster. Additionally we use it in case one is not able to create a direct route into the cluster.
 
 Network Interfaces
 ^^^^^^^^^^^^^^^^^^^^
@@ -72,8 +72,10 @@ Network Interfaces
 Client Modules
 ----------------------------
 
-Hostnames and Hardwareaddress
+Hostnames and Hardware Address
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The clients ask the DHCP server to provide them a hostname. The hostname is given according to their hardware address. The geographical position row gives you information where the module is physically placed. Every bar starts with module 1 and ends with module 15. 4 single bars with 15 modules each bar.
 
 +---------------------+--------------+---------------------+--------+-----------+
 | Hardwareaddresses   | Hostname     | Geographical        | Typ    | SD Rate   |
@@ -203,6 +205,8 @@ Hostnames and Hardwareaddress
 Geographical Position
 ^^^^^^^^^^^^^^^^^^^^^^
 
+This table provides an easier way to get a client module's hardware address when you stand infront of the cluster.
+
 +----------+---------------------+---------------------+---------------------+---------------------+
 | Bitbar   | 0                   | 1                   | 2                   | 3                   |
 +==========+=====================+=====================+=====================+=====================+
@@ -237,7 +241,6 @@ Geographical Position
 | 0xF      | B8:27:EB:52:06:8E   | B8:27:EB:02:84:F0   | B8:27:EB:57:6E:2F   | B8:27:EB:D3:C9:CC   |
 +----------+---------------------+---------------------+---------------------+---------------------+
 
-.. note:: The numeration starts with 01 for every bar.
 
 Known Problems
 -------------------------
