@@ -19,7 +19,11 @@ Routing
 ----------------
 
 In order to communicate with the client modules directly you need a route into the cluster. This means, the packages from your workstation addressed to the client modules (10.42.0.x) need a route to the server module. Under some circumstances 
+<<<<<<< HEAD
 it is not possible to add a direct route into the cluster. For that we have a workaround that you can find in section :ref:`Without Route <Without a route>`.
+=======
+it is not possible to add a direct route into the cluster. For that we have a workaround that you can find in section  :ref:`Without Route <Without a route>`.
+>>>>>>> a55a37684c1ba331bdf1d5084f6fa1261dbf3fa2
 
 Check for a route
 ^^^^^^^^^^^^^^^^^^^^^
