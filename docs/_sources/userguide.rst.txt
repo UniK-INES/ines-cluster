@@ -165,19 +165,28 @@ Connect to the University's VPN and ssh into the server module
 	ssh pi@141.51.123.55
 	# Single command
 
+In a script
 
+.. code-block:: bash
 
-
+	ssh pi@141.51.123.55 'current_path=$(pwd); echo $current_path'
+	
 
 Executing commands on client modules
 -------------------------------------
 
-With a route you can directly connect to each client module.
+When you are connected with the University's network or are using the WiFi you can directly connect to each client module.
 
 .. code-block:: bash
 
 	ssh pi@10.42.0.1
 	# Single command
+
+A quick way to run multiple commands on a node is to connect the commands with the ; operator.
+
+.. code-block:: bash
+	
+	ssh pi@10.42.0.1 'echo $HOSTNAME; pwd'
 	
 You can use the following syntax to run commands on multiple nodes. 
 
@@ -187,7 +196,15 @@ You can use the following syntax to run commands on multiple nodes.
 		ssh pi@10.42.0.$i 'echo $HOSTNAME'
 	done
 	
-.. note:: To access the 10.42.0.0/24 ips you need a route into the cluster. Also this only works for the R3 modules since the Zero modules are connected to the WiFi.
+This will only work if you have a route into the cluster and all addressed nodes are R3 modules. In order to work on all nodes including the Zero modules you can use a script like this.
 
-One time
-^^^^^^^^
+.. code-block:: bash
+
+	# Download global_functions in master branch and source it
+	source global_functions
+	for i in $(seq 1 60); do
+		currentnode=$(nodestring $i)
+		currentip=$(get_ip_for_node $currentnode)
+		ssh pi@$currentip 'echo $HOSTNAME'
+	done
+
