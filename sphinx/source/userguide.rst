@@ -257,6 +257,8 @@ Alternative in R
 
 * Within your R script or console
 
+.. code-block:: R
+
 	R
 	require("ssh")
 	session <- ssh_connect("outsider@192.168.1.111")
