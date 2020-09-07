@@ -155,8 +155,8 @@ The ``/opt/cluster_scripts`` directory contains all necessary scripts for managi
 .. note:: The Raspberry Pi modules have a hard limit of 85°C and a soft limit of 60°C. After reaching 60°C the `clock speed is reduced by 200MHz and the operating voltage is slightly reduced <https://www.raspberrypi.org/documentation/hardware/raspberrypi/frequency-management.md>`_.
 
 
-Executing commands on the server module
-----------------------------------------
+Executing commands on the server module (terminal)
+---------------------------------------------------
 
 Connect to the University's VPN and ssh into the server module
 
@@ -172,8 +172,8 @@ In a script
 	ssh pi@141.51.123.55 'current_path=$(pwd); echo $current_path'
 	
 
-Executing commands on client modules
--------------------------------------
+Executing commands on client modules (terminal)
+------------------------------------------------
 
 When you are connected with the University's network or are using the WiFi you can directly connect to each client module.
 
@@ -208,3 +208,66 @@ This will only work if you have a route into the cluster and all addressed nodes
 		ssh pi@$currentip 'echo $HOSTNAME'
 	done
 
+Executing commands on client modules with the provided scripts
+---------------------------------------------------------------
+
+With a route you can use the toolchain to upload and run your software on the nodes.
+
+* Copy your ssh key to the server module so there won't be any password questions in the scripts we run later.
+
+.. code-block:: bash
+
+	ssh-copy-id outsider@141.51.123.55
+
+* Create a new directory for your scripts or simulation files on the server node
+
+.. code-block:: bash
+
+	ssh outsider@141.51.123.55 'mkdir /pxe/meta/simulation/YOURSIMULATIONNAME'
+	
+* Upload via rsync
+
+.. code-block:: bash
+
+	rsync -r -e ssh /path/to/your/simulation/ outsider@141.51.123.55:/pxe/meta/simulation/YOURSIMULATIONNAME
+	
+.. note:: You can also use scp for uploading your simulation.
+
+* Distribute your scripts or simulation to the desired nodes
+
+.. code-block:: bash
+
+	# You can use multiple single nodes or a range of nodes divided by semicolon
+	ssh outsider@141.51.123.55 '/pxe/meta/sim_to_nodes "YOURSIMULATIONNAME" "4-6;9"'
+	# The script will copy your simulation directory to the individual content directories of the specified nodes
+	
+Alternative in R
+
+* Installing dependencies
+
+.. code-block:: bash
+
+	sudo apt-get install -y libssh-dev
+	sudo -i R
+	# In R shell
+	install.packages("ssh")
+	require("ssh")
+	... (loaded successfully)
+	q()
+
+* Within your R script or console
+
+.. code-block:: R
+
+	R
+	require("ssh")
+	session <- ssh_connect("outsider@192.168.1.111")
+	out <- ssh_exec_wait(session, command = 'mkdir /pxe/meta/simulation/YOURSIMULATIONNAME')
+	path <- "/path/to/YOURSIMULATIONNAME"
+	files <- dir(path)
+	for (f in files) {
+	out <- scp_upload(session, paste(path, f, sep="/"), '/pxe/meta/simulation/YOURSIMULATIONNAME', verbose = TRUE)
+	}
+	out <- ssh_exec_wait(session, command = '/pxe/meta/sim_to_nodes "YOURSIMULATIONNAME" "4-6;9"')
+
+.. TODO:: Testing and running part in bash and R

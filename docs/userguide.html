@@ -103,8 +103,9 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#without-a-route">Without a route</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#executing-commands-on-the-server-module">Executing commands on the server module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#executing-commands-on-client-modules">Executing commands on client modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#executing-commands-on-the-server-module-terminal">Executing commands on the server module (terminal)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#executing-commands-on-client-modules-terminal">Executing commands on client modules (terminal)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#executing-commands-on-client-modules-with-the-provided-scripts">Executing commands on client modules with the provided scripts</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="admin.html">Administration</a></li>
@@ -317,8 +318,8 @@ pip install websocket-client
 <p>The Raspberry Pi modules have a hard limit of 85°C and a soft limit of 60°C. After reaching 60°C the <a class="reference external" href="https://www.raspberrypi.org/documentation/hardware/raspberrypi/frequency-management.md">clock speed is reduced by 200MHz and the operating voltage is slightly reduced</a>.</p>
 </div>
 </div>
-<div class="section" id="executing-commands-on-the-server-module">
-<h2>Executing commands on the server module<a class="headerlink" href="#executing-commands-on-the-server-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="executing-commands-on-the-server-module-terminal">
+<h2>Executing commands on the server module (terminal)<a class="headerlink" href="#executing-commands-on-the-server-module-terminal" title="Permalink to this headline">¶</a></h2>
 <p>Connect to the University’s VPN and ssh into the server module</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh pi@141.51.123.55
 <span class="c1"># Single command</span>
@@ -329,8 +330,8 @@ pip install websocket-client
 </pre></div>
 </div>
 </div>
-<div class="section" id="executing-commands-on-client-modules">
-<h2>Executing commands on client modules<a class="headerlink" href="#executing-commands-on-client-modules" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="executing-commands-on-client-modules-terminal">
+<h2>Executing commands on client modules (terminal)<a class="headerlink" href="#executing-commands-on-client-modules-terminal" title="Permalink to this headline">¶</a></h2>
 <p>When you are connected with the University’s network or are using the WiFi you can directly connect to each client module.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh pi@10.42.0.1
 <span class="c1"># Single command</span>
@@ -355,6 +356,72 @@ pip install websocket-client
         ssh pi@<span class="nv">$currentip</span> <span class="s1">&#39;echo $HOSTNAME&#39;</span>
 <span class="k">done</span>
 </pre></div>
+</div>
+</div>
+<div class="section" id="executing-commands-on-client-modules-with-the-provided-scripts">
+<h2>Executing commands on client modules with the provided scripts<a class="headerlink" href="#executing-commands-on-client-modules-with-the-provided-scripts" title="Permalink to this headline">¶</a></h2>
+<p>With a route you can use the toolchain to upload and run your software on the nodes.</p>
+<ul class="simple">
+<li><p>Copy your ssh key to the server module so there won’t be any password questions in the scripts we run later.</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh-copy-id outsider@141.51.123.55
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Create a new directory for your scripts or simulation files on the server node</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh outsider@141.51.123.55 <span class="s1">&#39;mkdir /pxe/meta/simulation/YOURSIMULATIONNAME&#39;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Upload via rsync</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rsync -r -e ssh /path/to/your/simulation/ outsider@141.51.123.55:/pxe/meta/simulation/YOURSIMULATIONNAME
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can also use scp for uploading your simulation.</p>
+</div>
+<ul class="simple">
+<li><p>Distribute your scripts or simulation to the desired nodes</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># You can use multiple single nodes or a range of nodes divided by semicolon</span>
+ssh outsider@141.51.123.55 <span class="s1">&#39;/pxe/meta/sim_to_nodes &quot;YOURSIMULATIONNAME&quot; &quot;4-6;9&quot;&#39;</span>
+<span class="c1"># The script will copy your simulation directory to the individual content directories of the specified nodes</span>
+</pre></div>
+</div>
+<p>Alternative in R</p>
+<ul class="simple">
+<li><p>Installing dependencies</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install -y libssh-dev
+sudo -i R
+<span class="c1"># In R shell</span>
+install.packages<span class="o">(</span><span class="s2">&quot;ssh&quot;</span><span class="o">)</span>
+require<span class="o">(</span><span class="s2">&quot;ssh&quot;</span><span class="o">)</span>
+... <span class="o">(</span>loaded successfully<span class="o">)</span>
+q<span class="o">()</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Within your R script or console</p></li>
+</ul>
+<div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">R</span>
+<span class="nf">require</span><span class="p">(</span><span class="s">&quot;ssh&quot;</span><span class="p">)</span>
+<span class="n">session</span> <span class="o">&lt;-</span> <span class="nf">ssh_connect</span><span class="p">(</span><span class="s">&quot;outsider@192.168.1.111&quot;</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">&lt;-</span> <span class="nf">ssh_exec_wait</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">command</span> <span class="o">=</span> <span class="s">&#39;mkdir /pxe/meta/simulation/YOURSIMULATIONNAME&#39;</span><span class="p">)</span>
+<span class="n">path</span> <span class="o">&lt;-</span> <span class="s">&quot;/path/to/YOURSIMULATIONNAME&quot;</span>
+<span class="n">files</span> <span class="o">&lt;-</span> <span class="nf">dir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="nf">for </span><span class="p">(</span><span class="n">f</span> <span class="n">in</span> <span class="n">files</span><span class="p">)</span> <span class="p">{</span>
+<span class="n">out</span> <span class="o">&lt;-</span> <span class="nf">scp_upload</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="nf">paste</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s">&quot;/&quot;</span><span class="p">),</span> <span class="s">&#39;/pxe/meta/simulation/YOURSIMULATIONNAME&#39;</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="n">out</span> <span class="o">&lt;-</span> <span class="nf">ssh_exec_wait</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">command</span> <span class="o">=</span> <span class="s">&#39;/pxe/meta/sim_to_nodes &quot;YOURSIMULATIONNAME&quot; &quot;4-6;9&quot;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>Testing and running part in bash and R</p>
 </div>
 </div>
 </div>
