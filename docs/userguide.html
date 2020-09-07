@@ -330,6 +330,21 @@ pip install websocket-client
 </div>
 <div class="section" id="executing-commands-on-client-modules">
 <h2>Executing commands on client modules<a class="headerlink" href="#executing-commands-on-client-modules" title="Permalink to this headline">¶</a></h2>
+<p>With a route you can directly connect to each client module.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh pi@10.42.0.1
+<span class="c1"># Single command</span>
+</pre></div>
+</div>
+<p>You can use the following syntax to run commands on multiple nodes.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> i in <span class="k">$(</span>seq <span class="m">1</span> <span class="m">10</span><span class="k">)</span><span class="p">;</span> <span class="k">do</span>
+        ssh pi@10.42.0.<span class="nv">$i</span> <span class="s1">&#39;echo $HOSTNAME&#39;</span>
+<span class="k">done</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To access the 10.42.0.0/24 ips you need a route into the cluster. Also this only works for the R3 modules since the Zero modules are connected to the WiFi.</p>
+</div>
 <div class="section" id="one-time">
 <h3>One time<a class="headerlink" href="#one-time" title="Permalink to this headline">¶</a></h3>
 </div>

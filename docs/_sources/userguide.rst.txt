@@ -172,5 +172,22 @@ Connect to the University's VPN and ssh into the server module
 Executing commands on client modules
 -------------------------------------
 
+With a route you can directly connect to each client module.
+
+.. code-block:: bash
+
+	ssh pi@10.42.0.1
+	# Single command
+	
+You can use the following syntax to run commands on multiple nodes. 
+
+.. code-block:: bash
+
+	for i in $(seq 1 10); do
+		ssh pi@10.42.0.$i 'echo $HOSTNAME'
+	done
+	
+.. note:: To access the 10.42.0.0/24 ips you need a route into the cluster. Also this only works for the R3 modules since the Zero modules are connected to the WiFi.
+
 One time
 ^^^^^^^^
