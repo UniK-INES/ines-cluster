@@ -116,14 +116,48 @@ dmesg output
 bad geometry: block count 7748608 exceeds size of device
 
 
-TFTP Server
+Package dnsmasq
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-DHCP Server
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The package includes the dhcp and tftp server. When powered on the client nodes will look for the first dhcp in the local network and request an ip address and hostname.
+
+We can get information about the dhcp handshake with tcpdump.
+
+.. code-block:: bash
+
+	sudo tcpdump -i eth0 port bootpc
+	# Output will look like this
+	12:46:31.983064 IP 0.0.0.0.bootpc > 255.255.255.255.bootps: BOOTP/DHCP, Request from 10.42.0.2, length 322
+	12:46:33.987601 IP 10.42.0.250.bootps > node02.cluster.bootpc: BOOTP/DHCP, Reply, length 341
+
+The ip addresses are configured in /etc/dnsmasq.d/mac_table. They are set accoring to the nodes' geographical position. The Zero modules don't have an ethernet interface and connect to an external wifi so they are not listed in the file.
+
+.. code-block:: bash
+
+	dhcp-host=b8:27:eb:fc:6a:59,node35,10.42.0.35,infinite
+	
+After getting an ip address the client will request the boot partition.
+
+.. code-block:: bash
+
+	tail -f /var/log/daemon.log
+	# Output
+	Sep 15 12:46:34 sevastopol dnsmasq-tftp[603]: file /pxe/boot/bootsig.bin not found
+	Sep 15 12:46:34 sevastopol dnsmasq-tftp[603]: sent /pxe/boot/bootcode.bin to 10.42.0.2
+	Sep 15 12:46:34 sevastopol dnsmasq-tftp[603]: file /pxe/boot/27e247cc/start.elf not found
+	Sep 15 12:46:34 sevastopol dnsmasq-tftp[603]: file /pxe/boot/autoboot.txt not found
+	Sep 15 12:46:34 sevastopol dnsmasq-tftp[603]: sent /pxe/boot/config.txt to 10.42.0.2
+	Sep 15 12:46:34 sevastopol dnsmasq-tftp[603]: file /pxe/boot/recovery.elf not found
+	Sep 15 12:46:35 sevastopol dnsmasq-tftp[603]: sent /pxe/boot/start.elf to 10.42.0.2
+	Sep 15 12:46:35 sevastopol dnsmasq-tftp[603]: sent /pxe/boot/fixup.dat to 10.42.0.2
+	Sep 15 12:46:35 sevastopol dnsmasq-tftp[603]: file /pxe/boot/recovery.elf not found
+	Sep 15 12:46:35 sevastopol dnsmasq-tftp[603]: sent /pxe/boot/config.txt to 10.42.0.2
+
 
 NFS Server
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Provides the root partition /pxe/root and the individual content directory for the nodes. The directories are set in /etc/exports. Changes have to be reimported with exportfs -ra.
 
 
 Setting Up A Testsystem
