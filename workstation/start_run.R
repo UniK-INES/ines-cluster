@@ -13,3 +13,4 @@ node <- 2
 
 ssh_exec_wait(session, command = paste('/pxe/meta/sim_start_on_nodes init ', node, sep=""), std_out = function(x) { start_run(rawToChar(x))})
 
+ssh_disconnect()
