@@ -5,7 +5,7 @@ start_run <- function(pid) {
 	pid <- parse_number(pid)
 	print(pid)
 	Sys.sleep(5)
-	ssh_exec_wait(session, command = paste('/pxe/meta/sim_start_on_nodes start ', node, sep=""))
+	ssh_exec_wait(session, command = paste('BDEBUG=true /pxe/meta/sim_start_on_nodes start', node, pid, sep=" "))
 }
 
 session <- ssh_connect("outsider@141.51.123.55")
