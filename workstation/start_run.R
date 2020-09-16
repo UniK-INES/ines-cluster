@@ -4,6 +4,7 @@ require('readr')
 start_run <- function(pid) {
 	pid <- parse_number(pid)
 	print(pid)
+	Sys.sleep(5)
 	ssh_exec_wait(session, command = paste('/pxe/meta/sim_start_on_nodes start ', node, sep=""))
 }
 
