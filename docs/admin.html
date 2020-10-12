@@ -97,9 +97,18 @@
 <li class="toctree-l4"><a class="reference internal" href="#restore">Restore</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#tftp-server">TFTP Server</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dhcp-server">DHCP Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#package-dnsmasq">Package dnsmasq</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#nfs-server">NFS Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-user-outsider">The user outsider</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#setup">Setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#debug">Debug</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#client-modules">Client modules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#hostname">Hostname</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#individual-content-directory">Individual content directory</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#setting-up-a-testsystem">Setting Up A Testsystem</a><ul>
@@ -284,14 +293,125 @@ gunzip <span class="s1">&#39;2020-08-13 server module backup.img.gz&#39;</span>
 bad geometry: block count 7748608 exceeds size of device</p>
 </div>
 </div>
-<div class="section" id="tftp-server">
-<h3>TFTP Server<a class="headerlink" href="#tftp-server" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="package-dnsmasq">
+<h3>Package dnsmasq<a class="headerlink" href="#package-dnsmasq" title="Permalink to this headline">¶</a></h3>
+<p>The package includes the dhcp and tftp server. When powered on the client nodes will look for the first dhcp in the local network and request an ip address and hostname.</p>
+<p>We can get information about the dhcp handshake with tcpdump.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo tcpdump -i eth0 port bootpc
+<span class="c1"># Output will look like this</span>
+<span class="m">12</span>:46:31.983064 IP <span class="m">0</span>.0.0.0.bootpc &gt; <span class="m">255</span>.255.255.255.bootps: BOOTP/DHCP, Request from <span class="m">10</span>.42.0.2, length <span class="m">322</span>
+<span class="m">12</span>:46:33.987601 IP <span class="m">10</span>.42.0.250.bootps &gt; node02.cluster.bootpc: BOOTP/DHCP, Reply, length <span class="m">341</span>
+</pre></div>
 </div>
-<div class="section" id="dhcp-server">
-<h3>DHCP Server<a class="headerlink" href="#dhcp-server" title="Permalink to this headline">¶</a></h3>
+<p>The ip addresses are configured in /etc/dnsmasq.d/mac_table. They are set accoring to the nodes’ geographical position. The Zero modules don’t have an ethernet interface and connect to an external wifi so they are not listed in the file.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>dhcp-host<span class="o">=</span>b8:27:eb:fc:6a:59,node35,10.42.0.35,infinite
+</pre></div>
+</div>
+<p>After getting an ip address the client will request the boot partition.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tail -f /var/log/daemon.log
+<span class="c1"># Output</span>
+Sep <span class="m">15</span> <span class="m">12</span>:46:34 sevastopol dnsmasq-tftp<span class="o">[</span><span class="m">603</span><span class="o">]</span>: file /pxe/boot/bootsig.bin not found
+Sep <span class="m">15</span> <span class="m">12</span>:46:34 sevastopol dnsmasq-tftp<span class="o">[</span><span class="m">603</span><span class="o">]</span>: sent /pxe/boot/bootcode.bin to <span class="m">10</span>.42.0.2
+Sep <span class="m">15</span> <span class="m">12</span>:46:34 sevastopol dnsmasq-tftp<span class="o">[</span><span class="m">603</span><span class="o">]</span>: file /pxe/boot/27e247cc/start.elf not found
+Sep <span class="m">15</span> <span class="m">12</span>:46:34 sevastopol dnsmasq-tftp<span class="o">[</span><span class="m">603</span><span class="o">]</span>: file /pxe/boot/autoboot.txt not found
+Sep <span class="m">15</span> <span class="m">12</span>:46:34 sevastopol dnsmasq-tftp<span class="o">[</span><span class="m">603</span><span class="o">]</span>: sent /pxe/boot/config.txt to <span class="m">10</span>.42.0.2
+Sep <span class="m">15</span> <span class="m">12</span>:46:34 sevastopol dnsmasq-tftp<span class="o">[</span><span class="m">603</span><span class="o">]</span>: file /pxe/boot/recovery.elf not found
+Sep <span class="m">15</span> <span class="m">12</span>:46:35 sevastopol dnsmasq-tftp<span class="o">[</span><span class="m">603</span><span class="o">]</span>: sent /pxe/boot/start.elf to <span class="m">10</span>.42.0.2
+Sep <span class="m">15</span> <span class="m">12</span>:46:35 sevastopol dnsmasq-tftp<span class="o">[</span><span class="m">603</span><span class="o">]</span>: sent /pxe/boot/fixup.dat to <span class="m">10</span>.42.0.2
+Sep <span class="m">15</span> <span class="m">12</span>:46:35 sevastopol dnsmasq-tftp<span class="o">[</span><span class="m">603</span><span class="o">]</span>: file /pxe/boot/recovery.elf not found
+Sep <span class="m">15</span> <span class="m">12</span>:46:35 sevastopol dnsmasq-tftp<span class="o">[</span><span class="m">603</span><span class="o">]</span>: sent /pxe/boot/config.txt to <span class="m">10</span>.42.0.2
+</pre></div>
+</div>
 </div>
 <div class="section" id="nfs-server">
 <h3>NFS Server<a class="headerlink" href="#nfs-server" title="Permalink to this headline">¶</a></h3>
+<p>Provides the root partition /pxe/root and the individual content directory for the nodes. The directories are set in /etc/exports. Changes have to be reimported with exportfs -ra.</p>
+</div>
+<div class="section" id="the-user-outsider">
+<h3>The user outsider<a class="headerlink" href="#the-user-outsider" title="Permalink to this headline">¶</a></h3>
+<p>The user account “outsider” on the server module and the client modules is used to setup and run new simulations.</p>
+<div class="section" id="setup">
+<h4>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo /bin/bash
+useradd -m -g pi outsider
+<span class="c1"># Disabling status messages when connecting via ssh</span>
+<span class="nb">echo</span> -e <span class="s2">&quot;outsider\noutsider&quot;</span> <span class="p">|</span> passwd outsider
+touch /home/outsider/.hushlogin <span class="o">&amp;&amp;</span> chown outsider:pi /home/outsider/.hushlogin
+</pre></div>
+</div>
+</div>
+<div class="section" id="debug">
+<h4>Debug<a class="headerlink" href="#debug" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat /etc/passwd <span class="p">|</span> grep outsider
+<span class="c1"># outsider:x:1221:1221::/home/outsider:/bin/bash</span>
+cat /etc/group <span class="p">|</span> grep outsider
+<span class="c1"># adm:x:4:pi,outsider</span>
+<span class="c1"># dialout:x:20:pi,outsider</span>
+<span class="c1"># sudo:x:27:pi,outsider</span>
+<span class="c1"># plugdev:x:46:pi,outsider</span>
+<span class="c1"># users:x:100:pi,outsider</span>
+<span class="c1"># input:x:101:pi,outsider</span>
+<span class="c1"># netdev:x:108:pi,outsider</span>
+<span class="c1"># pi:x:1000:outsider</span>
+<span class="c1"># outsider:x:1221:</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="client-modules">
+<h3>Client modules<a class="headerlink" href="#client-modules" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="hostname">
+<h4>Hostname<a class="headerlink" href="#hostname" title="Permalink to this headline">¶</a></h4>
+<p>When a client module is booted the eth0 hardware address is used to determine their geographical position. The lookup table is located in <code class="docutils literal notranslate"><span class="pre">/opt/mac_nodes</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">read</span> MAC &lt;/sys/class/net/eth0/address
+cat /opt/mac_nodes <span class="p">|</span> grep <span class="nv">$MAC</span>
+<span class="c1"># Output</span>
+<span class="m">2</span>       b8:27:eb:e2:47:cc
+</pre></div>
+</div>
+<p>The geographical position is then used to generate a hostname for the specific client module. The hostnames are formatted with leading 0s when the geographical position is smaller than 10.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>node01
+node02
+..
+node10
+node11
+..
+</pre></div>
+</div>
+<p>When the hostname is known the client module tries to mount their individual content directory. This happens during booting in <code class="docutils literal notranslate"><span class="pre">/opt/mount_content.sh</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.. sudo mount -t nfs -o soft <span class="m">10</span>.42.0.250:<span class="s2">&quot;</span><span class="nv">$CONTENT_DIR</span><span class="s2">&quot;</span> <span class="s2">&quot;</span><span class="nv">$MOUNT_DIR</span><span class="s2">&quot;</span><span class="p">;</span> <span class="k">then</span> ..
+</pre></div>
+</div>
+<p>Since root permissions are needed to mount there is an exception for <code class="docutils literal notranslate"><span class="pre">/opt/mount_content.sh</span></code> in <code class="docutils literal notranslate"><span class="pre">/etc/sudoers</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat /etc/sudoers
+<span class="c1"># Output</span>
+..
+%pi     <span class="nv">ALL</span><span class="o">=</span>NOPASSWD: /opt/mount_content.sh
+..
+</pre></div>
+</div>
+</div>
+<div class="section" id="individual-content-directory">
+<h4>Individual content directory<a class="headerlink" href="#individual-content-directory" title="Permalink to this headline">¶</a></h4>
+<p>The simulations for the clients to run are stored in their individual content directory. On the server module they are located in <code class="docutils literal notranslate"><span class="pre">/pxe/nodes</span></code> and are mounted on the clients in /opt/individual_content. Inside the directory a symlink <code class="docutils literal notranslate"><span class="pre">lastrun</span></code> points to the output file of the last run simulation.</p>
+<p>The output file contains all informations about the lastrun and is available during run time. The file descriptors (FDPARENT and FDCHILD) can be used to read standard output/error from the <code class="docutils literal notranslate"><span class="pre">/opt/starter</span></code> script and the command/simulation the client is running currently.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat /opt/individual_content/lastrun
+<span class="c1"># Output</span>
+PARENTPID:                              <span class="m">26301</span>
+FDPARENT:                               <span class="m">10</span>
+FDCHILD:                                <span class="m">11</span>
+COMMAND<span class="o">(</span>default<span class="o">)</span>:                       java -classpath /home/pi/ EndlessTest
+CHILDPID:                               <span class="m">26344</span>
+CHILDRET:                               <span class="m">123</span>
+Run finished 17h15m56s <span class="m">19</span>.08.2020
+</pre></div>
+</div>
+<p>For an overview of all commands/simulations run by the client node you can list the <code class="docutils literal notranslate"><span class="pre">/opt/individual_content/starter</span></code> directory.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ls /opt/individual_content/starter
+<span class="c1"># Output is formatted by date _ time</span>
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 <div class="section" id="setting-up-a-testsystem">

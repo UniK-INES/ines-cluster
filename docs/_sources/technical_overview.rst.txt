@@ -69,7 +69,7 @@ Network Interfaces
 +---------------------+--------------+------------------------------+-----------+
 
 
-Client Modules
+Nodes
 ----------------------------
 
 Hostnames and Hardware Address
