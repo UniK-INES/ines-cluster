@@ -1,0 +1,6 @@
+!#/bin/bash
+
+echo "Starting simulation"
+sleep(10)
+touch testfile
+echo "Simulation finished"
