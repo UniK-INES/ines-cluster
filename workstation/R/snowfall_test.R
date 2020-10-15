@@ -6,7 +6,7 @@ require(mvna)
 data(sir.adm)
 
 wrapper <- function(idx) {
-logfilecat( "Current index: ", idx, "\n" )
+cat( "Current index: ", idx, "\n" )
 index <- sample(1:nrow(sir.adm), replace=TRUE)
 temp <- sir.adm[index, ]
 fit <- crr(temp$time, temp$status, temp$pneu)
