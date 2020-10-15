@@ -64,7 +64,7 @@ upload_sim <- function(files) {
 	# Create simulation directory on server node
 	out <- ssh_exec_wait(session, command = paste('mkdir', paste(pxe, sim_name, sep="/"), sep=" "))
 	
-	# Loop through node range and distribute
+	# Upload the simulation to the server node
 	for (f in files) {
 		out <- scp_upload(session, paste(sim_path, f, sep="/"), paste(pxe, sim_name, sep="/")) 
 	}
