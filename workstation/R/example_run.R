@@ -10,7 +10,7 @@ sim_cmd <- "cmd"
 
 # Range of nodes that should run the simulation
 node_beg <- 8
-node_end <- 10
+node_end <- 9
 
 ############### Internals ###############
 
@@ -55,7 +55,7 @@ start <- function() {
 # Starts the simulation
 start_sim <- function(node, pid) {
 	print(paste("Starting on ", node))
-	ssh_exec_internal(session, command = paste(sim_ctrl, 'start', node, pid, sep=" "))
+	ssh_exec_wait(session, command = paste(sim_ctrl, 'start', node, pid, sep=" "))
 }
 
 # Uploads simulation files to nodes
