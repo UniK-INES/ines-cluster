@@ -4,11 +4,6 @@ sfInit(parallel=TRUE, cpus=4, type="SOCK")
 sfLibrary(ssh)
 sfLibrary(readr)
 
-# Start on Node, End on Node
-lo=8
-hi=9
-span <- if (lo > hi) 1 else hi - lo + 1
-
 # Full path to your simulation directory
 sim_path <- "/home/chh/ines-cluster/workstation/R/testsim"
 # Name of the simulation
@@ -17,8 +12,9 @@ sim_name <- basename(sim_path)
 sim_cmd <- "cmd"
 
 # Range of nodes that should run the simulation
-node_beg <- 8
-node_end <- 9
+lo=8
+hi=9
+span <- if (lo > hi) 1 else hi - lo + 1
 
 ############### Internals ###############
 
@@ -39,7 +35,7 @@ sim_ctrl <- "/pxe/meta/sim_start_on_nodes"
 sim_dist <- "/pxe/meta/sim_to_nodes"
 
 # Current node we are working on used in global context
-current_node <- node_beg
+current_node <- lo
 
 # Local simulation files
 sim_files <- dir(sim_path)
@@ -59,7 +55,7 @@ retrieve_pid <- function(cbstream) {
 start <- function() {
   upload_sim(sim_files)
   
-  for (node in node_beg:node_end) {
+  for (node in lo:hi) {
     current_node <<- node
     # assign("current_node", node, envir = .GlobalEnv)
     ssh_exec_wait(session, command = paste(sim_ctrl, 'init', node, sep=" "), std_out = function(x) { retrieve_pid(x)})
@@ -84,7 +80,7 @@ upload_sim <- function(files) {
   }
   
   # Distribute to nodes
-  for (node in node_beg:node_end) {
+  for (node in lo:hi) {
     out <- ssh_exec_wait(session, command = paste(sim_dist, sim_name, node, sep=" "))
   }	
 }
@@ -122,7 +118,7 @@ get_node <- function(geo_pos) {
 # Takes geographical position (1-60) of a node and initializes the simulation
 init_node <- function(geo_pos) {
 
-  session <- ssh_con()
+  # session <- ssh_con()
   
   # The node we work with
   node <- get_node(geo_pos)
@@ -154,7 +150,7 @@ update_pid_list <- function(result) {
 
 upload_sim(sim_files)
 
-sfExport("pid_list", "get_node", "ssh_con", "start_sim", "retrieve_pid", "sim_ctrl")
+sfExport("pid_list", "get_node", "session", "start_sim", "retrieve_pid", "sim_ctrl")
 
 
 update_pid_list(sfLapply(sapply(pid_list,'[[',1), init_node))
