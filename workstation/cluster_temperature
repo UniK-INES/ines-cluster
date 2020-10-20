@@ -19,7 +19,7 @@ if [[ $module != "all" ]]; then
 fi
 
 # Path to global functions
-GFUNC="../global_functions"
+GFUNC="../server/global_functions"
 
 # Global functions are needed in this script
 source "$GFUNC"

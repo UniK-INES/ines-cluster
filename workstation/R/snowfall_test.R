@@ -1,6 +1,7 @@
 require('snowfall')
 
-sfInit(parallel=TRUE, cpus=4, type="SOCK")
+sfInit(parallel=TRUE, cpus=4, type="SOCK", slaveOutfile="./slave_out.txt")
+#sfInit(parallel=FALSE)
 sfLibrary(ssh)
 sfLibrary(readr)
 
@@ -25,6 +26,7 @@ ssh_con <- function() {
   return(session) 
 }
 session <- ssh_con()
+
 # Simulation directory on server node
 pxe <- "/pxe/meta/simulation/"
 
@@ -34,38 +36,37 @@ sim_ctrl <- "/pxe/meta/sim_start_on_nodes"
 # Distribution script on server node
 sim_dist <- "/pxe/meta/sim_to_nodes"
 
-# Current node we are working on used in global context
-current_node <- lo
-
 # Local simulation files
 sim_files <- dir(sim_path)
 
-pid_list <- prepare_pid_list(lo, hi, span)
-
 # Retrieves the PID of the simulation process started on nodes
-retrieve_pid <- function(cbstream) {
+retrieve_pid <- function(cbstream, node) {
   rpid <- rawToChar(cbstream)
   pid <- parse_number(rpid)
   Sys.sleep(2)
-  print(current_node)
-  start_sim(current_node, pid)
+  pid_list[[get_node(node)]][3] <<- pid
+  print(paste("Retrieved PID for node ", node, ": ", pid, sep=""))
+  start_sim(node, pid)
   # return(pid)
 }
 
 start <- function() {
   upload_sim(sim_files)
   
-  for (node in lo:hi) {
-    current_node <<- node
+  for (geo_pos in lo:hi) {
     # assign("current_node", node, envir = .GlobalEnv)
-    ssh_exec_wait(session, command = paste(sim_ctrl, 'init', node, sep=" "), std_out = function(x) { retrieve_pid(x)})
+	session <- ssh_connect("outsider@141.51.123.55") 
+    ssh_exec_wait(session, command = paste(sim_ctrl, 'init', geo_pos, sep=" "), std_out = function(x) { retrieve_pid(x, geo_pos)})
+	ssh_disconnect(session)
   }
 }
 
 # Starts the simulation
 start_sim <- function(node, pid) {
-  print(paste("Starting on ", node))
+  print(paste("Starting on ", node, " (PID: ", pid,")", sep=""))
+  session <- ssh_connect("outsider@141.51.123.55") 
   ssh_exec_wait(session, command = paste(sim_ctrl, 'start', node, pid, sep=" "))
+  ssh_disconnect(session)
 }
 
 # Uploads simulation files to nodes
@@ -117,7 +118,7 @@ get_node <- function(geo_pos) {
 
 # Takes geographical position (1-60) of a node and initializes the simulation
 init_node <- function(geo_pos) {
-
+  print(paste("Starting init_node on Geo-Pos", geo_pos))
   # session <- ssh_con()
   
   # The node we work with
@@ -125,35 +126,23 @@ init_node <- function(geo_pos) {
   
   # Node with geographical position was not found in pid_list
   if (node != -1) {
-    assign("current_node", pid_list[[node]], envir = .GlobalEnv)
-    ssh_exec_wait(session, command = paste(sim_ctrl, 'init', node, sep=" "), std_out = function(x) { retrieve_pid(x)})
-    pid <- 123
-    # pid_list[[node]][[3]] <<- pid
-    # assign(pid_list[[node]][[3]], pid, envir = .GlobalEnv)
-  } 
-  
-  return(c(node, pid))
-
+    #assign("current_node", pid_list[[node]][1], envir = .GlobalEnv)
+	session <- ssh_connect("outsider@141.51.123.55") 
+    ssh_exec_wait(session, command = paste(sim_ctrl, 'init', geo_pos, sep=" "), std_out = function(x) { retrieve_pid(x, geo_pos)})
+	ssh_disconnect(session)
+  }   
+  return(pid_list[[node]])
 }
 
-# Takes a list of 2-dim vectors (listindex, pid) and updates pid_list
-update_pid_list <- function(result) {
-  print("Updating pid_list")
 
-  for (node_result in result) {
-    i <- node_result[1]
-    pid_list[[i]][3] <<- node_result[2]
-    print(paste("list index: ", i, " pid: ", node_result[2], sep=""))
-  }
-
-}
+pid_list <- prepare_pid_list(lo, hi, span)
 
 upload_sim(sim_files)
 
-sfExport("pid_list", "get_node", "session", "start_sim", "retrieve_pid", "sim_ctrl")
+sfExport("pid_list", "get_node", "start_sim", "retrieve_pid", "sim_ctrl")
 
-
-update_pid_list(sfLapply(sapply(pid_list,'[[',1), init_node))
+#update_pid_list(sfLapply(as.list(sapply(pid_list,'[[',1)), init_node))
+pid_list <- sfLapply(as.list(sapply(pid_list,'[[',1)), init_node)
 
 # print(result)
 
