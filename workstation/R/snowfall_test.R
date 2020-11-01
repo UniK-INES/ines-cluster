@@ -173,7 +173,7 @@ pid_list <- prepare_pid_list(lo, hi, span)
 sim_upload(sim_files)
 
 # Export to parallel processes
-sfExport("pid_list", "get_node", "sim_start", "retrieve_pid", "sim_ctrl")
+sfExport("pid_list", "get_ssh_session", "get_node", "sim_start", "retrieve_pid", "sim_ctrl")
 
 # Init simulation on every node in pid_list
 pid_list <- sfLapply(as.list(sapply(pid_list,'[[',1)), init_node)
