@@ -88,7 +88,37 @@ function range_check {
 
 }
 
-
+function ssh_work {
+	
+	local ip=$1
+	local hostname=$2
+	
+    output=$(ssh -q pi@"$1" "ps -ax -o pid,cmd | grep /bin/bash | grep /opt/starter | awk {'print \$1,\$2'}") # The pid in the last line will be of this command so we ignore it
+	
+	pid_list=($output)
+	
+	for i in ${pid_list[@]}; do
+		echo -e "$i"
+	done
+	
+	# Could be necessary to set ifs to whitespace
+	# OLDIFS="$IFS"
+	# IFS=" "
+	# IFS="$OLDIFS"
+	
+	counter=-1 # The grep command produces one pid for this node
+	for pid in $output; do
+		if [[ $resume == true ]]; then
+			echo "Sending SIGCONT to $pid"
+			printf -v __ %q "$pid"
+			ssh -q pi@"$ip" "kill -18 $__ &"
+		fi
+		(( counter++ ))
+	done
+	
+	echo "$counter active start scripts on $hostname"
+	
+}
 
 gen_ip_list $low_node $high_node
 
@@ -96,3 +126,5 @@ range_check $1 $2
 
 for K in "${!nodes[@]}"; do echo "$K ${nodes[$K]}"; done | sort -n
 # for K in "${!ip_list[@]}"; do echo "$K ${ip_list[$K]}"; done | sort -n
+
+ssh_work 10.42.0.9 "node09"
