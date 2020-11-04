@@ -13,10 +13,6 @@ if [[ ! -z $3 && "$3" == "resume" ]]; then
 	resume=true
 fi
 
-if [[ "$resume" == true ]]; then
-	echo "resume"
-fi
-
 # A assoc. array with hostnames as keys and ips as value
 declare -A nodes
 
@@ -83,8 +79,6 @@ function range_check {
 		local ip=${ip_list[$hostname]}
 		nodes[$hostname]=$ip
 	done
-	
-	
 
 }
 
@@ -93,12 +87,19 @@ function ssh_work {
 	local ip=$1
 	local hostname=$2
 	
-    output=$(ssh -q pi@"$1" "ps -ax -o pid,cmd | grep /bin/bash | grep /opt/starter | awk {'print \$1,\$2'}") # The pid in the last line will be of this command so we ignore it
+	# This will put every /opt/starter pid into an array
+    pid_list=($(ssh -q -o StrictHostKeyChecking=no pi@"$1" "ps -ax -o pid,cmd | grep -v grep | grep /opt/starter | awk {'print \$1'}")) # The pid in the last line will be of this command so we ignore it
 	
-	pid_list=($output)
+	echo -e "$hostname: ${#pid_list[@]} active"
+		
+	# pid_list=($output)
 	
-	for i in ${pid_list[@]}; do
-		echo -e "$i"
+	for pid in ${pid_list[@]}; do
+		if [[ $resume == true ]]; then
+			[[ $BDEBUG ]] && echo "Sending SIGCONT to $pid on $hostname"
+			printf -v __ %q "$pid"
+			ssh -q -o StrictHostKeyChecking=no pi@"$ip" "kill -18 $__ &"
+		fi
 	done
 	
 	# Could be necessary to set ifs to whitespace
@@ -106,25 +107,17 @@ function ssh_work {
 	# IFS=" "
 	# IFS="$OLDIFS"
 	
-	counter=-1 # The grep command produces one pid for this node
-	for pid in $output; do
-		if [[ $resume == true ]]; then
-			echo "Sending SIGCONT to $pid"
-			printf -v __ %q "$pid"
-			ssh -q pi@"$ip" "kill -18 $__ &"
-		fi
-		(( counter++ ))
-	done
-	
-	echo "$counter active start scripts on $hostname"
-	
 }
 
 gen_ip_list $low_node $high_node
 
 range_check $1 $2
 
-for K in "${!nodes[@]}"; do echo "$K ${nodes[$K]}"; done | sort -n
+# for K in "${!nodes[@]}"; do echo "$K ${nodes[$K]}"; done | sort -n
 # for K in "${!ip_list[@]}"; do echo "$K ${ip_list[$K]}"; done | sort -n
 
-ssh_work 10.42.0.9 "node09"
+for node in "${!nodes[@]}"; do
+	ssh_work $node ${nodes[$node]}
+done | sort -n
+
+# ssh_work 10.42.0.9 "node09"
