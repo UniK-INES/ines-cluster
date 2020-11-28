@@ -121,6 +121,9 @@ Package dnsmasq
 
 The package includes the dhcp and tftp server. When powered on the client nodes will look for the first dhcp in the local network and request an ip address and hostname.
 
+Debugging packets
+=====================
+
 We can get information about the dhcp handshake with tcpdump.
 
 .. code-block:: bash
@@ -129,6 +132,17 @@ We can get information about the dhcp handshake with tcpdump.
 	# Output will look like this
 	12:46:31.983064 IP 0.0.0.0.bootpc > 255.255.255.255.bootps: BOOTP/DHCP, Request from 10.42.0.2, length 322
 	12:46:33.987601 IP 10.42.0.250.bootps > node02.cluster.bootpc: BOOTP/DHCP, Reply, length 341
+	# More detailed in combination with the command below
+	sudo tcpdump -vvveni eth0 portrange 67-68
+	
+Additionally you can use your own computer to send a dhcp broadcast into the cluster net.
+
+.. code-block:: bash
+
+	sudo nmap --script broadcast-dhcp-discover 255.255.255.255 -p67
+
+DHCP Configuration
+=====================
 
 The ip addresses are configured in /etc/dnsmasq.d/mac_table. They are set accoring to the nodes' geographical position. The Zero modules don't have an ethernet interface and connect to an external wifi so they are not listed in the file.
 
@@ -159,7 +173,7 @@ NFS Server
 
 Provides the root partition /pxe/root and the individual content directory for the nodes. The directories are set in /etc/exports. Changes have to be reimported with exportfs -ra.
 
-The user outsider
+User outsider
 ^^^^^^^^^^^^^^^^^^^^^^
 
 The user account "outsider" on the server module and the client modules is used to setup and run new simulations.
