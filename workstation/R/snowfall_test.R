@@ -114,7 +114,7 @@ start <- function() {
   for (geo_pos in lo:hi) {
     # assign("current_node", node, envir = .GlobalEnv)
     session <- get_ssh_session()
-    ssh_exec_wait(session, command = paste(sim_ctrl, 'init', geo_pos, sep=" "), std_out = function(x) { retrieve_pid(x, geo_pos)})
+    ssh_exec_wait(session, command = paste(sim_ctrl, 'init', geo_pos, sep=" "), std_out = function(x) { retrieve_pid(x, geo_pos) })
     ssh_disconnect(session)
   }
 }
