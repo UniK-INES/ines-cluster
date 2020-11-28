@@ -111,6 +111,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#homematic">Homematic</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#setting-up-a-testsystem">Setting Up A Testsystem</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#preparing-the-sd-cards-and-installing-raspbian">Preparing the SD cards and installing Raspbian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#generate-and-set-locale">Generate and set locale</a></li>
@@ -412,6 +413,37 @@ Run finished 17h15m56s <span class="m">19</span>.08.2020
 </pre></div>
 </div>
 </div>
+</div>
+</div>
+<div class="section" id="homematic">
+<h2>Homematic<a class="headerlink" href="#homematic" title="Permalink to this headline">¶</a></h2>
+<p>The cluster is powered by an electrical socket that is controlled by the debmatic software running on this R4 module (<a class="reference external" href="http://141.51.123.42">http://141.51.123.42</a>).</p>
+<p>Additionally the Homematic module provides date and time information for the nodes. For that a ntp server is used.</p>
+<p>1. Installation</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">ntp</span>
+</pre></div>
+</div>
+<p>2. Disable systemd’s timesyncd service</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">systemctl</span> <span class="n">stop</span> <span class="n">systemd</span><span class="o">-</span><span class="n">timesyncd</span>
+<span class="n">systemctl</span> <span class="n">disable</span> <span class="n">systemd</span><span class="o">-</span><span class="n">timesyncd</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Configuration is found in <code class="docutils literal notranslate"><span class="pre">`/etc/ntp.conf`</span></code></p></li>
+</ol>
+<p>On nodes:</p>
+<p>1. Add ntp server</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nano</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">systemd</span><span class="o">/</span><span class="n">timesyncd</span><span class="o">.</span><span class="n">conf</span>
+<span class="c1"># NTP=141.51.123.42</span>
+</pre></div>
+</div>
+<p>2. Restart timesyncd service</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">systemctl</span> <span class="n">restart</span> <span class="n">systemd</span><span class="o">-</span><span class="n">timesyncd</span><span class="o">.</span><span class="n">service</span>
+</pre></div>
+</div>
+<p>3. Time and date should be correct now</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">timedatectl</span>
+</pre></div>
 </div>
 </div>
 <div class="section" id="setting-up-a-testsystem">
