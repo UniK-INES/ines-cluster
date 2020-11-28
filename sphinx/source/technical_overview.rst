@@ -50,6 +50,7 @@ Important Services
 ^^^^^^^^^^^^^^^^^^^^
 
 * Debmatic / lighttpd running on `<http://141.51.123.42>`_
+* `NTP Server <https://en.wikipedia.org/wiki/Network_Time_Protocol>`_ providing time and date for the nodes
 
 
 Router

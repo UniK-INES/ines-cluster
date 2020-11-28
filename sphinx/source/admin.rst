@@ -260,7 +260,47 @@ For an overview of all commands/simulations run by the client node you can list 
 
 	ls /opt/individual_content/starter
 	# Output is formatted by date _ time
-	
+
+Homematic
+------------------------------
+
+The cluster is powered by an electrical socket that is controlled by the debmatic software running on this R4 module (`<http://141.51.123.42>`_).
+
+.. note: Always make sure the server module is not running anymore when you power off the socket.
+
+Additionally the Homematic module provides date and time information for the nodes. For that a ntp server is used.
+
+1. Installation
+::
+
+	sudo apt-get install ntp
+
+2. Disable systemd's timesyncd service
+::
+
+	systemctl stop systemd-timesyncd
+	systemctl disable systemd-timesyncd
+
+3. Configuration is found in ```/etc/ntp.conf```  
+
+On nodes:
+
+1. Add ntp server
+::
+
+	nano /etc/systemd/timesyncd.conf
+	# NTP=141.51.123.42
+
+2. Restart timesyncd service
+::
+
+	sudo systemctl restart systemd-timesyncd.service
+
+3. Time and date should be correct now
+::
+
+	timedatectl
+
 
 Setting Up A Testsystem
 ------------------------------
