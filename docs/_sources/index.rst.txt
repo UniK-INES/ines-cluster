@@ -10,3 +10,4 @@
    technical_overview
    userguide
    admin
+   docker
