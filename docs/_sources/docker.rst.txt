@@ -117,7 +117,7 @@ Alternatively the boot directories can also be provided based on the mac address
 	ls /boot
 	# Should list the contents of /pxe/boot/10.42.0.2 on sevastopol
 
-* Update/Upgrade the root partition for x
+* Update/Upgrade the root partition for x (dirty)
 
 1. Backup the root partition
 
@@ -129,13 +129,43 @@ Alternatively the boot directories can also be provided based on the mac address
 	rsync -avr /pxe/root_node02/ /pxe/root_node02_backup/
 	# This will take some time
 
-2. Connect to node02 and update/upgrade
+2. Flush all iptables rules
+
+.. code-block:: bash
+
+	iptables -F
+	iptables -X
+	iptables -t nat -F
+	iptables -t nat -X
+	iptables -t mangle -F
+	iptables -t mangle -X
+	iptables -P INPUT ACCEPT
+	iptables -P FORWARD ACCEPT
+	iptables -P OUTPUT ACCEPT
+
+3. Add all accepting rules
+
+.. code-block:: bash
+
+	# Allow established connections
+	iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+	iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+	
+	# Masquerade
+	iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE
+
+4. Connect to node02 and update/upgrade
 
 .. code-block:: bash
 
 	ssh pi@10.42.0.2
 	sudo /bin/bash
 	apt-get update
+	apt-get full-upgrade --dry-run > ~/full_upgrade_list
+	apt-get full-upgrade 2>&1 | tee ~/full_upgrade
+
+
+
 
 
 Docker on sd cards

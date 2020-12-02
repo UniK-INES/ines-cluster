@@ -279,7 +279,7 @@ sudo mount -a
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Update/Upgrade the root partition for x</p></li>
+<li><p>Update/Upgrade the root partition for x (dirty)</p></li>
 </ul>
 <ol class="arabic simple">
 <li><p>Backup the root partition</p></li>
@@ -292,11 +292,38 @@ rsync -avr /pxe/root_node02/ /pxe/root_node02_backup/
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
+<li><p>Flush all iptables rules</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>iptables -F
+iptables -X
+iptables -t nat -F
+iptables -t nat -X
+iptables -t mangle -F
+iptables -t mangle -X
+iptables -P INPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Add all accepting rules</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Allow established connections</span>
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+<span class="c1"># Masquerade</span>
+iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
 <li><p>Connect to node02 and update/upgrade</p></li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh pi@10.42.0.2
 sudo /bin/bash
 apt-get update
+apt-get full-upgrade --dry-run &gt; ~/full_upgrade_list
+apt-get full-upgrade <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">|</span> tee ~/full_upgrade
 </pre></div>
 </div>
 <div class="section" id="docker-on-sd-cards">
