@@ -8,10 +8,135 @@ We identified three different options so far that could work on the cluster. Thi
 General todo list:
 
 * Take one node x as test node
+
+1. Make sure no node is running
+
+.. code-block:: bash
+
+	nmap -sP 10.42.0.0/24
+	# ..
+	/home/client/python powerall.py off 1 60
+
 * Give x its own boot partition on sevastopol (tftp configuration)
-* Duplicate pxe root partition and use the duplicate exclusively on x
+
+1. Backup dnsmasq.conf
+
+.. code-block:: bash
+
+	sudo cp /etc/dnsmasq.conf /etc/dnsmasq.conf.20201202
+
+2. Activate individual tftp-root directories based on ip address
+
+.. code-block:: bash
+
+	sudo nano -w /etc/dnsmasq.conf
+	# Add
+	tftp-unique-root=ip
+
+
+3. Prepare directory and clone boot partition
+
+.. code-block:: bash
+
+	sudo mkdir /pxe/boot/10.42.0.2
+	sudo rsync -arv --exclude=10.42.0.2 /pxe/boot/ /pxe/boot/10.42.0.2/
+
+4. Prepare directory and clone root partition
+
+.. code-block:: bash
+
+	sudo mkdir /pxe/root_node02
+	sudo rsync -arv /pxe/root/ /pxe/root_node02/
+	# This will take some time
+
+
+4. Edit cmdline.txt so node02 will boot a different root partition
+
+.. code-block:: bash
+
+	sudo nano -w /pxe/boot/10.42.0.2/cmdline.txt
+	# Change 10.42.0.250:/pxe/root to 10.42.0.250:/pxe/root_node02
+
+5. Boot node02 and touch a file
+
+.. code-block:: bash
+
+	python /home/pi/client/powerall.py on 2 2
+	ssh pi@10.42.0.2
+	touch test_file_node02
+	exit
+	ls /pxe/root_node02 | grep test_file_node02
+	# If the file exists booting from the new root partition was successful
+
+.. note:: There were some problems when this method was tested for the first time. The node was only be able to boot after several attempts. Maybe todo in the future if problems remain.
+	
+Alternatively the boot directories can also be provided based on the mac address. For that modify steps 2. and 3.
+
+1. Get mac address for node02
+
+.. code-block:: bash
+
+	cat /pxe/meta/mac_nodes | grep -oP '^2[^0-9].*$'
+
+
+2. In /etc/dnsmasq.conf add an individual directory for the boot partition for node02 (`<https://stackoverflow.com/questions/40008276/dnsmasq-different-tftp-root-for-each-macaddress>_`)
+
+.. code-block:: bash
+
+	# /etc/dnsmasq.conf
+	tftp-unique-root=mac
+
+2. Get mac address for node02
+
+.. code-block:: bash
+
+	cat /pxe/meta/mac_nodes | grep -oP '^2[^0-9].*$'
+
+3. Create the directory with lowercase letters and zero padded digits.
+
 * Include the boot partition in /etc/fstab
+
+1. Connect to node02
+
+.. code-block:: bash
+
+	ssh pi@10.42.0.2
+
+2. Change the /etc/fstab on node02
+
+.. code-block:: bash
+
+	sudo nano -w /etc/fstab
+	# Add 10.42.0.250:/pxe/boot/10.42.0.2 /boot nfs defaults,vers=3 0 0
+	sudo mount -a
+
+3. Verify
+
+.. code-block:: bash
+
+	ls /boot
+	# Should list the contents of /pxe/boot/10.42.0.2 on sevastopol
+
 * Update/Upgrade the root partition for x
+
+1. Backup the root partition
+
+.. code-block:: bash
+
+	# On Sevastopol
+	sudo /bin/bash
+	mkdir /pxe/root_node02_backup
+	rsync -avr /pxe/root_node02/ /pxe/root_node02_backup/
+	# This will take some time
+
+2. Connect to node02 and update/upgrade
+
+.. code-block:: bash
+
+	ssh pi@10.42.0.2
+	sudo /bin/bash
+	apt-get update
+
 
 Docker on sd cards
 ------------------
