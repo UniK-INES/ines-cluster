@@ -109,14 +109,14 @@
 <li class="toctree-l4"><a class="reference internal" href="#debug">Debug</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#client-modules">Client modules</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#hostname">Hostname</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#individual-content-directory">Individual content directory</a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#homematic">Homematic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#client-modules">Client modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hostname">Hostname</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#individual-content-directory">Individual content directory</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#setting-up-a-testsystem">Setting Up A Testsystem</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#preparing-the-sd-cards-and-installing-raspbian">Preparing the SD cards and installing Raspbian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#generate-and-set-locale">Generate and set locale</a></li>
@@ -377,61 +377,6 @@ cat /etc/group <span class="p">|</span> grep outsider
 </div>
 </div>
 </div>
-<div class="section" id="client-modules">
-<h3>Client modules<a class="headerlink" href="#client-modules" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="hostname">
-<h4>Hostname<a class="headerlink" href="#hostname" title="Permalink to this headline">¶</a></h4>
-<p>When a client module is booted the eth0 hardware address is used to determine their geographical position. The lookup table is located in <code class="docutils literal notranslate"><span class="pre">/opt/mac_nodes</span></code>.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">read</span> MAC &lt;/sys/class/net/eth0/address
-cat /opt/mac_nodes <span class="p">|</span> grep <span class="nv">$MAC</span>
-<span class="c1"># Output</span>
-<span class="m">2</span>       b8:27:eb:e2:47:cc
-</pre></div>
-</div>
-<p>The geographical position is then used to generate a hostname for the specific client module. The hostnames are formatted with leading 0s when the geographical position is smaller than 10.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>node01
-node02
-..
-node10
-node11
-..
-</pre></div>
-</div>
-<p>When the hostname is known the client module tries to mount their individual content directory. This happens during booting in <code class="docutils literal notranslate"><span class="pre">/opt/mount_content.sh</span></code>.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.. sudo mount -t nfs -o soft <span class="m">10</span>.42.0.250:<span class="s2">&quot;</span><span class="nv">$CONTENT_DIR</span><span class="s2">&quot;</span> <span class="s2">&quot;</span><span class="nv">$MOUNT_DIR</span><span class="s2">&quot;</span><span class="p">;</span> <span class="k">then</span> ..
-</pre></div>
-</div>
-<p>Since root permissions are needed to mount there is an exception for <code class="docutils literal notranslate"><span class="pre">/opt/mount_content.sh</span></code> in <code class="docutils literal notranslate"><span class="pre">/etc/sudoers</span></code>.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat /etc/sudoers
-<span class="c1"># Output</span>
-..
-%pi     <span class="nv">ALL</span><span class="o">=</span>NOPASSWD: /opt/mount_content.sh
-..
-</pre></div>
-</div>
-</div>
-<div class="section" id="individual-content-directory">
-<h4>Individual content directory<a class="headerlink" href="#individual-content-directory" title="Permalink to this headline">¶</a></h4>
-<p>The simulations for the clients to run are stored in their individual content directory. On the server module they are located in <code class="docutils literal notranslate"><span class="pre">/pxe/nodes</span></code> and are mounted on the clients in /opt/individual_content. Inside the directory a symlink <code class="docutils literal notranslate"><span class="pre">lastrun</span></code> points to the output file of the last run simulation.</p>
-<p>The output file contains all informations about the lastrun and is available during run time. The file descriptors (FDPARENT and FDCHILD) can be used to read standard output/error from the <code class="docutils literal notranslate"><span class="pre">/opt/starter</span></code> script and the command/simulation the client is running currently.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat /opt/individual_content/lastrun
-<span class="c1"># Output</span>
-PARENTPID:                              <span class="m">26301</span>
-FDPARENT:                               <span class="m">10</span>
-FDCHILD:                                <span class="m">11</span>
-COMMAND<span class="o">(</span>default<span class="o">)</span>:                       java -classpath /home/pi/ EndlessTest
-CHILDPID:                               <span class="m">26344</span>
-CHILDRET:                               <span class="m">123</span>
-Run finished 17h15m56s <span class="m">19</span>.08.2020
-</pre></div>
-</div>
-<p>For an overview of all commands/simulations run by the client node you can list the <code class="docutils literal notranslate"><span class="pre">/opt/individual_content/starter</span></code> directory.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ls /opt/individual_content/starter
-<span class="c1"># Output is formatted by date _ time</span>
-</pre></div>
-</div>
-</div>
-</div>
 </div>
 <div class="section" id="homematic">
 <h2>Homematic<a class="headerlink" href="#homematic" title="Permalink to this headline">¶</a></h2>
@@ -462,6 +407,61 @@ Run finished 17h15m56s <span class="m">19</span>.08.2020
 <p>3. Time and date should be correct now</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">timedatectl</span>
 </pre></div>
+</div>
+</div>
+<div class="section" id="client-modules">
+<h2>Client modules<a class="headerlink" href="#client-modules" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="hostname">
+<h3>Hostname<a class="headerlink" href="#hostname" title="Permalink to this headline">¶</a></h3>
+<p>When a client module is booted the eth0 hardware address is used to determine their geographical position. The lookup table is located in <code class="docutils literal notranslate"><span class="pre">/opt/mac_nodes</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">read</span> MAC &lt;/sys/class/net/eth0/address
+cat /opt/mac_nodes <span class="p">|</span> grep <span class="nv">$MAC</span>
+<span class="c1"># Output</span>
+<span class="m">2</span>       b8:27:eb:e2:47:cc
+</pre></div>
+</div>
+<p>The geographical position is then used to generate a hostname for the specific client module. The hostnames are formatted with leading 0s when the geographical position is smaller than 10.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>node01
+node02
+..
+node10
+node11
+..
+</pre></div>
+</div>
+<p>When the hostname is known the client module tries to mount their individual content directory. This happens during booting in <code class="docutils literal notranslate"><span class="pre">/opt/mount_content.sh</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.. sudo mount -t nfs -o soft <span class="m">10</span>.42.0.250:<span class="s2">&quot;</span><span class="nv">$CONTENT_DIR</span><span class="s2">&quot;</span> <span class="s2">&quot;</span><span class="nv">$MOUNT_DIR</span><span class="s2">&quot;</span><span class="p">;</span> <span class="k">then</span> ..
+</pre></div>
+</div>
+<p>Since root permissions are needed to mount there is an exception for <code class="docutils literal notranslate"><span class="pre">/opt/mount_content.sh</span></code> in <code class="docutils literal notranslate"><span class="pre">/etc/sudoers</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat /etc/sudoers
+<span class="c1"># Output</span>
+..
+%pi     <span class="nv">ALL</span><span class="o">=</span>NOPASSWD: /opt/mount_content.sh
+..
+</pre></div>
+</div>
+</div>
+<div class="section" id="individual-content-directory">
+<h3>Individual content directory<a class="headerlink" href="#individual-content-directory" title="Permalink to this headline">¶</a></h3>
+<p>The simulations for the clients to run are stored in their individual content directory. On the server module they are located in <code class="docutils literal notranslate"><span class="pre">/pxe/nodes</span></code> and are mounted on the clients in /opt/individual_content. Inside the directory a symlink <code class="docutils literal notranslate"><span class="pre">lastrun</span></code> points to the output file of the last run simulation.</p>
+<p>The output file contains all informations about the lastrun and is available during run time. The file descriptors (FDPARENT and FDCHILD) can be used to read standard output/error from the <code class="docutils literal notranslate"><span class="pre">/opt/starter</span></code> script and the command/simulation the client is running currently.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat /opt/individual_content/lastrun
+<span class="c1"># Output</span>
+PARENTPID:                              <span class="m">26301</span>
+FDPARENT:                               <span class="m">10</span>
+FDCHILD:                                <span class="m">11</span>
+COMMAND<span class="o">(</span>default<span class="o">)</span>:                       java -classpath /home/pi/ EndlessTest
+CHILDPID:                               <span class="m">26344</span>
+CHILDRET:                               <span class="m">123</span>
+Run finished 17h15m56s <span class="m">19</span>.08.2020
+</pre></div>
+</div>
+<p>For an overview of all commands/simulations run by the client node you can list the <code class="docutils literal notranslate"><span class="pre">/opt/individual_content/starter</span></code> directory.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ls /opt/individual_content/starter
+<span class="c1"># Output is formatted by date _ time</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="setting-up-a-testsystem">

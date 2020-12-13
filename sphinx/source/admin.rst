@@ -207,74 +207,6 @@ Debug
 	# pi:x:1000:outsider
 	# outsider:x:1221:
 
-Client modules
-^^^^^^^^^^^^^^^^^^^^
-
-Hostname
-==========
-
-When a client module is booted the eth0 hardware address is used to determine their geographical position. The lookup table is located in ``/opt/mac_nodes``.
-
-.. code-block:: bash
-	
-	read MAC </sys/class/net/eth0/address
-	cat /opt/mac_nodes | grep $MAC
-	# Output
-	2       b8:27:eb:e2:47:cc
-
-The geographical position is then used to generate a hostname for the specific client module. The hostnames are formatted with leading 0s when the geographical position is smaller than 10.
-
-.. code-block:: bash
-
-	node01
-	node02
-	..
-	node10
-	node11
-	..
-
-When the hostname is known the client module tries to mount their individual content directory. This happens during booting in ``/opt/mount_content.sh``.
-
-.. code-block:: bash
-
-	.. sudo mount -t nfs -o soft 10.42.0.250:"$CONTENT_DIR" "$MOUNT_DIR"; then ..
-
-Since root permissions are needed to mount there is an exception for ``/opt/mount_content.sh`` in ``/etc/sudoers``.
-
-.. code-block:: bash
-
-	cat /etc/sudoers
-	# Output
-	..
-	%pi     ALL=NOPASSWD: /opt/mount_content.sh
-	..
-
-Individual content directory
-=============================
-
-The simulations for the clients to run are stored in their individual content directory. On the server module they are located in ``/pxe/nodes`` and are mounted on the clients in /opt/individual_content. Inside the directory a symlink ``lastrun`` points to the output file of the last run simulation.
-
-The output file contains all informations about the lastrun and is available during run time. The file descriptors (FDPARENT and FDCHILD) can be used to read standard output/error from the ``/opt/starter`` script and the command/simulation the client is running currently.
-
-.. code-block:: bash
-
-	cat /opt/individual_content/lastrun
-	# Output
-	PARENTPID:                              26301
-	FDPARENT:                               10
-	FDCHILD:                                11
-	COMMAND(default):                       java -classpath /home/pi/ EndlessTest
-	CHILDPID:                               26344
-	CHILDRET:                               123
-	Run finished 17h15m56s 19.08.2020
-
-For an overview of all commands/simulations run by the client node you can list the ``/opt/individual_content/starter`` directory.
-
-.. code-block:: bash
-
-	ls /opt/individual_content/starter
-	# Output is formatted by date _ time
-
 Homematic
 ------------------------------
 
@@ -314,6 +246,75 @@ On nodes:
 ::
 
 	timedatectl
+
+
+Client modules
+------------------------------
+
+Hostname
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When a client module is booted the eth0 hardware address is used to determine their geographical position. The lookup table is located in ``/opt/mac_nodes``.
+
+.. code-block:: bash
+	
+	read MAC </sys/class/net/eth0/address
+	cat /opt/mac_nodes | grep $MAC
+	# Output
+	2       b8:27:eb:e2:47:cc
+
+The geographical position is then used to generate a hostname for the specific client module. The hostnames are formatted with leading 0s when the geographical position is smaller than 10.
+
+.. code-block:: bash
+
+	node01
+	node02
+	..
+	node10
+	node11
+	..
+
+When the hostname is known the client module tries to mount their individual content directory. This happens during booting in ``/opt/mount_content.sh``.
+
+.. code-block:: bash
+
+	.. sudo mount -t nfs -o soft 10.42.0.250:"$CONTENT_DIR" "$MOUNT_DIR"; then ..
+
+Since root permissions are needed to mount there is an exception for ``/opt/mount_content.sh`` in ``/etc/sudoers``.
+
+.. code-block:: bash
+
+	cat /etc/sudoers
+	# Output
+	..
+	%pi     ALL=NOPASSWD: /opt/mount_content.sh
+	..
+
+Individual content directory
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The simulations for the clients to run are stored in their individual content directory. On the server module they are located in ``/pxe/nodes`` and are mounted on the clients in /opt/individual_content. Inside the directory a symlink ``lastrun`` points to the output file of the last run simulation.
+
+The output file contains all informations about the lastrun and is available during run time. The file descriptors (FDPARENT and FDCHILD) can be used to read standard output/error from the ``/opt/starter`` script and the command/simulation the client is running currently.
+
+.. code-block:: bash
+
+	cat /opt/individual_content/lastrun
+	# Output
+	PARENTPID:                              26301
+	FDPARENT:                               10
+	FDCHILD:                                11
+	COMMAND(default):                       java -classpath /home/pi/ EndlessTest
+	CHILDPID:                               26344
+	CHILDRET:                               123
+	Run finished 17h15m56s 19.08.2020
+
+For an overview of all commands/simulations run by the client node you can list the ``/opt/individual_content/starter`` directory.
+
+.. code-block:: bash
+
+	ls /opt/individual_content/starter
+	# Output is formatted by date _ time
 
 
 Setting Up A Testsystem
