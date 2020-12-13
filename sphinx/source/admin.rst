@@ -251,6 +251,100 @@ On nodes:
 Client modules
 ------------------------------
 
+In the manufactorer's server module configuration (standard configuration image) the nodes are booted simply by turning on the electricity to each module. There are three services responsible started by systemd on boot on the server module. This means whenever the server module is booted every single client node receives an "electricity off / on" signal. The server module sends the boot partition via TFTP and consequently the boot partition is not available on the nodes after they finished booting which makes it impossible to use programms like apt-get to install new software out of the box.
+
+There are multiple ways to fix this problem:
+
+* Mounting the boot partition after the boot process was finished on nodes via /etc/fstab
+* Mounting it manually by script
+* Change the /boot directory in the root partition on server node into a simlink
+
+Mounting the boot partition with an entry in /etc/fstab
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Make sure the boot partition gets exported by the nfs server
+
+.. code-block:: bash
+
+	showmount -e
+
+* Add the path to the boot partition in `/etc/fstab``
+
+.. code-block:: bash
+
+	sudo nano -w /etc/fstab
+	# 10.42.0.250:/pxe/boot /boot nfs defaults,vers=3 0 0
+
+The boot partition will be mounted after the next boot.
+
+.. warning::
+	If the boot partition is not mounted an `apt-get upgrade` can corrupt the root partition.
+
+
+Setting a custom boot partition for a single node
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The root partition is set in cmdline.txt in `/pxe/boot`. In order to use an individual root partition for a specific node we need the TFTP server to distribute an individual boot partition to the node. This enables testing without corrupting the root image for all nodes.
+
+1. Turn off all nodes and get a root shell
+
+.. code-block:: bash
+
+	nmap -sP 10.42.0.0/24
+	# ..
+	/home/client/python powerall.py off 1 60
+	sudo /bin/bash
+
+
+2. Backup and edit TFTP configuration
+
+.. code-block:: bash
+
+	bk_date=$(date +"%y%m%d%s")
+	cp /etc/dnsmasq.conf "/etc/dnsmasq.conf.$bk_date"
+	nano -w /etc/dnsmasq.conf
+	# Find or add
+	tftp-unique-root=ip
+
+3. The directory for the individual boot partition unfortunately has to be in the main TFTP directory
+
+.. code-block:: bash
+
+	# Based on the ip address
+	mkdir /pxe/boot/10.42.0.2
+	# Duplicate the content
+	rsync -arv --exclude=10.42.0.2 /pxe/boot/ /pxe/boot/10.42.0.2/
+
+4. Clone the root partition
+
+.. code-block:: bash
+
+	mkdir /pxe/root_node02
+	rsync -arv /pxe/root/ /pxe/root_node02/
+	# This will take some time
+
+5. Edit cmdline.txt
+
+.. code-block:: bash
+
+	nano -w /pxe/boot/10.42.0.2/cmdline.txt
+	# Change 10.42.0.250:/pxe/root to 10.42.0.250:/pxe/root_node02
+
+6. Start node02 and test
+
+.. code-block:: bash
+
+	python /home/pi/client/powerall.py on 2 2
+	ssh pi@10.42.0.2
+	touch test_file_node02
+	exit
+	ls /pxe/root_node02 | grep test_file_node02
+	# If the file exists booting from the new root partition was successful
+
+
+.. note:: It took several attempts to boot the indidivual boot partition in the first run.
+	
+
 Hostname
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

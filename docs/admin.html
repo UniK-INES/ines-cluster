@@ -113,6 +113,8 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#homematic">Homematic</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#client-modules">Client modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#mounting-the-boot-partition-with-an-entry-in-etc-fstab">Mounting the boot partition with an entry in /etc/fstab</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setting-a-custom-boot-partition-for-a-single-node">Setting a custom boot partition for a single node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#hostname">Hostname</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#individual-content-directory">Individual content directory</a></li>
 </ul>
@@ -411,6 +413,96 @@ cat /etc/group <span class="p">|</span> grep outsider
 </div>
 <div class="section" id="client-modules">
 <h2>Client modules<a class="headerlink" href="#client-modules" title="Permalink to this headline">¶</a></h2>
+<p>In the manufactorer’s server module configuration (standard configuration image) the nodes are booted simply by turning on the electricity to each module. There are three services responsible started by systemd on boot on the server module. This means whenever the server module is booted every single client node receives an “electricity off / on” signal. The server module sends the boot partition via TFTP and consequently the boot partition is not available on the nodes after they finished booting which makes it impossible to use programms like apt-get to install new software out of the box.</p>
+<p>There are multiple ways to fix this problem:</p>
+<ul class="simple">
+<li><p>Mounting the boot partition after the boot process was finished on nodes via /etc/fstab</p></li>
+<li><p>Mounting it manually by script</p></li>
+<li><p>Change the /boot directory in the root partition on server node into a simlink</p></li>
+</ul>
+<div class="section" id="mounting-the-boot-partition-with-an-entry-in-etc-fstab">
+<h3>Mounting the boot partition with an entry in /etc/fstab<a class="headerlink" href="#mounting-the-boot-partition-with-an-entry-in-etc-fstab" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Make sure the boot partition gets exported by the nfs server</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>showmount -e
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Add the path to the boot partition in <cite>/etc/fstab`</cite></p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo nano -w /etc/fstab
+<span class="c1"># 10.42.0.250:/pxe/boot /boot nfs defaults,vers=3 0 0</span>
+</pre></div>
+</div>
+<p>The boot partition will be mounted after the next boot.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If the boot partition is not mounted an <cite>apt-get upgrade</cite> can corrupt the root partition.</p>
+</div>
+</div>
+<div class="section" id="setting-a-custom-boot-partition-for-a-single-node">
+<h3>Setting a custom boot partition for a single node<a class="headerlink" href="#setting-a-custom-boot-partition-for-a-single-node" title="Permalink to this headline">¶</a></h3>
+<p>The root partition is set in cmdline.txt in <cite>/pxe/boot</cite>. In order to use an individual root partition for a specific node we need the TFTP server to distribute an individual boot partition to the node. This enables testing without corrupting the root image for all nodes.</p>
+<ol class="arabic simple">
+<li><p>Turn off all nodes and get a root shell</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nmap -sP <span class="m">10</span>.42.0.0/24
+<span class="c1"># ..</span>
+/home/client/python powerall.py off <span class="m">1</span> <span class="m">60</span>
+sudo /bin/bash
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Backup and edit TFTP configuration</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">bk_date</span><span class="o">=</span><span class="k">$(</span>date +<span class="s2">&quot;%y%m%d%s&quot;</span><span class="k">)</span>
+cp /etc/dnsmasq.conf <span class="s2">&quot;/etc/dnsmasq.conf.</span><span class="nv">$bk_date</span><span class="s2">&quot;</span>
+nano -w /etc/dnsmasq.conf
+<span class="c1"># Find or add</span>
+tftp-unique-root<span class="o">=</span>ip
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>The directory for the individual boot partition unfortunately has to be in the main TFTP directory</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Based on the ip address</span>
+mkdir /pxe/boot/10.42.0.2
+<span class="c1"># Duplicate the content</span>
+rsync -arv --exclude<span class="o">=</span><span class="m">10</span>.42.0.2 /pxe/boot/ /pxe/boot/10.42.0.2/
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Clone the root partition</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir /pxe/root_node02
+rsync -arv /pxe/root/ /pxe/root_node02/
+<span class="c1"># This will take some time</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>Edit cmdline.txt</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nano -w /pxe/boot/10.42.0.2/cmdline.txt
+<span class="c1"># Change 10.42.0.250:/pxe/root to 10.42.0.250:/pxe/root_node02</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="6">
+<li><p>Start node02 and test</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python /home/pi/client/powerall.py on <span class="m">2</span> <span class="m">2</span>
+ssh pi@10.42.0.2
+touch test_file_node02
+<span class="nb">exit</span>
+ls /pxe/root_node02 <span class="p">|</span> grep test_file_node02
+<span class="c1"># If the file exists booting from the new root partition was successful</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It took several attempts to boot the indidivual boot partition in the first run.</p>
+</div>
+</div>
 <div class="section" id="hostname">
 <h3>Hostname<a class="headerlink" href="#hostname" title="Permalink to this headline">¶</a></h3>
 <p>When a client module is booted the eth0 hardware address is used to determine their geographical position. The lookup table is located in <code class="docutils literal notranslate"><span class="pre">/opt/mac_nodes</span></code>.</p>
