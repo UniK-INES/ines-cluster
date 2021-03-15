@@ -246,4 +246,4 @@ This table provides an easier way to get a client module's hardware address when
 Known Problems
 -------------------------
 
-`firmware issue <https://github.com/raspberrypi/firmware/issues/894>`_,
+* `The module hangs in a while loop while waiting for an ip address and can only get unstuck if there is activity on the ethernet interface  <https://github.com/raspberrypi/firmware/issues/894>`_,
