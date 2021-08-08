@@ -1,23 +1,31 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html4" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Technical Overview &mdash; RPi Cluster 0.1 alpha documentation</title>
   
 
   
-  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -29,10 +37,6 @@
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="User Guide" href="userguide.html" />
@@ -77,6 +81,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -117,6 +122,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -151,18 +157,20 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Technical Overview</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/technical_overview.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -184,35 +192,35 @@ for managing the system. All modules contain an sd-card. The card itself is only
 <h2>Server Module<a class="headerlink" href="#server-module" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="network-interfaces">
 <h3>Network Interfaces<a class="headerlink" href="#network-interfaces" title="Permalink to this headline">¶</a></h3>
-<table class="docutils align-center">
+<table border="1" class="docutils">
 <colgroup>
-<col style="width: 28%" />
-<col style="width: 18%" />
-<col style="width: 39%" />
-<col style="width: 14%" />
+<col width="28%" />
+<col width="18%" />
+<col width="39%" />
+<col width="14%" />
 </colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Hardwareaddress</p></th>
-<th class="head"><p>Name</p></th>
-<th class="head"><p>IP</p></th>
-<th class="head"><p>Rate</p></th>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Hardwareaddress</th>
+<th class="head">Name</th>
+<th class="head">IP</th>
+<th class="head">Rate</th>
 </tr>
 </thead>
-<tbody>
-<tr class="row-even"><td><p>B8:27:EB:36:A7:A3</p></td>
-<td><p>eth0</p></td>
-<td><p>10.42.0.250</p></td>
-<td><p>100 MB/s</p></td>
+<tbody valign="top">
+<tr class="row-even"><td>B8:27:EB:36:A7:A3</td>
+<td>eth0</td>
+<td>10.42.0.250</td>
+<td>100 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>D0:37:45:88:8C:EF</p></td>
-<td><p>eth1</p></td>
-<td><p>141.51.123.55</p></td>
-<td><p>1000 MB/s</p></td>
+<tr class="row-odd"><td>D0:37:45:88:8C:EF</td>
+<td>eth1</td>
+<td>141.51.123.55</td>
+<td>1000 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>D0:37:45:88:8C:EF</p></td>
-<td><p>wlan0</p></td>
-<td><p>192.168.1.111</p></td>
-<td><p>56 MB/s</p></td>
+<tr class="row-even"><td>D0:37:45:88:8C:EF</td>
+<td>wlan0</td>
+<td>192.168.1.111</td>
+<td>56 MB/s</td>
 </tr>
 </tbody>
 </table>
@@ -220,9 +228,9 @@ for managing the system. All modules contain an sd-card. The card itself is only
 <div class="section" id="important-services">
 <h3>Important Services<a class="headerlink" href="#important-services" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><p><strong>dnsmasq</strong> used as DHCP and TFTP server</p></li>
-<li><p><strong>nfs-kernel-server</strong> used for providing the root partition and the individual content directory</p></li>
-<li><p><strong>iptables</strong> rules connecting eth0 and wlan0 interfaces</p></li>
+<li><strong>dnsmasq</strong> used as DHCP and TFTP server</li>
+<li><strong>nfs-kernel-server</strong> used for providing the root partition and the individual content directory</li>
+<li><strong>iptables</strong> rules connecting eth0 and wlan0 interfaces</li>
 </ul>
 </div>
 </div>
@@ -231,30 +239,30 @@ for managing the system. All modules contain an sd-card. The card itself is only
 <p>The Homematic module is used to power the cluster. Additionally we use it in case one is not able to create a direct route into the cluster.</p>
 <div class="section" id="id1">
 <h3>Network Interfaces<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<table class="docutils align-center">
+<table border="1" class="docutils">
 <colgroup>
-<col style="width: 28%" />
-<col style="width: 18%" />
-<col style="width: 39%" />
-<col style="width: 14%" />
+<col width="28%" />
+<col width="18%" />
+<col width="39%" />
+<col width="14%" />
 </colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Hardwareaddress</p></th>
-<th class="head"><p>Name</p></th>
-<th class="head"><p>IP</p></th>
-<th class="head"><p>Rate</p></th>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Hardwareaddress</th>
+<th class="head">Name</th>
+<th class="head">IP</th>
+<th class="head">Rate</th>
 </tr>
 </thead>
-<tbody>
-<tr class="row-even"><td><p>DC:A6:32:36:33:2D</p></td>
-<td><p>eth0</p></td>
-<td><p>141.51.123.42</p></td>
-<td><p>100 MB/s</p></td>
+<tbody valign="top">
+<tr class="row-even"><td>DC:A6:32:36:33:2D</td>
+<td>eth0</td>
+<td>141.51.123.42</td>
+<td>100 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>DC:A6:32:36:33:2F</p></td>
-<td><p>wlan0</p></td>
-<td><p>192.168.1.134</p></td>
-<td><p>56 MB/s</p></td>
+<tr class="row-odd"><td>DC:A6:32:36:33:2F</td>
+<td>wlan0</td>
+<td>192.168.1.134</td>
+<td>56 MB/s</td>
 </tr>
 </tbody>
 </table>
@@ -262,8 +270,8 @@ for managing the system. All modules contain an sd-card. The card itself is only
 <div class="section" id="id2">
 <h3>Important Services<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><p>Debmatic / lighttpd running on <a class="reference external" href="http://141.51.123.42">http://141.51.123.42</a></p></li>
-<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Network_Time_Protocol">NTP Server</a> providing time and date for the nodes</p></li>
+<li>Debmatic / lighttpd running on <a class="reference external" href="http://141.51.123.42">http://141.51.123.42</a></li>
+<li><a class="reference external" href="https://en.wikipedia.org/wiki/Network_Time_Protocol">NTP Server</a> providing time and date for the nodes</li>
 </ul>
 </div>
 </div>
@@ -272,30 +280,30 @@ for managing the system. All modules contain an sd-card. The card itself is only
 <p>The router provides a WiFi <strong>nostromo</strong> to the server module’s wlan0 interface and the Zero client modules. When connected to the wifi you can add a route to the client modules with <strong>192.168.1.111</strong> (server module wlan0) as a gateway.</p>
 <div class="section" id="id3">
 <h3>Network Interfaces<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
-<table class="docutils align-center">
+<table border="1" class="docutils">
 <colgroup>
-<col style="width: 28%" />
-<col style="width: 18%" />
-<col style="width: 39%" />
-<col style="width: 14%" />
+<col width="28%" />
+<col width="18%" />
+<col width="39%" />
+<col width="14%" />
 </colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Hardwareaddress</p></th>
-<th class="head"><p>Name</p></th>
-<th class="head"><p>IP</p></th>
-<th class="head"><p>Rate</p></th>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Hardwareaddress</th>
+<th class="head">Name</th>
+<th class="head">IP</th>
+<th class="head">Rate</th>
 </tr>
 </thead>
-<tbody>
-<tr class="row-even"><td><p>B0:C7:45:3F:86:1B</p></td>
-<td><p>vlan2</p></td>
-<td><p>141.51.123.4</p></td>
-<td><p>100 MB/s</p></td>
+<tbody valign="top">
+<tr class="row-even"><td>B0:C7:45:3F:86:1B</td>
+<td>vlan2</td>
+<td>141.51.123.4</td>
+<td>100 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B0:C7:45:3F:86:1C</p></td>
-<td><p>br0</p></td>
-<td><p>192.168.1.1</p></td>
-<td><p>100 MB/s</p></td>
+<tr class="row-odd"><td>B0:C7:45:3F:86:1C</td>
+<td>br0</td>
+<td>192.168.1.1</td>
+<td>100 MB/s</td>
 </tr>
 </tbody>
 </table>
@@ -306,382 +314,382 @@ for managing the system. All modules contain an sd-card. The card itself is only
 <div class="section" id="hostnames-and-hardware-address">
 <h3>Hostnames and Hardware Address<a class="headerlink" href="#hostnames-and-hardware-address" title="Permalink to this headline">¶</a></h3>
 <p>The clients ask the DHCP server to provide them a hostname. The hostname is given according to their hardware address. The geographical position row gives you information where the module is physically placed. Every bar starts with module 1 and ends with module 15. 4 single bars with 15 modules each bar.</p>
-<table class="docutils align-center">
+<table border="1" class="docutils">
 <colgroup>
-<col style="width: 28%" />
-<col style="width: 19%" />
-<col style="width: 28%" />
-<col style="width: 11%" />
-<col style="width: 15%" />
+<col width="28%" />
+<col width="19%" />
+<col width="28%" />
+<col width="11%" />
+<col width="15%" />
 </colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Hardwareaddresses</p></th>
-<th class="head"><p>Hostname</p></th>
-<th class="head"><p>Geographical</p></th>
-<th class="head"><p>Typ</p></th>
-<th class="head"><p>SD Rate</p></th>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Hardwareaddresses</th>
+<th class="head">Hostname</th>
+<th class="head">Geographical</th>
+<th class="head">Typ</th>
+<th class="head">SD Rate</th>
 </tr>
 </thead>
-<tbody>
-<tr class="row-even"><td><p>B8:27:EB:F1:32:3B</p></td>
-<td><p>host01</p></td>
-<td><p>0x01</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tbody valign="top">
+<tr class="row-even"><td>B8:27:EB:F1:32:3B</td>
+<td>host01</td>
+<td>0x01</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:6F:45:23</p></td>
-<td><p>host02</p></td>
-<td><p>0x02</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:6F:45:23</td>
+<td>host02</td>
+<td>0x02</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:C7:4F:DE</p></td>
-<td><p>host03</p></td>
-<td><p>0x03</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:C7:4F:DE</td>
+<td>host03</td>
+<td>0x03</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:1F:C3:23</p></td>
-<td><p>host04</p></td>
-<td><p>0x04</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:1F:C3:23</td>
+<td>host04</td>
+<td>0x04</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:7E:F5:D9</p></td>
-<td><p>host05</p></td>
-<td><p>0x05</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:7E:F5:D9</td>
+<td>host05</td>
+<td>0x05</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:73:CE:79</p></td>
-<td><p>host06</p></td>
-<td><p>0x06</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:73:CE:79</td>
+<td>host06</td>
+<td>0x06</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:39:22:68</p></td>
-<td><p>host07</p></td>
-<td><p>0x07</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:39:22:68</td>
+<td>host07</td>
+<td>0x07</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:4E:CA:10</p></td>
-<td><p>host08</p></td>
-<td><p>0x08</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:4E:CA:10</td>
+<td>host08</td>
+<td>0x08</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:1E:E3:9F</p></td>
-<td><p>host09</p></td>
-<td><p>0x09</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:1E:E3:9F</td>
+<td>host09</td>
+<td>0x09</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:53:F2:86</p></td>
-<td><p>host10</p></td>
-<td><p>0x0A</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:53:F2:86</td>
+<td>host10</td>
+<td>0x0A</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:85:AD:ED</p></td>
-<td><p>host11</p></td>
-<td><p>0x0B</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:85:AD:ED</td>
+<td>host11</td>
+<td>0x0B</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:81:4C:93</p></td>
-<td><p>host12</p></td>
-<td><p>0x0C</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:81:4C:93</td>
+<td>host12</td>
+<td>0x0C</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:A2:47:0F</p></td>
-<td><p>host13</p></td>
-<td><p>0x0D</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:A2:47:0F</td>
+<td>host13</td>
+<td>0x0D</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:B7:DB:0F</p></td>
-<td><p>host14</p></td>
-<td><p>0x0E</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:B7:DB:0F</td>
+<td>host14</td>
+<td>0x0E</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:52:06:8E</p></td>
-<td><p>host15</p></td>
-<td><p>0x0F</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:52:06:8E</td>
+<td>host15</td>
+<td>0x0F</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:81:7A:2D</p></td>
-<td><p>host16</p></td>
-<td><p>0x11</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:81:7A:2D</td>
+<td>host16</td>
+<td>0x11</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:BD:11:3E</p></td>
-<td><p>host17</p></td>
-<td><p>0x12</p></td>
-<td><p>Zero</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:BD:11:3E</td>
+<td>host17</td>
+<td>0x12</td>
+<td>Zero</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:74:8E:CC</p></td>
-<td><p>host18</p></td>
-<td><p>0x13</p></td>
-<td><p>Zero</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:74:8E:CC</td>
+<td>host18</td>
+<td>0x13</td>
+<td>Zero</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:37:0F:06</p></td>
-<td><p>host19</p></td>
-<td><p>0x14</p></td>
-<td><p>Zero</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:37:0F:06</td>
+<td>host19</td>
+<td>0x14</td>
+<td>Zero</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:38:DD:C7</p></td>
-<td><p>host20</p></td>
-<td><p>0x15</p></td>
-<td><p>Zero</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:38:DD:C7</td>
+<td>host20</td>
+<td>0x15</td>
+<td>Zero</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:F6:A8:5D</p></td>
-<td><p>host21</p></td>
-<td><p>0x16</p></td>
-<td><p>Zero</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:F6:A8:5D</td>
+<td>host21</td>
+<td>0x16</td>
+<td>Zero</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:8B:31:C7</p></td>
-<td><p>host22</p></td>
-<td><p>0x17</p></td>
-<td><p>Zero</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:8B:31:C7</td>
+<td>host22</td>
+<td>0x17</td>
+<td>Zero</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:FC:7E:24</p></td>
-<td><p>host23</p></td>
-<td><p>0x18</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:FC:7E:24</td>
+<td>host23</td>
+<td>0x18</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:07:54:46</p></td>
-<td><p>host24</p></td>
-<td><p>0x19</p></td>
-<td><p>Zero</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:07:54:46</td>
+<td>host24</td>
+<td>0x19</td>
+<td>Zero</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:41:EE:0C</p></td>
-<td><p>host25</p></td>
-<td><p>0x1A</p></td>
-<td><p>Zero</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:41:EE:0C</td>
+<td>host25</td>
+<td>0x1A</td>
+<td>Zero</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:45:BA:43</p></td>
-<td><p>host26</p></td>
-<td><p>0x1B</p></td>
-<td><p>Zero</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:45:BA:43</td>
+<td>host26</td>
+<td>0x1B</td>
+<td>Zero</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:74:91:F0</p></td>
-<td><p>host27</p></td>
-<td><p>0x1C</p></td>
-<td><p>Zero</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:74:91:F0</td>
+<td>host27</td>
+<td>0x1C</td>
+<td>Zero</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:DC:5E:F8</p></td>
-<td><p>host28</p></td>
-<td><p>0x1D</p></td>
-<td><p>Zero</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:DC:5E:F8</td>
+<td>host28</td>
+<td>0x1D</td>
+<td>Zero</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:2E:33:17</p></td>
-<td><p>host29</p></td>
-<td><p>0x1E</p></td>
-<td><p>Zero</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:2E:33:17</td>
+<td>host29</td>
+<td>0x1E</td>
+<td>Zero</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:02:84:F0</p></td>
-<td><p>host30</p></td>
-<td><p>0x1F</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:02:84:F0</td>
+<td>host30</td>
+<td>0x1F</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:B1:1F:72</p></td>
-<td><p>host31</p></td>
-<td><p>0x21</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:B1:1F:72</td>
+<td>host31</td>
+<td>0x21</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:A7:F6:1B</p></td>
-<td><p>host32</p></td>
-<td><p>0x22</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:A7:F6:1B</td>
+<td>host32</td>
+<td>0x22</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:A9:54:CD</p></td>
-<td><p>host33</p></td>
-<td><p>0x23</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:A9:54:CD</td>
+<td>host33</td>
+<td>0x23</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:AF:1A:F3</p></td>
-<td><p>host34</p></td>
-<td><p>0x24</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:AF:1A:F3</td>
+<td>host34</td>
+<td>0x24</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:5B:8B:77</p></td>
-<td><p>host35</p></td>
-<td><p>0x25</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:5B:8B:77</td>
+<td>host35</td>
+<td>0x25</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:78:7B:A3</p></td>
-<td><p>host36</p></td>
-<td><p>0x26</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:78:7B:A3</td>
+<td>host36</td>
+<td>0x26</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:FC:01:AF</p></td>
-<td><p>host37</p></td>
-<td><p>0x27</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:FC:01:AF</td>
+<td>host37</td>
+<td>0x27</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:EF:D4:D5</p></td>
-<td><p>host38</p></td>
-<td><p>0x28</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:EF:D4:D5</td>
+<td>host38</td>
+<td>0x28</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:D9:E1:52</p></td>
-<td><p>host39</p></td>
-<td><p>0x29</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:D9:E1:52</td>
+<td>host39</td>
+<td>0x29</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:DD:46:06</p></td>
-<td><p>host40</p></td>
-<td><p>0x2A</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:DD:46:06</td>
+<td>host40</td>
+<td>0x2A</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:32:AC:5D</p></td>
-<td><p>host41</p></td>
-<td><p>0x2B</p></td>
-<td><p>R3</p></td>
-<td><p>30 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:32:AC:5D</td>
+<td>host41</td>
+<td>0x2B</td>
+<td>R3</td>
+<td>30 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:77:14:97</p></td>
-<td><p>host42</p></td>
-<td><p>0x2C</p></td>
-<td><p>R3</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:77:14:97</td>
+<td>host42</td>
+<td>0x2C</td>
+<td>R3</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:C7:CE:08</p></td>
-<td><p>host43</p></td>
-<td><p>0x2D</p></td>
-<td><p>R3</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:C7:CE:08</td>
+<td>host43</td>
+<td>0x2D</td>
+<td>R3</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:BD:D1:8F</p></td>
-<td><p>host44</p></td>
-<td><p>0x2E</p></td>
-<td><p>R3</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:BD:D1:8F</td>
+<td>host44</td>
+<td>0x2E</td>
+<td>R3</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:57:6E:2F</p></td>
-<td><p>host45</p></td>
-<td><p>0x2F</p></td>
-<td><p>R3</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:57:6E:2F</td>
+<td>host45</td>
+<td>0x2F</td>
+<td>R3</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:1B:A6:F1</p></td>
-<td><p>host46</p></td>
-<td><p>0x31</p></td>
-<td><p>R3</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:1B:A6:F1</td>
+<td>host46</td>
+<td>0x31</td>
+<td>R3</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:7D:CE:3A</p></td>
-<td><p>host47</p></td>
-<td><p>0x32</p></td>
-<td><p>R3</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:7D:CE:3A</td>
+<td>host47</td>
+<td>0x32</td>
+<td>R3</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:E9:4A:87</p></td>
-<td><p>host48</p></td>
-<td><p>0x33</p></td>
-<td><p>R3</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:E9:4A:87</td>
+<td>host48</td>
+<td>0x33</td>
+<td>R3</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:87:4D:83</p></td>
-<td><p>host49</p></td>
-<td><p>0x34</p></td>
-<td><p>R3</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:87:4D:83</td>
+<td>host49</td>
+<td>0x34</td>
+<td>R3</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:08:2F:DE</p></td>
-<td><p>host50</p></td>
-<td><p>0x35</p></td>
-<td><p>R3</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:08:2F:DE</td>
+<td>host50</td>
+<td>0x35</td>
+<td>R3</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:F6:50:B8</p></td>
-<td><p>host51</p></td>
-<td><p>0x36</p></td>
-<td><p>R3</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:F6:50:B8</td>
+<td>host51</td>
+<td>0x36</td>
+<td>R3</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:E8:C2:6A</p></td>
-<td><p>host52</p></td>
-<td><p>0x37</p></td>
-<td><p>R3</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:E8:C2:6A</td>
+<td>host52</td>
+<td>0x37</td>
+<td>R3</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:96:CB:E9</p></td>
-<td><p>host53</p></td>
-<td><p>0x38</p></td>
-<td><p>R3</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:96:CB:E9</td>
+<td>host53</td>
+<td>0x38</td>
+<td>R3</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:84:75:97</p></td>
-<td><p>host54</p></td>
-<td><p>0x39</p></td>
-<td><p>R3</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:84:75:97</td>
+<td>host54</td>
+<td>0x39</td>
+<td>R3</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:E2:C3:6E</p></td>
-<td><p>host55</p></td>
-<td><p>0x3A</p></td>
-<td><p>R3</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:E2:C3:6E</td>
+<td>host55</td>
+<td>0x3A</td>
+<td>R3</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:26:3C:3D</p></td>
-<td><p>host56</p></td>
-<td><p>0x3B</p></td>
-<td><p>R3</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:26:3C:3D</td>
+<td>host56</td>
+<td>0x3B</td>
+<td>R3</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:4C:6F:A5</p></td>
-<td><p>host57</p></td>
-<td><p>0x3C</p></td>
-<td><p>R3</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:4C:6F:A5</td>
+<td>host57</td>
+<td>0x3C</td>
+<td>R3</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:09:31:48</p></td>
-<td><p>host58</p></td>
-<td><p>0x3D</p></td>
-<td><p>R3</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:09:31:48</td>
+<td>host58</td>
+<td>0x3D</td>
+<td>R3</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-even"><td><p>B8:27:EB:AA:89:FA</p></td>
-<td><p>host59</p></td>
-<td><p>0x3E</p></td>
-<td><p>R3</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-even"><td>B8:27:EB:AA:89:FA</td>
+<td>host59</td>
+<td>0x3E</td>
+<td>R3</td>
+<td>10 MB/s</td>
 </tr>
-<tr class="row-odd"><td><p>B8:27:EB:D3:C9:CC</p></td>
-<td><p>host60</p></td>
-<td><p>0x3F</p></td>
-<td><p>R3</p></td>
-<td><p>10 MB/s</p></td>
+<tr class="row-odd"><td>B8:27:EB:D3:C9:CC</td>
+<td>host60</td>
+<td>0x3F</td>
+<td>R3</td>
+<td>10 MB/s</td>
 </tr>
 </tbody>
 </table>
@@ -689,112 +697,112 @@ for managing the system. All modules contain an sd-card. The card itself is only
 <div class="section" id="geographical-position">
 <h3>Geographical Position<a class="headerlink" href="#geographical-position" title="Permalink to this headline">¶</a></h3>
 <p>This table provides an easier way to get a client module’s hardware address when you stand infront of the cluster.</p>
-<table class="docutils align-center">
+<table border="1" class="docutils">
 <colgroup>
-<col style="width: 11%" />
-<col style="width: 22%" />
-<col style="width: 22%" />
-<col style="width: 22%" />
-<col style="width: 22%" />
+<col width="11%" />
+<col width="22%" />
+<col width="22%" />
+<col width="22%" />
+<col width="22%" />
 </colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Bitbar</p></th>
-<th class="head"><p>0</p></th>
-<th class="head"><p>1</p></th>
-<th class="head"><p>2</p></th>
-<th class="head"><p>3</p></th>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Bitbar</th>
+<th class="head">0</th>
+<th class="head">1</th>
+<th class="head">2</th>
+<th class="head">3</th>
 </tr>
 </thead>
-<tbody>
-<tr class="row-even"><td><p>0x1</p></td>
-<td><p>B8:27:EB:F1:32:3B</p></td>
-<td><p>B8:27:EB:81:7A:2D</p></td>
-<td><p>B8:27:EB:B1:1F:72</p></td>
-<td><p>B8:27:EB:1B:A6:F1</p></td>
+<tbody valign="top">
+<tr class="row-even"><td>0x1</td>
+<td>B8:27:EB:F1:32:3B</td>
+<td>B8:27:EB:81:7A:2D</td>
+<td>B8:27:EB:B1:1F:72</td>
+<td>B8:27:EB:1B:A6:F1</td>
 </tr>
-<tr class="row-odd"><td><p>0x2</p></td>
-<td><p>B8:27:EB:6F:45:23</p></td>
-<td><p>B8:27:EB:BD:11:3E</p></td>
-<td><p>B8:27:EB:A7:F6:1B</p></td>
-<td><p>B8:27:EB:7D:CE:3A</p></td>
+<tr class="row-odd"><td>0x2</td>
+<td>B8:27:EB:6F:45:23</td>
+<td>B8:27:EB:BD:11:3E</td>
+<td>B8:27:EB:A7:F6:1B</td>
+<td>B8:27:EB:7D:CE:3A</td>
 </tr>
-<tr class="row-even"><td><p>0x3</p></td>
-<td><p>B8:27:EB:C7:4F:DE</p></td>
-<td><p>B8:27:EB:74:8E:CC</p></td>
-<td><p>B8:27:EB:A9:54:CD</p></td>
-<td><p>B8:27:EB:E9:4A:87</p></td>
+<tr class="row-even"><td>0x3</td>
+<td>B8:27:EB:C7:4F:DE</td>
+<td>B8:27:EB:74:8E:CC</td>
+<td>B8:27:EB:A9:54:CD</td>
+<td>B8:27:EB:E9:4A:87</td>
 </tr>
-<tr class="row-odd"><td><p>0x4</p></td>
-<td><p>B8:27:EB:1F:C3:23</p></td>
-<td><p>B8:27:EB:37:0F:06</p></td>
-<td><p>B8:27:EB:AF:1A:F3</p></td>
-<td><p>B8:27:EB:87:4D:83</p></td>
+<tr class="row-odd"><td>0x4</td>
+<td>B8:27:EB:1F:C3:23</td>
+<td>B8:27:EB:37:0F:06</td>
+<td>B8:27:EB:AF:1A:F3</td>
+<td>B8:27:EB:87:4D:83</td>
 </tr>
-<tr class="row-even"><td><p>0x5</p></td>
-<td><p>B8:27:EB:7E:F5:D9</p></td>
-<td><p>B8:27:EB:38:DD:C7</p></td>
-<td><p>B8:27:EB:5B:8B:77</p></td>
-<td><p>B8:27:EB:08:2F:DE</p></td>
+<tr class="row-even"><td>0x5</td>
+<td>B8:27:EB:7E:F5:D9</td>
+<td>B8:27:EB:38:DD:C7</td>
+<td>B8:27:EB:5B:8B:77</td>
+<td>B8:27:EB:08:2F:DE</td>
 </tr>
-<tr class="row-odd"><td><p>0x6</p></td>
-<td><p>B8:27:EB:73:CE:79</p></td>
-<td><p>B8:27:EB:F6:A8:5D</p></td>
-<td><p>B8:27:EB:78:7B:A3</p></td>
-<td><p>B8:27:EB:F6:50:B8</p></td>
+<tr class="row-odd"><td>0x6</td>
+<td>B8:27:EB:73:CE:79</td>
+<td>B8:27:EB:F6:A8:5D</td>
+<td>B8:27:EB:78:7B:A3</td>
+<td>B8:27:EB:F6:50:B8</td>
 </tr>
-<tr class="row-even"><td><p>0x7</p></td>
-<td><p>B8:27:EB:39:22:68</p></td>
-<td><p>B8:27:EB:8B:31:C7</p></td>
-<td><p>B8:27:EB:FC:01:AF</p></td>
-<td><p>B8:27:EB:E8:C2:6A</p></td>
+<tr class="row-even"><td>0x7</td>
+<td>B8:27:EB:39:22:68</td>
+<td>B8:27:EB:8B:31:C7</td>
+<td>B8:27:EB:FC:01:AF</td>
+<td>B8:27:EB:E8:C2:6A</td>
 </tr>
-<tr class="row-odd"><td><p>0x8</p></td>
-<td><p>B8:27:EB:4E:CA:10</p></td>
-<td><p>B8:27:EB:FC:7E:24</p></td>
-<td><p>B8:27:EB:EF:D4:D5</p></td>
-<td><p>B8:27:EB:96:CB:E9</p></td>
+<tr class="row-odd"><td>0x8</td>
+<td>B8:27:EB:4E:CA:10</td>
+<td>B8:27:EB:FC:7E:24</td>
+<td>B8:27:EB:EF:D4:D5</td>
+<td>B8:27:EB:96:CB:E9</td>
 </tr>
-<tr class="row-even"><td><p>0x9</p></td>
-<td><p>B8:27:EB:1E:E3:9F</p></td>
-<td><p>B8:27:EB:07:54:46</p></td>
-<td><p>B8:27:EB:D9:E1:52</p></td>
-<td><p>B8:27:EB:84:75:97</p></td>
+<tr class="row-even"><td>0x9</td>
+<td>B8:27:EB:1E:E3:9F</td>
+<td>B8:27:EB:07:54:46</td>
+<td>B8:27:EB:D9:E1:52</td>
+<td>B8:27:EB:84:75:97</td>
 </tr>
-<tr class="row-odd"><td><p>0xA</p></td>
-<td><p>B8:27:EB:53:F2:86</p></td>
-<td><p>B8:27:EB:41:EE:0C</p></td>
-<td><p>B8:27:EB:DD:46:06</p></td>
-<td><p>B8:27:EB:E2:C3:6E</p></td>
+<tr class="row-odd"><td>0xA</td>
+<td>B8:27:EB:53:F2:86</td>
+<td>B8:27:EB:41:EE:0C</td>
+<td>B8:27:EB:DD:46:06</td>
+<td>B8:27:EB:E2:C3:6E</td>
 </tr>
-<tr class="row-even"><td><p>0xB</p></td>
-<td><p>B8:27:EB:85:AD:ED</p></td>
-<td><p>B8:27:EB:45:BA:43</p></td>
-<td><p>B8:27:EB:32:AC:5D</p></td>
-<td><p>B8:27:EB:26:3C:3D</p></td>
+<tr class="row-even"><td>0xB</td>
+<td>B8:27:EB:85:AD:ED</td>
+<td>B8:27:EB:45:BA:43</td>
+<td>B8:27:EB:32:AC:5D</td>
+<td>B8:27:EB:26:3C:3D</td>
 </tr>
-<tr class="row-odd"><td><p>0xC</p></td>
-<td><p>B8:27:EB:81:4C:93</p></td>
-<td><p>B8:27:EB:74:91:F0</p></td>
-<td><p>B8:27:EB:77:14:97</p></td>
-<td><p>B8:27:EB:4C:6F:A5</p></td>
+<tr class="row-odd"><td>0xC</td>
+<td>B8:27:EB:81:4C:93</td>
+<td>B8:27:EB:74:91:F0</td>
+<td>B8:27:EB:77:14:97</td>
+<td>B8:27:EB:4C:6F:A5</td>
 </tr>
-<tr class="row-even"><td><p>0xD</p></td>
-<td><p>B8:27:EB:A2:47:0F</p></td>
-<td><p>B8:27:EB:DC:5E:F8</p></td>
-<td><p>B8:27:EB:C7:CE:08</p></td>
-<td><p>B8:27:EB:09:31:48</p></td>
+<tr class="row-even"><td>0xD</td>
+<td>B8:27:EB:A2:47:0F</td>
+<td>B8:27:EB:DC:5E:F8</td>
+<td>B8:27:EB:C7:CE:08</td>
+<td>B8:27:EB:09:31:48</td>
 </tr>
-<tr class="row-odd"><td><p>0xE</p></td>
-<td><p>B8:27:EB:B7:DB:0F</p></td>
-<td><p>B8:27:EB:2E:33:17</p></td>
-<td><p>B8:27:EB:BD:D1:8F</p></td>
-<td><p>B8:27:EB:AA:89:FA</p></td>
+<tr class="row-odd"><td>0xE</td>
+<td>B8:27:EB:B7:DB:0F</td>
+<td>B8:27:EB:2E:33:17</td>
+<td>B8:27:EB:BD:D1:8F</td>
+<td>B8:27:EB:AA:89:FA</td>
 </tr>
-<tr class="row-even"><td><p>0xF</p></td>
-<td><p>B8:27:EB:52:06:8E</p></td>
-<td><p>B8:27:EB:02:84:F0</p></td>
-<td><p>B8:27:EB:57:6E:2F</p></td>
-<td><p>B8:27:EB:D3:C9:CC</p></td>
+<tr class="row-even"><td>0xF</td>
+<td>B8:27:EB:52:06:8E</td>
+<td>B8:27:EB:02:84:F0</td>
+<td>B8:27:EB:57:6E:2F</td>
+<td>B8:27:EB:D3:C9:CC</td>
 </tr>
 </tbody>
 </table>
@@ -803,7 +811,7 @@ for managing the system. All modules contain an sd-card. The card itself is only
 <div class="section" id="known-problems">
 <h2>Known Problems<a class="headerlink" href="#known-problems" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p><a class="reference external" href="https://github.com/raspberrypi/firmware/issues/894">The module hangs in a while loop while waiting for an ip address and can only get unstuck if there is activity on the ethernet interface</a>,</p></li>
+<li><a class="reference external" href="https://github.com/raspberrypi/firmware/issues/894">The module hangs in a while loop while waiting for an ip address and can only get unstuck if there is activity on the ethernet interface</a>,</li>
 </ul>
 </div>
 </div>
@@ -813,29 +821,29 @@ for managing the system. All modules contain an sd-card. The card itself is only
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="userguide.html" class="btn btn-neutral float-right" title="User Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="index.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="userguide.html" class="btn btn-neutral float-right" title="User Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Christoph Hanauer, Sascha Holzhauer
+        &#169; Copyright 2020, Christoph Hanauer, Sascha Holzhauer.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -843,7 +851,6 @@ for managing the system. All modules contain an sd-card. The card itself is only
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

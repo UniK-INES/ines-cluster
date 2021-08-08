@@ -1,23 +1,31 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html4" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>User Guide &mdash; RPi Cluster 0.1 alpha documentation</title>
   
 
   
-  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -29,10 +37,6 @@
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Administration" href="admin.html" />
@@ -77,6 +81,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -113,6 +118,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -147,18 +153,20 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>User Guide</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/userguide.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -180,12 +188,12 @@
 <p>Turn on the server module by activating the electrical outlet. In your web browser open <a class="reference external" href="http://141.51.123.42">http://141.51.123.42</a> and login with the “Admin” account. You will see an item called “Schaltaktor RP-Cluster” which controlls the electrical outlet the cluster is connected to. Press the On button.</p>
 <p>The server module will power on the client modules, perform some self tests and turn them off again. Afterwards the client modules get booted one by one according to their geographical position. There is a <a class="reference internal" href="technical_overview.html#known-problems"><span class="std std-ref">firmware issue</span></a> keeping a lot of client modules from downloading their root partition. We will fix that with a helper script after we added the necessary routes.</p>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>It is important to wait some time at this point as the client modules should not access the root partition at the same time.</p>
+<p class="first admonition-title">Note</p>
+<p class="last">It is important to wait some time at this point as the client modules should not access the root partition at the same time.</p>
 </div>
 <div class="admonition-todo admonition" id="index-0">
-<p class="admonition-title">Todo</p>
-<p>Add testing if the client modules successfully booted with a side effect on the server module</p>
+<p class="first admonition-title">Todo</p>
+<p class="last">Add testing if the client modules successfully booted with a side effect on the server module</p>
 </div>
 </div>
 <div class="section" id="routing">
@@ -257,27 +265,27 @@ pip install websocket-client
 <div class="section" id="shutting-down-the-cluster">
 <h3>Shutting down the cluster<a class="headerlink" href="#shutting-down-the-cluster" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><p>Shut down the client modules</p></li>
+<li>Shut down the client modules</li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># workstation directory</span>
 ./cluster_shutdown
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Wait until the client modules are turned off. You can check with nmap</p></li>
+<li>Wait until the client modules are turned off. You can check with nmap</li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nmap -sP <span class="m">10</span>.42.0.0/24
 <span class="c1"># Output should not list any ips in range 10.42.0.1 - 10.42.0.60</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Shut down the server module</p></li>
+<li>Shut down the server module</li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh pi@141.51.123.55
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Use the Homematic module to power off the socket.</p></li>
+<li>Use the Homematic module to power off the socket.</li>
 </ul>
 </div>
 </div>
@@ -289,31 +297,31 @@ pip install websocket-client
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">/opt/cluster_scripts</span></code> directory contains all necessary scripts for managing the cluster.</p>
-<table class="docutils align-center">
+<table border="1" class="docutils">
 <colgroup>
-<col style="width: 27%" />
-<col style="width: 73%" />
+<col width="27%" />
+<col width="73%" />
 </colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Command</p></th>
-<th class="head"></th>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Command</th>
+<th class="head">&#160;</th>
 </tr>
 </thead>
-<tbody>
-<tr class="row-even"><td><p>./c_start</p></td>
-<td><p>Starts the remaining client modules</p></td>
+<tbody valign="top">
+<tr class="row-even"><td>./c_start</td>
+<td>Starts the remaining client modules</td>
 </tr>
-<tr class="row-odd"><td><p>./c_shutdown</p></td>
-<td><p>Shuts down the client modules</p></td>
+<tr class="row-odd"><td>./c_shutdown</td>
+<td>Shuts down the client modules</td>
 </tr>
-<tr class="row-even"><td><p>./c_temperature</p></td>
-<td><p>Provides you CPU/GPU temperature of the clients</p></td>
+<tr class="row-even"><td>./c_temperature</td>
+<td>Provides you CPU/GPU temperature of the clients</td>
 </tr>
 </tbody>
 </table>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The Raspberry Pi modules have a hard limit of 85°C and a soft limit of 60°C. After reaching 60°C the <a class="reference external" href="https://www.raspberrypi.org/documentation/hardware/raspberrypi/frequency-management.md">clock speed is reduced by 200MHz and the operating voltage is slightly reduced</a>.</p>
+<p class="first admonition-title">Note</p>
+<p class="last">The Raspberry Pi modules have a hard limit of 85°C and a soft limit of 60°C. After reaching 60°C the <a class="reference external" href="https://www.raspberrypi.org/documentation/hardware/raspberrypi/frequency-management.md">clock speed is reduced by 200MHz and the operating voltage is slightly reduced</a>.</p>
 </div>
 </div>
 <div class="section" id="executing-commands-on-the-server-module-terminal">
@@ -360,29 +368,29 @@ pip install websocket-client
 <h2>Executing commands on client modules with the provided scripts<a class="headerlink" href="#executing-commands-on-client-modules-with-the-provided-scripts" title="Permalink to this headline">¶</a></h2>
 <p>With a route you can use the toolchain to upload and run your software on the nodes.</p>
 <ul class="simple">
-<li><p>Copy your ssh key to the server module so there won’t be any password questions in the scripts we run later.</p></li>
+<li>Copy your ssh key to the server module so there won’t be any password questions in the scripts we run later.</li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh-copy-id outsider@141.51.123.55
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Create a new directory for your scripts or simulation files on the server node</p></li>
+<li>Create a new directory for your scripts or simulation files on the server node</li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh outsider@141.51.123.55 <span class="s1">&#39;mkdir /pxe/meta/simulation/YOURSIMULATIONNAME&#39;</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Upload via rsync</p></li>
+<li>Upload via rsync</li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rsync -r -e ssh /path/to/your/simulation/ outsider@141.51.123.55:/pxe/meta/simulation/YOURSIMULATIONNAME
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>You can also use scp for uploading your simulation.</p>
+<p class="first admonition-title">Note</p>
+<p class="last">You can also use scp for uploading your simulation.</p>
 </div>
 <ul class="simple">
-<li><p>Distribute your scripts or simulation to the desired nodes</p></li>
+<li>Distribute your scripts or simulation to the desired nodes</li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># You can use multiple single nodes or a range of nodes divided by semicolon</span>
 ssh outsider@141.51.123.55 <span class="s1">&#39;/pxe/meta/sim_to_nodes &quot;YOURSIMULATIONNAME&quot; &quot;4-6;9&quot;&#39;</span>
@@ -391,7 +399,7 @@ ssh outsider@141.51.123.55 <span class="s1">&#39;/pxe/meta/sim_to_nodes &quot;YO
 </div>
 <p>Alternative in R</p>
 <ul class="simple">
-<li><p>Installing dependencies</p></li>
+<li>Installing dependencies</li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install -y libssh-dev
 sudo -i R
@@ -403,7 +411,7 @@ q<span class="o">()</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Within your R script or console</p></li>
+<li>Within your R script or console</li>
 </ul>
 <div class="highlight-R notranslate"><div class="highlight"><pre><span></span><span class="n">R</span>
 <span class="nf">require</span><span class="p">(</span><span class="s">&quot;ssh&quot;</span><span class="p">)</span>
@@ -418,8 +426,8 @@ q<span class="o">()</span>
 </pre></div>
 </div>
 <div class="admonition-todo admonition" id="index-1">
-<p class="admonition-title">Todo</p>
-<p>Testing and running part in bash and R</p>
+<p class="first admonition-title">Todo</p>
+<p class="last">Testing and running part in bash and R</p>
 </div>
 </div>
 </div>
@@ -429,29 +437,29 @@ q<span class="o">()</span>
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="admin.html" class="btn btn-neutral float-right" title="Administration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="technical_overview.html" class="btn btn-neutral float-left" title="Technical Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="admin.html" class="btn btn-neutral float-right" title="Administration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="technical_overview.html" class="btn btn-neutral float-left" title="Technical Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Christoph Hanauer, Sascha Holzhauer
+        &#169; Copyright 2020, Christoph Hanauer, Sascha Holzhauer.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -459,7 +467,6 @@ q<span class="o">()</span>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

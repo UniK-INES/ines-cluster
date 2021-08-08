@@ -1,23 +1,31 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html4" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Docker &mdash; RPi Cluster 0.1 alpha documentation</title>
   
 
   
-  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -29,10 +37,6 @@
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="Administration" href="admin.html" /> 
@@ -76,6 +80,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -99,6 +104,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -133,18 +139,20 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Docker</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/docker.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -164,10 +172,10 @@
 <p>We identified three different options so far that could work on the cluster. This page intends to keep track of the progress.</p>
 <p>General todo list:</p>
 <ul class="simple">
-<li><p>Take one node x as test node</p></li>
+<li>Take one node x as test node</li>
 </ul>
 <ol class="arabic simple">
-<li><p>Make sure no node is running</p></li>
+<li>Make sure no node is running</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nmap -sP <span class="m">10</span>.42.0.0/24
 <span class="c1"># ..</span>
@@ -175,16 +183,16 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Give x its own boot partition on sevastopol (tftp configuration)</p></li>
+<li>Give x its own boot partition on sevastopol (tftp configuration)</li>
 </ul>
 <ol class="arabic simple">
-<li><p>Backup dnsmasq.conf</p></li>
+<li>Backup dnsmasq.conf</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo cp /etc/dnsmasq.conf /etc/dnsmasq.conf.20201202
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li><p>Activate individual tftp-root directories based on ip address</p></li>
+<li>Activate individual tftp-root directories based on ip address</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo nano -w /etc/dnsmasq.conf
 <span class="c1"># Add</span>
@@ -192,14 +200,14 @@ tftp-unique-root<span class="o">=</span>ip
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
-<li><p>Prepare directory and clone boot partition</p></li>
+<li>Prepare directory and clone boot partition</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo mkdir /pxe/boot/10.42.0.2
 sudo rsync -arv --exclude<span class="o">=</span><span class="m">10</span>.42.0.2 /pxe/boot/ /pxe/boot/10.42.0.2/
 </pre></div>
 </div>
 <ol class="arabic simple" start="4">
-<li><p>Prepare directory and clone root partition</p></li>
+<li>Prepare directory and clone root partition</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo mkdir /pxe/root_node02
 sudo rsync -arv /pxe/root/ /pxe/root_node02/
@@ -207,14 +215,14 @@ sudo rsync -arv /pxe/root/ /pxe/root_node02/
 </pre></div>
 </div>
 <ol class="arabic simple" start="4">
-<li><p>Edit cmdline.txt so node02 will boot a different root partition</p></li>
+<li>Edit cmdline.txt so node02 will boot a different root partition</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo nano -w /pxe/boot/10.42.0.2/cmdline.txt
 <span class="c1"># Change 10.42.0.250:/pxe/root to 10.42.0.250:/pxe/root_node02</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="5">
-<li><p>Boot node02 and touch a file</p></li>
+<li>Boot node02 and touch a file</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python /home/pi/client/powerall.py on <span class="m">2</span> <span class="m">2</span>
 ssh pi@10.42.0.2
@@ -225,43 +233,43 @@ ls /pxe/root_node02 <span class="p">|</span> grep test_file_node02
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>There were some problems when this method was tested for the first time. The node was only be able to boot after several attempts. Maybe todo in the future if problems remain.</p>
+<p class="first admonition-title">Note</p>
+<p class="last">There were some problems when this method was tested for the first time. The node was only be able to boot after several attempts. Maybe todo in the future if problems remain.</p>
 </div>
 <p>Alternatively the boot directories can also be provided based on the mac address. For that modify steps 2. and 3.</p>
 <ol class="arabic simple">
-<li><p>Get mac address for node02</p></li>
+<li>Get mac address for node02</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat /pxe/meta/mac_nodes <span class="p">|</span> grep -oP <span class="s1">&#39;^2[^0-9].*$&#39;</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li><p>In /etc/dnsmasq.conf add an individual directory for the boot partition for node02 (<cite>&lt;https://stackoverflow.com/questions/40008276/dnsmasq-different-tftp-root-for-each-macaddress&gt;_</cite>)</p></li>
+<li>In /etc/dnsmasq.conf add an individual directory for the boot partition for node02 (<cite>&lt;https://stackoverflow.com/questions/40008276/dnsmasq-different-tftp-root-for-each-macaddress&gt;_</cite>)</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># /etc/dnsmasq.conf</span>
 tftp-unique-root<span class="o">=</span>mac
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li><p>Get mac address for node02</p></li>
+<li>Get mac address for node02</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat /pxe/meta/mac_nodes <span class="p">|</span> grep -oP <span class="s1">&#39;^2[^0-9].*$&#39;</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
-<li><p>Create the directory with lowercase letters and zero padded digits.</p></li>
+<li>Create the directory with lowercase letters and zero padded digits.</li>
 </ol>
 <ul class="simple">
-<li><p>Include the boot partition in /etc/fstab</p></li>
+<li>Include the boot partition in /etc/fstab</li>
 </ul>
 <ol class="arabic simple">
-<li><p>Connect to node02</p></li>
+<li>Connect to node02</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh pi@10.42.0.2
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li><p>Change the /etc/fstab on node02</p></li>
+<li>Change the /etc/fstab on node02</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo nano -w /etc/fstab
 <span class="c1"># Add 10.42.0.250:/pxe/boot/10.42.0.2 /boot nfs defaults,vers=3 0 0</span>
@@ -269,17 +277,17 @@ sudo mount -a
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
-<li><p>Verify</p></li>
+<li>Verify</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ls /boot
 <span class="c1"># Should list the contents of /pxe/boot/10.42.0.2 on sevastopol</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Update/Upgrade the root partition for x (dirty)</p></li>
+<li>Update/Upgrade the root partition for x (dirty)</li>
 </ul>
 <ol class="arabic simple">
-<li><p>Backup the root partition</p></li>
+<li>Backup the root partition</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># On Sevastopol</span>
 sudo /bin/bash
@@ -289,7 +297,7 @@ rsync -avr /pxe/root_node02/ /pxe/root_node02_backup/
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li><p>Flush all iptables rules</p></li>
+<li>Flush all iptables rules</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>iptables -F
 iptables -X
@@ -303,7 +311,7 @@ iptables -P OUTPUT ACCEPT
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
-<li><p>Add all accepting rules</p></li>
+<li>Add all accepting rules</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Allow established connections</span>
 iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
@@ -314,7 +322,7 @@ iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE
 </pre></div>
 </div>
 <ol class="arabic simple" start="4">
-<li><p>Connect to node02 and update/upgrade</p></li>
+<li>Connect to node02 and update/upgrade</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh pi@10.42.0.2
 sudo /bin/bash
@@ -328,13 +336,13 @@ apt-get full-upgrade <span class="m">2</span>&gt;<span class="p">&amp;</span><sp
 <p>In later docker versions it is possible to keep the docker root on a different storage. Every node has an unused sd card that could be used to store the docker containers.</p>
 <p>What needs to be done:</p>
 <ol class="arabic simple">
-<li><p>Script that mounts the sd cards on nodes (ssh)</p></li>
-<li><p>Install docker</p></li>
-<li><p>If apt-get does not work, compiling it with gcc (binaries can be used for every single node later on)</p></li>
-<li><p>Change docker configuration so the container root is on the sd card</p></li>
-<li><p>Start container</p></li>
-<li><p>If failure, try to move everything related to docker (binary, configuration, etc) to sd card</p></li>
-<li><p>If success, compress every step into bash script so it can be done automatically on other nodes</p></li>
+<li>Script that mounts the sd cards on nodes (ssh)</li>
+<li>Install docker</li>
+<li>If apt-get does not work, compiling it with gcc (binaries can be used for every single node later on)</li>
+<li>Change docker configuration so the container root is on the sd card</li>
+<li>Start container</li>
+<li>If failure, try to move everything related to docker (binary, configuration, etc) to sd card</li>
+<li>If success, compress every step into bash script so it can be done automatically on other nodes</li>
 </ol>
 </div>
 <div class="section" id="docker-via-vfs">
@@ -342,12 +350,12 @@ apt-get full-upgrade <span class="m">2</span>&gt;<span class="p">&amp;</span><sp
 <p>VFS as an overlay file system could be used to provide the COW functionality.</p>
 <p>What needs to be done:</p>
 <ol class="arabic simple">
-<li><p>Install VFS on x</p></li>
-<li><p>Find out path where docker saves containers</p></li>
-<li><p>Put the overlay over path</p></li>
-<li><p>Trials</p></li>
-<li><p>If failure, add overlay for everything docker related</p></li>
-<li><p>If success, automate via bash script</p></li>
+<li>Install VFS on x</li>
+<li>Find out path where docker saves containers</li>
+<li>Put the overlay over path</li>
+<li>Trials</li>
+<li>If failure, add overlay for everything docker related</li>
+<li>If success, automate via bash script</li>
 </ol>
 </div>
 <div class="section" id="changing-the-way-we-boot">
@@ -355,15 +363,15 @@ apt-get full-upgrade <span class="m">2</span>&gt;<span class="p">&amp;</span><sp
 <p>The nodes can also be booted with a standard Raspbian OS stored to the local sd cards.</p>
 <p>What needs to be done:</p>
 <ol class="arabic simple">
-<li><p>Information on how to install os remotely (ssh)</p></li>
-<li><p>Identify the essential manufactorer’s scripts for powering on the nodes (should be 3 on sevastopol)</p></li>
-<li><p>Build an image including everything</p></li>
-<li><p>Scripts for deploying on every node</p></li>
-<li><p>Single out second test node y</p></li>
-<li><p>Trials</p></li>
-<li><p>Automate process so os can be rolled out to every single node</p></li>
-<li><p>Changes to nfs server</p></li>
-<li><p>Additional ssh scripts for controlling the cluster (zero scripts as base)</p></li>
+<li>Information on how to install os remotely (ssh)</li>
+<li>Identify the essential manufactorer’s scripts for powering on the nodes (should be 3 on sevastopol)</li>
+<li>Build an image including everything</li>
+<li>Scripts for deploying on every node</li>
+<li>Single out second test node y</li>
+<li>Trials</li>
+<li>Automate process so os can be rolled out to every single node</li>
+<li>Changes to nfs server</li>
+<li>Additional ssh scripts for controlling the cluster (zero scripts as base)</li>
 </ol>
 </div>
 </div>
@@ -373,27 +381,28 @@ apt-get full-upgrade <span class="m">2</span>&gt;<span class="p">&amp;</span><sp
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-      
-        <a href="admin.html" class="btn btn-neutral float-left" title="Administration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="admin.html" class="btn btn-neutral float-left" title="Administration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Christoph Hanauer, Sascha Holzhauer
+        &#169; Copyright 2020, Christoph Hanauer, Sascha Holzhauer.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -401,7 +410,6 @@ apt-get full-upgrade <span class="m">2</span>&gt;<span class="p">&amp;</span><sp
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

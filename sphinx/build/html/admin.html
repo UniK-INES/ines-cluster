@@ -1,23 +1,31 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html4" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Administration &mdash; RPi Cluster 0.1 alpha documentation</title>
   
 
   
-  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -29,10 +37,6 @@
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Docker" href="docker.html" />
@@ -77,6 +81,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -135,6 +140,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -169,18 +175,20 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Administration</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/admin.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -200,15 +208,15 @@
 <div class="section" id="detailed-booting-process">
 <h2>Detailed Booting Process<a class="headerlink" href="#detailed-booting-process" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p>All modules are started</p></li>
-<li><p>The server module performs tests on the client modules, turns them all out again and starts them according to their <a class="reference internal" href="technical_overview.html#geographical-position"><span class="std std-ref">geographical position</span></a> (1-60)</p></li>
-<li><p>When the clients start t</p></li>
-<li><p>After receiving an ip address they request the boot partition via tftp</p></li>
-<li><p>When the firmware was loaded on the clients they try to mount the root partition</p></li>
-<li><p>The root partition is provided by the server module’s nfs server</p></li>
-<li><p>When mounting was successful the client modules start the operating system</p></li>
-<li><p>The LED on a client module is powered on when all services were started</p></li>
-<li><p>The client will additionally mount its individual content directory</p></li>
+<li>All modules are started</li>
+<li>The server module performs tests on the client modules, turns them all out again and starts them according to their <a class="reference internal" href="technical_overview.html#geographical-position"><span class="std std-ref">geographical position</span></a> (1-60)</li>
+<li>When the clients start t</li>
+<li>After receiving an ip address they request the boot partition via tftp</li>
+<li>When the firmware was loaded on the clients they try to mount the root partition</li>
+<li>The root partition is provided by the server module’s nfs server</li>
+<li>When mounting was successful the client modules start the operating system</li>
+<li>The LED on a client module is powered on when all services were started</li>
+<li>The client will additionally mount its individual content directory</li>
 </ul>
 </div>
 <div class="section" id="servermodule">
@@ -219,16 +227,16 @@
 root partition. Please note: the older backups were done with rsync in combination with tar and gunzip. When you intend to restore an older image (for example the factory default image) a lot of additional work like modifying fstab, setting missing symlinks, etc will be required.</p>
 <p>For both backup and restore procedures:</p>
 <ul class="simple">
-<li><p>Shutdown the client modules by either ssh’ing into the running ones and shutting them down or using the provided bash scripts</p></li>
-<li><p>Shutdown the server module</p></li>
-<li><p>Open the Homematic control panel in your web browser</p></li>
-<li><p>Deactivate the electrical outlet</p></li>
-<li><p>Remove the sd card from the server module</p></li>
+<li>Shutdown the client modules by either ssh’ing into the running ones and shutting them down or using the provided bash scripts</li>
+<li>Shutdown the server module</li>
+<li>Open the Homematic control panel in your web browser</li>
+<li>Deactivate the electrical outlet</li>
+<li>Remove the sd card from the server module</li>
 </ul>
 <p>On your workstation:</p>
 <ul class="simple">
-<li><p>Insert the server module’s sd card</p></li>
-<li><p>Find out its name</p></li>
+<li>Insert the server module’s sd card</li>
+<li>Find out its name</li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lsblk
 <span class="c1"># We assume it is /dev/sdb</span>
@@ -237,47 +245,47 @@ root partition. Please note: the older backups were done with rsync in combinati
 <div class="section" id="backup">
 <h4>Backup<a class="headerlink" href="#backup" title="Permalink to this headline">¶</a></h4>
 <ul class="simple">
-<li><p>We use dd to backup both partitions. You can add the partitions name at the end (for example <code class="docutils literal notranslate"><span class="pre">/dev/sdb1</span></code>) if you are only interested in a particular partition.</p></li>
+<li>We use dd to backup both partitions. You can add the partitions name at the end (for example <code class="docutils literal notranslate"><span class="pre">/dev/sdb1</span></code>) if you are only interested in a particular partition.</li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo dd <span class="nv">bs</span><span class="o">=</span>4M <span class="nv">of</span><span class="o">=</span>/dev/sdb <span class="nv">status</span><span class="o">=</span>progress <span class="p">|</span> gzip &gt; <span class="s2">&quot;</span><span class="k">$(</span>date <span class="s1">&#39;+%Y-%m-%d server module backup&#39;</span><span class="k">)</span><span class="s2">.img.gz&quot;</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Upload the created image to the disk station</p></li>
+<li>Upload the created image to the disk station</li>
 </ul>
 </div>
 <div class="section" id="restore">
 <h4>Restore<a class="headerlink" href="#restore" title="Permalink to this headline">¶</a></h4>
 <p>When you intend to use a new sd card and restore an older image, take a look into the <code class="docutils literal notranslate"><span class="pre">/etc/fstab</span></code> and overwrite the old identifier. Usually the identifier of the card keeps the name when exchanged between different modules.</p>
 <ul class="simple">
-<li><p>Download the image from the department’s diskstation. The samba mount requires root permission so open a root shell and install the dependencies.</p></li>
+<li>Download the image from the department’s diskstation. The samba mount requires root permission so open a root shell and install the dependencies.</li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo /bin/bash
 apt-get install cifs-utils keyutils -Y
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Create a directory for mounting.</p></li>
+<li>Create a directory for mounting.</li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir mnt_diskstation
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Create a credential file.</p></li>
+<li>Create a credential file.</li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>touch .smbcredentials
 <span class="nb">echo</span> -e <span class="s2">&quot;username=YOURUSERNAME\npassword=YOURPASSWORD\ndomain=its-ad&quot;</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Mount the directory with your credentials.</p></li>
+<li>Mount the directory with your credentials.</li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo mount -t cifs //141.51.123.2/ines-cluster ~/mnt_diskstation/ -o <span class="nv">credentials</span><span class="o">=</span>~/.smbcredentials,iocharset<span class="o">=</span>utf8,file_mode<span class="o">=</span><span class="m">0777</span>,dir_mode<span class="o">=</span><span class="m">0777</span>,vers<span class="o">=</span><span class="m">2</span>.0
 </pre></div>
 </div>
 <p>Troubleshooting since we are talking to a windows service: add -vvv as parameter to the mount command and check the syslog with dmesg</p>
 <ul class="simple">
-<li><p>The images of the server node are found in the server_node_backup directory. Download it to your workstation and unzip it.</p></li>
+<li>The images of the server node are found in the server_node_backup directory. Download it to your workstation and unzip it.</li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir ~/tmp_img
 cp ~/mnt_diskstation/server_node_backup/<span class="s1">&#39;2020-08-13 server module backup.img.gz&#39;</span> ~/tmp_img
@@ -286,13 +294,13 @@ gunzip <span class="s1">&#39;2020-08-13 server module backup.img.gz&#39;</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Extract the partions and copy it to the new sd card</p></li>
+<li>Extract the partions and copy it to the new sd card</li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo dd <span class="nv">bs</span><span class="o">=</span>4M <span class="k">if</span><span class="o">=</span>imagefile.img <span class="nv">of</span><span class="o">=</span>/dev/sdb <span class="nv">status</span><span class="o">=</span>progress
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Mount the root partition of the sd card and make sure the identifier of the sd card in <code class="docutils literal notranslate"><span class="pre">/etc/fstab</span></code> is identical.</p></li>
+<li>Mount the root partition of the sd card and make sure the identifier of the sd card in <code class="docutils literal notranslate"><span class="pre">/etc/fstab</span></code> is identical.</li>
 </ul>
 <p>Troubleshooting</p>
 <p>dmesg output
@@ -391,7 +399,7 @@ cat /etc/group <span class="p">|</span> grep outsider
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
-<li><p>Configuration is found in <code class="docutils literal notranslate"><span class="pre">`/etc/ntp.conf`</span></code></p></li>
+<li>Configuration is found in <code class="docutils literal notranslate"><span class="pre">`/etc/ntp.conf`</span></code></li>
 </ol>
 <p>On nodes:</p>
 <p>1. Add ntp server</p>
@@ -413,20 +421,20 @@ cat /etc/group <span class="p">|</span> grep outsider
 <p>In the manufactorer’s server module configuration (standard configuration image) the nodes are booted simply by turning on the electricity to each module. There are three services responsible started by systemd on boot on the server module. This means whenever the server module is booted every single client node receives an “electricity off / on” signal. The server module sends the boot partition via TFTP and consequently the boot partition is not available on the nodes after they finished booting which makes it impossible to use programms like apt-get to install new software out of the box.</p>
 <p>There are multiple ways to fix this problem:</p>
 <ul class="simple">
-<li><p>Mounting the boot partition after the boot process was finished on nodes via /etc/fstab</p></li>
-<li><p>Mounting it manually by script</p></li>
-<li><p>Change the /boot directory in the root partition on server node into a simlink</p></li>
+<li>Mounting the boot partition after the boot process was finished on nodes via /etc/fstab</li>
+<li>Mounting it manually by script</li>
+<li>Change the /boot directory in the root partition on server node into a simlink</li>
 </ul>
 <div class="section" id="mounting-the-boot-partition-with-an-entry-in-etc-fstab">
 <h3>Mounting the boot partition with an entry in /etc/fstab<a class="headerlink" href="#mounting-the-boot-partition-with-an-entry-in-etc-fstab" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li><p>Make sure the boot partition gets exported by the nfs server</p></li>
+<li>Make sure the boot partition gets exported by the nfs server</li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>showmount -e
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Add the path to the boot partition in <cite>/etc/fstab`</cite></p></li>
+<li>Add the path to the boot partition in <cite>/etc/fstab`</cite></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo nano -w /etc/fstab
 <span class="c1"># 10.42.0.250:/pxe/boot /boot nfs defaults,vers=3 0 0</span>
@@ -434,15 +442,15 @@ cat /etc/group <span class="p">|</span> grep outsider
 </div>
 <p>The boot partition will be mounted after the next boot.</p>
 <div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>If the boot partition is not mounted an <cite>apt-get upgrade</cite> can corrupt the root partition.</p>
+<p class="first admonition-title">Warning</p>
+<p class="last">If the boot partition is not mounted an <cite>apt-get upgrade</cite> can corrupt the root partition.</p>
 </div>
 </div>
 <div class="section" id="setting-a-custom-boot-partition-for-a-single-node">
 <h3>Setting a custom boot partition for a single node<a class="headerlink" href="#setting-a-custom-boot-partition-for-a-single-node" title="Permalink to this headline">¶</a></h3>
 <p>The root partition is set in cmdline.txt in <cite>/pxe/boot</cite>. In order to use an individual root partition for a specific node we need the TFTP server to distribute an individual boot partition to the node. This enables testing without corrupting the root image for all nodes.</p>
 <ol class="arabic simple">
-<li><p>Turn off all nodes and get a root shell</p></li>
+<li>Turn off all nodes and get a root shell</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nmap -sP <span class="m">10</span>.42.0.0/24
 <span class="c1"># ..</span>
@@ -451,7 +459,7 @@ sudo /bin/bash
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li><p>Backup and edit TFTP configuration</p></li>
+<li>Backup and edit TFTP configuration</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">bk_date</span><span class="o">=</span><span class="k">$(</span>date +<span class="s2">&quot;%y%m%d%s&quot;</span><span class="k">)</span>
 cp /etc/dnsmasq.conf <span class="s2">&quot;/etc/dnsmasq.conf.</span><span class="nv">$bk_date</span><span class="s2">&quot;</span>
@@ -461,7 +469,7 @@ tftp-unique-root<span class="o">=</span>ip
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
-<li><p>The directory for the individual boot partition unfortunately has to be in the main TFTP directory</p></li>
+<li>The directory for the individual boot partition unfortunately has to be in the main TFTP directory</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Based on the ip address</span>
 mkdir /pxe/boot/10.42.0.2
@@ -470,7 +478,7 @@ rsync -arv --exclude<span class="o">=</span><span class="m">10</span>.42.0.2 /px
 </pre></div>
 </div>
 <ol class="arabic simple" start="4">
-<li><p>Clone the root partition</p></li>
+<li>Clone the root partition</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir /pxe/root_node02
 rsync -arv /pxe/root/ /pxe/root_node02/
@@ -478,14 +486,14 @@ rsync -arv /pxe/root/ /pxe/root_node02/
 </pre></div>
 </div>
 <ol class="arabic simple" start="5">
-<li><p>Edit cmdline.txt</p></li>
+<li>Edit cmdline.txt</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nano -w /pxe/boot/10.42.0.2/cmdline.txt
 <span class="c1"># Change 10.42.0.250:/pxe/root to 10.42.0.250:/pxe/root_node02</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="6">
-<li><p>Start node02 and test</p></li>
+<li>Start node02 and test</li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python /home/pi/client/powerall.py on <span class="m">2</span> <span class="m">2</span>
 ssh pi@10.42.0.2
@@ -496,8 +504,8 @@ ls /pxe/root_node02 <span class="p">|</span> grep test_file_node02
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>It took several attempts to boot the indidivual boot partition in the first run.</p>
+<p class="first admonition-title">Note</p>
+<p class="last">It took several attempts to boot the indidivual boot partition in the first run.</p>
 </div>
 </div>
 <div class="section" id="hostname">
@@ -558,10 +566,10 @@ Run finished 17h15m56s <span class="m">19</span>.08.2020
 <p>In most use cases it’s beneficial to have a test system that works equivalent to the cluster where changes are made locally before they get introduced to all modules on the cluster eg our productive system.
 In this section we go through the necessary steps to create a system that provides that functionality. Overall there are four RaspberryPi modules needed.</p>
 <ul class="simple">
-<li><p>A RaspberryPi 3+ (or comparable) with SD card for providing the WiFi</p></li>
-<li><p>A RaspberryPi 3+ with SD card acting as the server module</p></li>
-<li><p>A RaspberryPi 3+ acting as client module</p></li>
-<li><p>A RaspberryPi Zero with SD card acting as client module</p></li>
+<li>A RaspberryPi 3+ (or comparable) with SD card for providing the WiFi</li>
+<li>A RaspberryPi 3+ with SD card acting as the server module</li>
+<li>A RaspberryPi 3+ acting as client module</li>
+<li>A RaspberryPi Zero with SD card acting as client module</li>
 </ul>
 <div class="section" id="preparing-the-sd-cards-and-installing-raspbian">
 <h3>Preparing the SD cards and installing Raspbian<a class="headerlink" href="#preparing-the-sd-cards-and-installing-raspbian" title="Permalink to this headline">¶</a></h3>
@@ -591,8 +599,8 @@ mmcblk0     179:0    0  29,8G  0 disk
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The dd-command expects the device name not a partition name.</p>
+<p class="first admonition-title">Note</p>
+<p class="last">The dd-command expects the device name not a partition name.</p>
 </div>
 <p>5. Mount the root filesystem and enable ssh</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">rasp_root</span>
@@ -601,7 +609,7 @@ mmcblk0     179:0    0  29,8G  0 disk
 </pre></div>
 </div>
 <ol class="arabic simple" start="6">
-<li><p>Expanding the file system</p></li>
+<li>Expanding the file system</li>
 </ol>
 <p>Open the sd card in fdisk and print the partition table:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">fdisk</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">mmcblk0</span>
@@ -627,8 +635,8 @@ mmcblk0     179:0    0  29,8G  0 disk
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This works because we don’t format the partition so the data on the card is not overwritten and remains readable.</p>
+<p class="first admonition-title">Note</p>
+<p class="last">This works because we don’t format the partition so the data on the card is not overwritten and remains readable.</p>
 </div>
 </div>
 <div class="section" id="generate-and-set-locale">
@@ -650,8 +658,8 @@ mmcblk0     179:0    0  29,8G  0 disk
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>We set LC_MESSAGES=POSIX so the system messages don’t get translated. The updated locale will be available after the next reboot. If you run into problems setting the locale correctly you
+<p class="first admonition-title">Note</p>
+<p class="last">We set LC_MESSAGES=POSIX so the system messages don’t get translated. The updated locale will be available after the next reboot. If you run into problems setting the locale correctly you
 can set LC_ALL to the locale of your choice. All other LC variables will be overwritten by that value.</p>
 </div>
 <p>4. In recent Raspbian versions the Wifi interface will be disabled if the country variable is not set in /etc/wpa_supplicant/wpa_supplicant.conf</p>
@@ -690,8 +698,8 @@ booted over Netboot (TFTP) and NFS so it does not need an sd card present.</p>
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>We assume the password for the root account was set to unikassel.</p>
+<p class="first admonition-title">Note</p>
+<p class="last">We assume the password for the root account was set to unikassel.</p>
 </div>
 <p>2. Update the operating system</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span> <span class="o">-</span><span class="n">y</span> <span class="o">&amp;&amp;</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">upgrade</span> <span class="o">-</span><span class="n">y</span>
@@ -716,11 +724,11 @@ booted over Netboot (TFTP) and NFS so it does not need an sd card present.</p>
 <p>The server module uses its ethernet interface for communicating with the R3 client modules. As consequence we use the wireless interface for communicating with it. The wifi itself is provided by an additional
 RaspberryPi module that is set up with packages hostapd and dnsmasq. There are multiple ways to go on from here.</p>
 <ol class="arabic simple">
-<li><p>Emulating the RaspberryPi with qemu and make changes locally</p></li>
-<li><p>A container solution like systemd-nspawn</p></li>
-<li><p>Native chroot with additional libs</p></li>
-<li><p>Working on the module itself via ssh</p></li>
-<li><p>Working on the module locally</p></li>
+<li>Emulating the RaspberryPi with qemu and make changes locally</li>
+<li>A container solution like systemd-nspawn</li>
+<li>Native chroot with additional libs</li>
+<li>Working on the module itself via ssh</li>
+<li>Working on the module locally</li>
 </ol>
 <p>Options 1 to 3 require a complicated setup before we are able to start therefor we focus on options 4 and 5. Insert one of the prepared sd cards into one of the R3 modules and connect it to your local setup via
 ethernet interface. Find out its IP address and connect via ssh. For easier reading we assume that address to be 192.168.0.123.</p>
@@ -729,8 +737,8 @@ ethernet interface. Find out its IP address and connect via ssh. For easier read
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Sometimes the locale isn’t set correctly on first boot so you are writting with an English keyboard layout (y -&gt; z)</p>
+<p class="first admonition-title">Note</p>
+<p class="last">Sometimes the locale isn’t set correctly on first boot so you are writting with an English keyboard layout (y -&gt; z)</p>
 </div>
 <p>1. Get a root shell and set the hostname.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">su</span>
@@ -784,8 +792,8 @@ ethernet interface. Find out its IP address and connect via ssh. For easier read
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>In our productive system the Zero modules are connected to this wifi and use its dhcp server to get their hostnames. They are identified by their physical address. Since we only have one Zero
+<p class="first admonition-title">Note</p>
+<p class="last">In our productive system the Zero modules are connected to this wifi and use its dhcp server to get their hostnames. They are identified by their physical address. Since we only have one Zero
 module in the test system changes are made easily by hand. In the productive system however an automatic approach is more convenient. You can look up the details in the corresponding section.</p>
 </div>
 <p>9. Configure hostapd base configuration and logging</p>
@@ -882,8 +890,8 @@ wireless interface for communicating with the outside world. So our goals in thi
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Without additional software you won’t be able to mount both partitions at the same time.</p>
+<p class="first admonition-title">Note</p>
+<p class="last">Without additional software you won’t be able to mount both partitions at the same time.</p>
 </div>
 <p>7. Tell the R3 client modules where to find their root partition after booting by editing the cmdline.txt</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nano</span> <span class="o">-</span><span class="n">w</span> <span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">rasp_root</span><span class="o">/</span><span class="n">pxe</span><span class="o">/</span><span class="n">boot</span><span class="o">/</span><span class="n">cmdline</span><span class="o">.</span><span class="n">txt</span>
@@ -892,8 +900,8 @@ wireless interface for communicating with the outside world. So our goals in thi
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Be very careful with special characters in this file. Avoid using any unnecessary white spaces especially new line n or tab t.</p>
+<p class="first admonition-title">Note</p>
+<p class="last">Be very careful with special characters in this file. Avoid using any unnecessary white spaces especially new line n or tab t.</p>
 </div>
 <p>8. Unmount the boot partition, mount the root partition copy the contents and unmount it again.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">umount</span> <span class="o">~/</span><span class="n">testsystem</span><span class="o">/</span><span class="n">mnt</span><span class="o">/</span><span class="n">boot</span>
@@ -956,8 +964,8 @@ server module’s sd card in one of the R3 modules and boot it.</p>
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The no_root_squash parameter can be a security flaw. Without it, the clients will run into a kernel panic when they try to mount the root partition. We include
+<p class="first admonition-title">Note</p>
+<p class="last">The no_root_squash parameter can be a security flaw. Without it, the clients will run into a kernel panic when they try to mount the root partition. We include
 the 192.168.1.0 range because the Zero modules will mount their directories via the wireless interface. If you set different ips for your wifi module you need to change
 the second part of the line.</p>
 </div>
@@ -981,8 +989,8 @@ the server module.</p>
 <p>After that the client will go through its RaspberryPi <a class="reference external" href="https://www.raspberrypi.org/documentation/hardware/raspberrypi/bootmodes/bootflow.md">boot order</a> and boot
 from the first device in the list that it finds.</p>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The module will boot from the first device it is able to identify and disregards entries lower in the list. Be careful when sd cards are present even if they don’t have
+<p class="first admonition-title">Note</p>
+<p class="last">The module will boot from the first device it is able to identify and disregards entries lower in the list. Be careful when sd cards are present even if they don’t have
 the right partition scheme or file systems. If you encounter problems at this point, try removing the sd card.</p>
 </div>
 <p>The booting itself is done over Trivial File Transfer Protocol after the client received an ip address from the first DHCP server it encounters on the network. The package dnsmasq is responsible for both TFTP and DHCP and logs to
@@ -1056,7 +1064,7 @@ partition to the server’s /pxe/boot directory again.</p>
 <p>something could have gone wrong with mounting the root partition. The easiest way from here is connecting the module with an HDMI cable to a monitor and check the output. Additionally (or in the case you
 can’t simply connect a cable like in our productive system) you can debug the nfs server.</p>
 <ul class="simple">
-<li><p>Check if your directories were exported correctly</p></li>
+<li>Check if your directories were exported correctly</li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Connect to testwifi with your working machine. We assume the testserver&#39;s ip to be 192.168.1.4</span>
 <span class="n">showmount</span> <span class="o">-</span><span class="n">e</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">1.4</span>
@@ -1069,7 +1077,7 @@ can’t simply connect a cable like in our productive system) you can debug the 
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Check if the nfsuser can mount the root partition</p></li>
+<li>Check if the nfsuser can mount the root partition</li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Connect to testwifi with your working machine. Next two lines only if you didn&#39;t already create nfsuser on your working machine.</span>
 <span class="n">sudo</span> <span class="n">useradd</span> <span class="o">-</span><span class="n">u</span> <span class="mi">1234</span> <span class="n">nfsuser</span>
@@ -1083,8 +1091,8 @@ can’t simply connect a cable like in our productive system) you can debug the 
 </pre></div>
 </div>
 <div class="admonition-todo admonition" id="index-0">
-<p class="admonition-title">Todo</p>
-<p>Cut that here.</p>
+<p class="first admonition-title">Todo</p>
+<p class="last">Cut that here.</p>
 </div>
 <p>Reconfigure the wireless interface</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wpa_cli</span> <span class="o">-</span><span class="n">i</span> <span class="n">wlan0</span> <span class="n">reconfigure</span>
@@ -1100,14 +1108,16 @@ can’t simply connect a cable like in our productive system) you can debug the 
 <div class="section" id="troubleshooting">
 <h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
 <p>It is physically impossible to access the client modules’ hdmi output because of the way the cluster is assembled. When all nodes are running it is also impossible to access the kernel logs with the current configuration since the nodes work concurrently on the same data stock.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Example</dt>
-<dd class="field-odd"><p>After booting the LED of a module stays off but the module is pingable.</p>
-</dd>
-<dt class="field-even">Conclusion</dt>
-<dd class="field-even"><p>The problem occured between initiating the network interfaces and running /etc/rc.local (the location where the led is powered on)</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body">After booting the LED of a module stays off but the module is pingable.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Conclusion:</th><td class="field-body">The problem occured between initiating the network interfaces and running /etc/rc.local (the location where the led is powered on)</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 
@@ -1116,29 +1126,29 @@ can’t simply connect a cable like in our productive system) you can debug the 
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="docker.html" class="btn btn-neutral float-right" title="Docker" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="userguide.html" class="btn btn-neutral float-left" title="User Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="docker.html" class="btn btn-neutral float-right" title="Docker" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="userguide.html" class="btn btn-neutral float-left" title="User Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Christoph Hanauer, Sascha Holzhauer
+        &#169; Copyright 2020, Christoph Hanauer, Sascha Holzhauer.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -1146,7 +1156,6 @@ can’t simply connect a cable like in our productive system) you can debug the 
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
