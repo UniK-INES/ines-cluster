@@ -45,6 +45,8 @@ If the route is not present yet you can try adding it manually.
 .. code-block:: bash
 
 	sudo route add 10.42.0.0 mask 255.255.255.0 141.51.123.55
+	# alternatively
+	sudo ip route add 10.42.0.0/24 via 141.51.123.55
 	# alternatively when you are connected via wifi
 	sudo ip route add 10.42.0.0/24 via 192.168.1.111
 
