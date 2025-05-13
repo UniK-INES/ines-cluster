@@ -22,7 +22,7 @@ In order to communicate with the client modules directly you need a route into t
 it is not possible to add a direct route into the cluster. For that we have a workaround that you can find in section :ref:`Without Route <Without a route>`.
 
 Check for a route
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^
 
 On linux based operating systems you can use one of the following commands:
 
