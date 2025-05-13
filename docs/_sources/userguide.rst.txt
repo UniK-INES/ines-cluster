@@ -128,8 +128,12 @@ Shutting down the cluster
 .. code-block:: bash
 
 	ssh pi@141.51.123.55
+	
+	sudo shutdown now
 
 * Use the Homematic module to power off the socket.
+	
+	`Homematic module <http://141.51.123.42>`__
 
 Without a route
 -------------------
