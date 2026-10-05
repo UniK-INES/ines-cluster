@@ -15,7 +15,7 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
-from recommonmark.transform import AutoStructify
+#from recommonmark.transform import AutoStructify
 
 # -- Project information -----------------------------------------------------
 
@@ -45,7 +45,6 @@ extensions = [
 	'sphinx.ext.autosectionlabel',
     'sphinx.ext.todo',
     'sphinx.ext.imgmath',
-    'recommonmark'
 ]
 
 
@@ -188,14 +187,8 @@ epub_exclude_files = ['search.html']
 
 # -- Options for intersphinx extension ---------------------------------------
 
-# Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'https://docs.python.org/': None}
-
 # -- Options for todo extension ----------------------------------------------
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
-
-def setup(app):
-    app.add_transform(AutoStructify)
 

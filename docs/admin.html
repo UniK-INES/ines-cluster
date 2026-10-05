@@ -1,19 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Administration &mdash; RPi Cluster 0.1 alpha documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=dd986fa6"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -26,14 +28,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> RPi Cluster
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            RPi Cluster
           </a>
-              <div class="version">
-                0.1
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -100,7 +103,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Administration</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/admin.rst.txt" rel="nofollow"> View page source</a>
@@ -112,10 +115,10 @@
            <div itemprop="articleBody">
              
   <section id="administration">
-<h1>Administration<a class="headerlink" href="#administration" title="Permalink to this heading"></a></h1>
+<h1>Administration<a class="headerlink" href="#administration" title="Link to this heading"></a></h1>
 <p>This part gives an overview about the adminstration of the cluster. Main focus is on the server module since the nodes are using space on the server module’s sd card to boot. Setting up a test system gives you the opportunity to recreate the system with a minimal amount of Raspberry Pi modules. It provides an insight into the internals and can be used (almost) equivalent to the productive system. Should you run into problems the Diagnosis section should be the first point to start. Troubleshooting lists some error scenarios that occur often while working with the system.</p>
 <section id="detailed-booting-process">
-<h2>Detailed Booting Process<a class="headerlink" href="#detailed-booting-process" title="Permalink to this heading"></a></h2>
+<h2>Detailed Booting Process<a class="headerlink" href="#detailed-booting-process" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>All modules are started</p></li>
 <li><p>The server module performs tests on the client modules, turns them all out again and starts them according to their <a class="reference internal" href="technical_overview.html#geographical-position"><span class="std std-ref">geographical position</span></a> (1-60)</p></li>
@@ -129,9 +132,9 @@
 </ul>
 </section>
 <section id="servermodule">
-<h2>Servermodule<a class="headerlink" href="#servermodule" title="Permalink to this heading"></a></h2>
+<h2>Servermodule<a class="headerlink" href="#servermodule" title="Link to this heading"></a></h2>
 <section id="backup-and-restore">
-<h3>Backup and Restore<a class="headerlink" href="#backup-and-restore" title="Permalink to this heading"></a></h3>
+<h3>Backup and Restore<a class="headerlink" href="#backup-and-restore" title="Link to this heading"></a></h3>
 <p>The contents of the server module are regularly backuped onto the department’s disk station. The images are named after their backup date. The easiest way to backup and restore is by using img-files containing the boot and
 root partition. Please note: the older backups were done with rsync in combination with tar and gunzip. When you intend to restore an older image (for example the factory default image) a lot of additional work like modifying fstab, setting missing symlinks, etc will be required.</p>
 <p>For both backup and restore procedures:</p>
@@ -152,7 +155,7 @@ root partition. Please note: the older backups were done with rsync in combinati
 </pre></div>
 </div>
 <section id="backup">
-<h4>Backup<a class="headerlink" href="#backup" title="Permalink to this heading"></a></h4>
+<h4>Backup<a class="headerlink" href="#backup" title="Link to this heading"></a></h4>
 <ul class="simple">
 <li><p>We use dd to backup both partitions. You can add the partitions name at the end (for example <code class="docutils literal notranslate"><span class="pre">/dev/sdb1</span></code>) if you are only interested in a particular partition.</p></li>
 </ul>
@@ -164,7 +167,7 @@ root partition. Please note: the older backups were done with rsync in combinati
 </ul>
 </section>
 <section id="restore">
-<h4>Restore<a class="headerlink" href="#restore" title="Permalink to this heading"></a></h4>
+<h4>Restore<a class="headerlink" href="#restore" title="Link to this heading"></a></h4>
 <p>When you intend to use a new sd card and restore an older image, take a look into the <code class="docutils literal notranslate"><span class="pre">/etc/fstab</span></code> and overwrite the old identifier. Usually the identifier of the card keeps the name when exchanged between different modules.</p>
 <ul class="simple">
 <li><p>Download the image from the department’s diskstation. The samba mount requires root permission so open a root shell and install the dependencies.</p></li>
@@ -217,10 +220,10 @@ bad geometry: block count 7748608 exceeds size of device</p>
 </section>
 </section>
 <section id="package-dnsmasq">
-<h3>Package dnsmasq<a class="headerlink" href="#package-dnsmasq" title="Permalink to this heading"></a></h3>
+<h3>Package dnsmasq<a class="headerlink" href="#package-dnsmasq" title="Link to this heading"></a></h3>
 <p>The package includes the dhcp and tftp server. When powered on the client nodes will look for the first dhcp in the local network and request an ip address and hostname.</p>
 <section id="debugging-packets">
-<h4>Debugging packets<a class="headerlink" href="#debugging-packets" title="Permalink to this heading"></a></h4>
+<h4>Debugging packets<a class="headerlink" href="#debugging-packets" title="Link to this heading"></a></h4>
 <p>We can get information about the dhcp handshake with tcpdump.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>port<span class="w"> </span>bootpc
 <span class="c1"># Output will look like this</span>
@@ -236,7 +239,7 @@ sudo<span class="w"> </span>tcpdump<span class="w"> </span>-vvveni<span class="w
 </div>
 </section>
 <section id="dhcp-configuration">
-<h4>DHCP Configuration<a class="headerlink" href="#dhcp-configuration" title="Permalink to this heading"></a></h4>
+<h4>DHCP Configuration<a class="headerlink" href="#dhcp-configuration" title="Link to this heading"></a></h4>
 <p>The ip addresses are configured in /etc/dnsmasq.d/mac_table. They are set accoring to the nodes’ geographical position. The Zero modules don’t have an ethernet interface and connect to an external wifi so they are not listed in the file.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>dhcp-host<span class="o">=</span>b8:27:eb:fc:6a:59,node35,10.42.0.35,infinite
 </pre></div>
@@ -259,14 +262,14 @@ Sep<span class="w"> </span><span class="m">15</span><span class="w"> </span><spa
 </section>
 </section>
 <section id="nfs-server">
-<h3>NFS Server<a class="headerlink" href="#nfs-server" title="Permalink to this heading"></a></h3>
+<h3>NFS Server<a class="headerlink" href="#nfs-server" title="Link to this heading"></a></h3>
 <p>Provides the root partition /pxe/root and the individual content directory for the nodes. The directories are set in /etc/exports. Changes have to be reimported with exportfs -ra.</p>
 </section>
 <section id="user-outsider">
-<h3>User outsider<a class="headerlink" href="#user-outsider" title="Permalink to this heading"></a></h3>
+<h3>User outsider<a class="headerlink" href="#user-outsider" title="Link to this heading"></a></h3>
 <p>The user account “outsider” on the server module and the client modules is used to setup and run new simulations.</p>
 <section id="setup">
-<h4>Setup<a class="headerlink" href="#setup" title="Permalink to this heading"></a></h4>
+<h4>Setup<a class="headerlink" href="#setup" title="Link to this heading"></a></h4>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>/bin/bash
 useradd<span class="w"> </span>-m<span class="w"> </span>-g<span class="w"> </span>pi<span class="w"> </span>outsider
 <span class="c1"># Disabling status messages when connecting via ssh</span>
@@ -276,7 +279,7 @@ touch<span class="w"> </span>/home/outsider/.hushlogin<span class="w"> </span><s
 </div>
 </section>
 <section id="debug">
-<h4>Debug<a class="headerlink" href="#debug" title="Permalink to this heading"></a></h4>
+<h4>Debug<a class="headerlink" href="#debug" title="Link to this heading"></a></h4>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat<span class="w"> </span>/etc/passwd<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>outsider
 <span class="c1"># outsider:x:1221:1221::/home/outsider:/bin/bash</span>
 cat<span class="w"> </span>/etc/group<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>outsider
@@ -295,7 +298,7 @@ cat<span class="w"> </span>/etc/group<span class="w"> </span><span class="p">|</
 </section>
 </section>
 <section id="homematic">
-<h2>Homematic<a class="headerlink" href="#homematic" title="Permalink to this heading"></a></h2>
+<h2>Homematic<a class="headerlink" href="#homematic" title="Link to this heading"></a></h2>
 <p>The cluster is powered by an electrical socket that is controlled by the debmatic software running on this R4 module (<a class="reference external" href="http://141.51.123.42">http://141.51.123.42</a>).</p>
 <p>Additionally the Homematic module provides date and time information for the nodes. For that a ntp server is used.</p>
 <p>1. Installation</p>
@@ -326,7 +329,7 @@ cat<span class="w"> </span>/etc/group<span class="w"> </span><span class="p">|</
 </div>
 </section>
 <section id="client-modules">
-<h2>Client modules<a class="headerlink" href="#client-modules" title="Permalink to this heading"></a></h2>
+<h2>Client modules<a class="headerlink" href="#client-modules" title="Link to this heading"></a></h2>
 <p>In the manufactorer’s server module configuration (standard configuration image) the nodes are booted simply by turning on the electricity to each module. There are three services responsible started by systemd on boot on the server module. This means whenever the server module is booted every single client node receives an “electricity off / on” signal. The server module sends the boot partition via TFTP and consequently the boot partition is not available on the nodes after they finished booting which makes it impossible to use programms like apt-get to install new software out of the box.</p>
 <p>There are multiple ways to fix this problem:</p>
 <ul class="simple">
@@ -335,7 +338,7 @@ cat<span class="w"> </span>/etc/group<span class="w"> </span><span class="p">|</
 <li><p>Change the /boot directory in the root partition on server node into a simlink</p></li>
 </ul>
 <section id="mounting-the-boot-partition-with-an-entry-in-etc-fstab">
-<h3>Mounting the boot partition with an entry in /etc/fstab<a class="headerlink" href="#mounting-the-boot-partition-with-an-entry-in-etc-fstab" title="Permalink to this heading"></a></h3>
+<h3>Mounting the boot partition with an entry in /etc/fstab<a class="headerlink" href="#mounting-the-boot-partition-with-an-entry-in-etc-fstab" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Make sure the boot partition gets exported by the nfs server</p></li>
 </ul>
@@ -356,7 +359,7 @@ cat<span class="w"> </span>/etc/group<span class="w"> </span><span class="p">|</
 </div>
 </section>
 <section id="setting-a-custom-boot-partition-for-a-single-node">
-<h3>Setting a custom boot partition for a single node<a class="headerlink" href="#setting-a-custom-boot-partition-for-a-single-node" title="Permalink to this heading"></a></h3>
+<h3>Setting a custom boot partition for a single node<a class="headerlink" href="#setting-a-custom-boot-partition-for-a-single-node" title="Link to this heading"></a></h3>
 <p>The root partition is set in cmdline.txt in <cite>/pxe/boot</cite>. In order to use an individual root partition for a specific node we need the TFTP server to distribute an individual boot partition to the node. This enables testing without corrupting the root image for all nodes.</p>
 <ol class="arabic simple">
 <li><p>Turn off all nodes and get a root shell</p></li>
@@ -418,7 +421,7 @@ ls<span class="w"> </span>/pxe/root_node02<span class="w"> </span><span class="p
 </div>
 </section>
 <section id="hostname">
-<h3>Hostname<a class="headerlink" href="#hostname" title="Permalink to this heading"></a></h3>
+<h3>Hostname<a class="headerlink" href="#hostname" title="Link to this heading"></a></h3>
 <p>When a client module is booted the eth0 hardware address is used to determine their geographical position. The lookup table is located in <code class="docutils literal notranslate"><span class="pre">/opt/mac_nodes</span></code>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">read</span><span class="w"> </span>MAC<span class="w"> </span>&lt;/sys/class/net/eth0/address
 cat<span class="w"> </span>/opt/mac_nodes<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="nv">$MAC</span>
@@ -449,7 +452,7 @@ node11
 </div>
 </section>
 <section id="individual-content-directory">
-<h3>Individual content directory<a class="headerlink" href="#individual-content-directory" title="Permalink to this heading"></a></h3>
+<h3>Individual content directory<a class="headerlink" href="#individual-content-directory" title="Link to this heading"></a></h3>
 <p>The simulations for the clients to run are stored in their individual content directory. On the server module they are located in <code class="docutils literal notranslate"><span class="pre">/pxe/nodes</span></code> and are mounted on the clients in /opt/individual_content. Inside the directory a symlink <code class="docutils literal notranslate"><span class="pre">lastrun</span></code> points to the output file of the last run simulation.</p>
 <p>The output file contains all informations about the lastrun and is available during run time. The file descriptors (FDPARENT and FDCHILD) can be used to read standard output/error from the <code class="docutils literal notranslate"><span class="pre">/opt/starter</span></code> script and the command/simulation the client is running currently.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat<span class="w"> </span>/opt/individual_content/lastrun
@@ -471,7 +474,7 @@ Run<span class="w"> </span>finished<span class="w"> </span>17h15m56s<span class=
 </section>
 </section>
 <section id="setting-up-a-testsystem">
-<h2>Setting Up A Testsystem<a class="headerlink" href="#setting-up-a-testsystem" title="Permalink to this heading"></a></h2>
+<h2>Setting Up A Testsystem<a class="headerlink" href="#setting-up-a-testsystem" title="Link to this heading"></a></h2>
 <p>In most use cases it’s beneficial to have a test system that works equivalent to the cluster where changes are made locally before they get introduced to all modules on the cluster eg our productive system.
 In this section we go through the necessary steps to create a system that provides that functionality. Overall there are four RaspberryPi modules needed.</p>
 <ul class="simple">
@@ -481,7 +484,7 @@ In this section we go through the necessary steps to create a system that provid
 <li><p>A RaspberryPi Zero with SD card acting as client module</p></li>
 </ul>
 <section id="preparing-the-sd-cards-and-installing-raspbian">
-<h3>Preparing the SD cards and installing Raspbian<a class="headerlink" href="#preparing-the-sd-cards-and-installing-raspbian" title="Permalink to this heading"></a></h3>
+<h3>Preparing the SD cards and installing Raspbian<a class="headerlink" href="#preparing-the-sd-cards-and-installing-raspbian" title="Link to this heading"></a></h3>
 <p>1. Get the latest raspbian lite image</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">-</span><span class="n">p</span> <span class="o">~/</span><span class="n">raspbian</span><span class="o">-</span><span class="n">lite</span> <span class="o">&amp;&amp;</span> <span class="n">cd</span> <span class="s2">&quot;$_&quot;</span>
 <span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">downloads</span><span class="o">.</span><span class="n">raspberrypi</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">raspbian_lite_latest</span>
@@ -537,7 +540,7 @@ mmcblk0     179:0    0  29,8G  0 disk
 <span class="n">Press</span> <span class="n">n</span> <span class="k">for</span> <span class="n">new</span> <span class="n">partition</span>
 <span class="n">Press</span> <span class="n">p</span> <span class="k">for</span> <span class="n">primary</span> <span class="n">partition</span>
 <span class="n">Press</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">partition</span> <span class="mi">2</span>
-<span class="n">Enter</span> <span class="n">the</span> <span class="n">start</span> <span class="n">value</span> <span class="mi">98304</span> <span class="kn">from</span> <span class="nn">above</span>
+<span class="n">Enter</span> <span class="n">the</span> <span class="n">start</span> <span class="n">value</span> <span class="mi">98304</span> <span class="kn">from</span><span class="w"> </span><span class="nn">above</span>
 <span class="n">Press</span> <span class="n">Enter</span> <span class="k">for</span> <span class="n">default</span> <span class="p">(</span><span class="n">partition</span> <span class="n">will</span> <span class="n">use</span> <span class="n">available</span> <span class="n">space</span><span class="p">)</span>
 <span class="n">Answer</span> <span class="n">no</span> <span class="n">when</span> <span class="n">asked</span> <span class="k">if</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">remove</span> <span class="n">the</span> <span class="n">partition</span><span class="s1">&#39;s signature</span>
 <span class="n">Press</span> <span class="n">w</span> <span class="n">to</span> <span class="n">write</span> <span class="n">out</span> <span class="n">the</span> <span class="n">partition</span> <span class="n">table</span>
@@ -549,7 +552,7 @@ mmcblk0     179:0    0  29,8G  0 disk
 </div>
 </section>
 <section id="generate-and-set-locale">
-<h3>Generate and set locale<a class="headerlink" href="#generate-and-set-locale" title="Permalink to this heading"></a></h3>
+<h3>Generate and set locale<a class="headerlink" href="#generate-and-set-locale" title="Link to this heading"></a></h3>
 <p>1. Boot the module and connect via ssh</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="n">pi</span><span class="o">@</span><span class="mf">192.168.0.123</span>
 
@@ -629,7 +632,7 @@ booted over Netboot (TFTP) and NFS so it does not need an sd card present.</p>
 <p>At this point the default user pi won’t be able to login anymore. You might want to reconnect with the newly created user.</p>
 </section>
 <section id="the-wifi-module">
-<h3>The WiFi module<a class="headerlink" href="#the-wifi-module" title="Permalink to this heading"></a></h3>
+<h3>The WiFi module<a class="headerlink" href="#the-wifi-module" title="Link to this heading"></a></h3>
 <p>The server module uses its ethernet interface for communicating with the R3 client modules. As consequence we use the wireless interface for communicating with it. The wifi itself is provided by an additional
 RaspberryPi module that is set up with packages hostapd and dnsmasq. There are multiple ways to go on from here.</p>
 <ol class="arabic simple">
@@ -748,7 +751,7 @@ DAEMON_OPTS=&quot;-dd -t -f /var/log/hostapd.log&quot;
 <p>At this point devices can connect to a wifi (ssid: testwifi) and get their packages rerouted to the ethernet interface of that module.</p>
 </section>
 <section id="the-server-module">
-<h3>The Server Module<a class="headerlink" href="#the-server-module" title="Permalink to this heading"></a></h3>
+<h3>The Server Module<a class="headerlink" href="#the-server-module" title="Link to this heading"></a></h3>
 <p>We have the wifi working and can move on to the server module. Remember the server module uses its ethernet interface supplying the R3 client modules with their operating system and its
 wireless interface for communicating with the outside world. So our goals in this section is preparing the ethernet interface and setup an nfs server.</p>
 <p>1. For that we copy our generic image to an sd card.</p>
@@ -892,7 +895,7 @@ the second part of the line.</p>
 <p>Debugging the netboot</p>
 </section>
 <section id="the-client-modules">
-<h3>The client modules<a class="headerlink" href="#the-client-modules" title="Permalink to this heading"></a></h3>
+<h3>The client modules<a class="headerlink" href="#the-client-modules" title="Link to this heading"></a></h3>
 <p>You are now able to netboot an R3 client module with its ethernet interface connected to our server module. Connect the client’s ethernet interface to
 the server module.</p>
 <p>After that the client will go through its RaspberryPi <a class="reference external" href="https://www.raspberrypi.org/documentation/hardware/raspberrypi/bootmodes/bootflow.md">boot order</a> and boot
@@ -949,9 +952,9 @@ the right partition scheme or file systems. If you encounter problems at this po
 <span class="c1"># Start the client module</span>
 
 <span class="c1"># Output</span>
-<span class="mi">10</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="mf">37.895478</span> <span class="n">IP</span> <span class="mf">0.0.0.0</span><span class="o">.</span><span class="n">bootpc</span> <span class="o">&gt;</span> <span class="mf">255.255.255.255</span><span class="o">.</span><span class="n">bootps</span><span class="p">:</span> <span class="n">BOOTP</span><span class="o">/</span><span class="n">DHCP</span><span class="p">,</span> <span class="n">Request</span> <span class="kn">from</span> <span class="nn">b8</span><span class="p">:</span><span class="mi">27</span><span class="p">:</span><span class="n">eb</span><span class="p">:</span><span class="mi">76</span><span class="p">:</span><span class="n">a6</span><span class="p">:</span><span class="mi">1</span><span class="n">a</span> <span class="p">(</span><span class="n">oui</span> <span class="n">Unknown</span><span class="p">),</span> <span class="n">length</span> <span class="mi">320</span>
-<span class="mi">10</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="mf">40.732978</span> <span class="n">IP</span> <span class="mf">0.0.0.0</span><span class="o">.</span><span class="n">bootpc</span> <span class="o">&gt;</span> <span class="mf">255.255.255.255</span><span class="o">.</span><span class="n">bootps</span><span class="p">:</span> <span class="n">BOOTP</span><span class="o">/</span><span class="n">DHCP</span><span class="p">,</span> <span class="n">Request</span> <span class="kn">from</span> <span class="nn">b8</span><span class="p">:</span><span class="mi">27</span><span class="p">:</span><span class="n">eb</span><span class="p">:</span><span class="mi">76</span><span class="p">:</span><span class="n">a6</span><span class="p">:</span><span class="mi">1</span><span class="n">a</span> <span class="p">(</span><span class="n">oui</span> <span class="n">Unknown</span><span class="p">),</span> <span class="n">length</span> <span class="mi">320</span>
-<span class="mi">10</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="mf">44.815790</span> <span class="n">IP</span> <span class="mf">0.0.0.0</span><span class="o">.</span><span class="n">bootpc</span> <span class="o">&gt;</span> <span class="mf">255.255.255.255</span><span class="o">.</span><span class="n">bootps</span><span class="p">:</span> <span class="n">BOOTP</span><span class="o">/</span><span class="n">DHCP</span><span class="p">,</span> <span class="n">Request</span> <span class="kn">from</span> <span class="nn">b8</span><span class="p">:</span><span class="mi">27</span><span class="p">:</span><span class="n">eb</span><span class="p">:</span><span class="mi">76</span><span class="p">:</span><span class="n">a6</span><span class="p">:</span><span class="mi">1</span><span class="n">a</span> <span class="p">(</span><span class="n">oui</span> <span class="n">Unknown</span><span class="p">),</span> <span class="n">length</span> <span class="mi">320</span>
+<span class="mi">10</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="mf">37.895478</span> <span class="n">IP</span> <span class="mf">0.0.0.0</span><span class="o">.</span><span class="n">bootpc</span> <span class="o">&gt;</span> <span class="mf">255.255.255.255</span><span class="o">.</span><span class="n">bootps</span><span class="p">:</span> <span class="n">BOOTP</span><span class="o">/</span><span class="n">DHCP</span><span class="p">,</span> <span class="n">Request</span> <span class="kn">from</span><span class="w"> </span><span class="nn">b8</span><span class="p">:</span><span class="mi">27</span><span class="p">:</span><span class="n">eb</span><span class="p">:</span><span class="mi">76</span><span class="p">:</span><span class="n">a6</span><span class="p">:</span><span class="mi">1</span><span class="n">a</span> <span class="p">(</span><span class="n">oui</span> <span class="n">Unknown</span><span class="p">),</span> <span class="n">length</span> <span class="mi">320</span>
+<span class="mi">10</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="mf">40.732978</span> <span class="n">IP</span> <span class="mf">0.0.0.0</span><span class="o">.</span><span class="n">bootpc</span> <span class="o">&gt;</span> <span class="mf">255.255.255.255</span><span class="o">.</span><span class="n">bootps</span><span class="p">:</span> <span class="n">BOOTP</span><span class="o">/</span><span class="n">DHCP</span><span class="p">,</span> <span class="n">Request</span> <span class="kn">from</span><span class="w"> </span><span class="nn">b8</span><span class="p">:</span><span class="mi">27</span><span class="p">:</span><span class="n">eb</span><span class="p">:</span><span class="mi">76</span><span class="p">:</span><span class="n">a6</span><span class="p">:</span><span class="mi">1</span><span class="n">a</span> <span class="p">(</span><span class="n">oui</span> <span class="n">Unknown</span><span class="p">),</span> <span class="n">length</span> <span class="mi">320</span>
+<span class="mi">10</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="mf">44.815790</span> <span class="n">IP</span> <span class="mf">0.0.0.0</span><span class="o">.</span><span class="n">bootpc</span> <span class="o">&gt;</span> <span class="mf">255.255.255.255</span><span class="o">.</span><span class="n">bootps</span><span class="p">:</span> <span class="n">BOOTP</span><span class="o">/</span><span class="n">DHCP</span><span class="p">,</span> <span class="n">Request</span> <span class="kn">from</span><span class="w"> </span><span class="nn">b8</span><span class="p">:</span><span class="mi">27</span><span class="p">:</span><span class="n">eb</span><span class="p">:</span><span class="mi">76</span><span class="p">:</span><span class="n">a6</span><span class="p">:</span><span class="mi">1</span><span class="n">a</span> <span class="p">(</span><span class="n">oui</span> <span class="n">Unknown</span><span class="p">),</span> <span class="n">length</span> <span class="mi">320</span>
 <span class="mi">10</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="mf">44.817322</span> <span class="n">IP</span> <span class="mf">10.42.0.250</span><span class="o">.</span><span class="n">bootps</span> <span class="o">&gt;</span> <span class="mf">10.42.0.17</span><span class="o">.</span><span class="n">bootpc</span><span class="p">:</span> <span class="n">BOOTP</span><span class="o">/</span><span class="n">DHCP</span><span class="p">,</span> <span class="n">Reply</span><span class="p">,</span> <span class="n">length</span> <span class="mi">344</span>
 </pre></div>
 </div>
@@ -1012,10 +1015,10 @@ can’t simply connect a cable like in our productive system) you can debug the 
 </section>
 </section>
 <section id="diagnosis">
-<h2>Diagnosis<a class="headerlink" href="#diagnosis" title="Permalink to this heading"></a></h2>
+<h2>Diagnosis<a class="headerlink" href="#diagnosis" title="Link to this heading"></a></h2>
 </section>
 <section id="troubleshooting">
-<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading"></a></h2>
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
 <p>It is physically impossible to access the client modules’ hdmi output because of the way the cluster is assembled. When all nodes are running it is also impossible to access the kernel logs with the current configuration since the nodes work concurrently on the same data stock.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Example<span class="colon">:</span></dt>

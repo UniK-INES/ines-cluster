@@ -1,19 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>User Guide &mdash; RPi Cluster 0.1 alpha documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=dd986fa6"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -26,14 +28,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> RPi Cluster
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            RPi Cluster
           </a>
-              <div class="version">
-                0.1
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -78,7 +81,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">User Guide</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/userguide.rst.txt" rel="nofollow"> View page source</a>
@@ -90,10 +93,10 @@
            <div itemprop="articleBody">
              
   <section id="user-guide">
-<h1>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this heading"></a></h1>
+<h1>User Guide<a class="headerlink" href="#user-guide" title="Link to this heading"></a></h1>
 <p>Connect to one of the Fachgebiet’s network outlets, the <strong>nostromo</strong> wifi or the <a class="reference external" href="https://www.uni-kassel.de/its-handbuch/netzinfrastruktur/cisco-anyconnect-client.html">University’s VPN</a>.</p>
 <section id="powering-on-the-cluster">
-<h2>Powering on the cluster<a class="headerlink" href="#powering-on-the-cluster" title="Permalink to this heading"></a></h2>
+<h2>Powering on the cluster<a class="headerlink" href="#powering-on-the-cluster" title="Link to this heading"></a></h2>
 <p>Turn on the server module by activating the electrical outlet. In your web browser open <a class="reference external" href="http://141.51.123.42">http://141.51.123.42</a> and login with the “Admin” account. You will see an item called “Schaltaktor RP-Cluster” which controlls the electrical outlet the cluster is connected to. Press the On button.</p>
 <p>The server module will power on the client modules, perform some self tests and turn them off again. Afterwards the client modules get booted one by one according to their geographical position. There is a <a class="reference internal" href="technical_overview.html#known-problems"><span class="std std-ref">firmware issue</span></a> keeping a lot of client modules from downloading their root partition. We will fix that with a helper script after we added the necessary routes.</p>
 <div class="admonition note">
@@ -106,11 +109,11 @@
 </div>
 </section>
 <section id="routing">
-<h2>Routing<a class="headerlink" href="#routing" title="Permalink to this heading"></a></h2>
+<h2>Routing<a class="headerlink" href="#routing" title="Link to this heading"></a></h2>
 <p>In order to communicate with the client modules directly you need a route into the cluster. This means, the packages from your workstation addressed to the client modules (10.42.0.x) need a route to the server module. Under some circumstances
 it is not possible to add a direct route into the cluster. For that we have a workaround that you can find in section <a class="reference internal" href="#without-a-route"><span class="std std-ref">Without Route</span></a>.</p>
 <section id="check-for-a-route">
-<h3>Check for a route<a class="headerlink" href="#check-for-a-route" title="Permalink to this heading"></a></h3>
+<h3>Check for a route<a class="headerlink" href="#check-for-a-route" title="Link to this heading"></a></h3>
 <p>On linux based operating systems you can use one of the following commands:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>route
 <span class="c1"># alternatively</span>
@@ -138,7 +141,7 @@ sudo<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </sp
 <p>If you get a response you can ignore the next step.</p>
 </section>
 <section id="adding-a-route-manually">
-<h3>Adding a route manually<a class="headerlink" href="#adding-a-route-manually" title="Permalink to this heading"></a></h3>
+<h3>Adding a route manually<a class="headerlink" href="#adding-a-route-manually" title="Link to this heading"></a></h3>
 <p>If you are connected to the WiFi</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>route<span class="w"> </span>add<span class="w"> </span><span class="m">10</span>.42.0.0<span class="w"> </span>mask<span class="w"> </span><span class="m">255</span>.255.255.0<span class="w"> </span><span class="m">192</span>.168.1.111
 <span class="c1"># alternatively</span>
@@ -159,10 +162,10 @@ sudo<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </sp
 </section>
 </section>
 <section id="with-a-route">
-<h2>With a route<a class="headerlink" href="#with-a-route" title="Permalink to this heading"></a></h2>
+<h2>With a route<a class="headerlink" href="#with-a-route" title="Link to this heading"></a></h2>
 <p>With a working route into the cluster you can directly use every script provided in the workstation directory of the repository on your computer. The easiest way to receive the scripts is cloning the respository <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/UniK-INES/ines-cluster.git</span></code>.</p>
 <section id="dependencies">
-<h3>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this heading"></a></h3>
+<h3>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading"></a></h3>
 <p>We install the dependencies</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>python<span class="w"> </span>python-pip<span class="w"> </span>fping<span class="w"> </span>-y
 pip<span class="w"> </span>install<span class="w"> </span>websocket-client
@@ -170,11 +173,11 @@ pip<span class="w"> </span>install<span class="w"> </span>websocket-client
 </div>
 </section>
 <section id="starting-the-remaining-modules">
-<h3>Starting the remaining modules<a class="headerlink" href="#starting-the-remaining-modules" title="Permalink to this heading"></a></h3>
+<h3>Starting the remaining modules<a class="headerlink" href="#starting-the-remaining-modules" title="Link to this heading"></a></h3>
 <p>Change into the workstation directory and run <code class="docutils literal notranslate"><span class="pre">./cluster_start</span></code>. The script will now boot the remaining client modules.</p>
 </section>
 <section id="shutting-down-the-cluster">
-<h3>Shutting down the cluster<a class="headerlink" href="#shutting-down-the-cluster" title="Permalink to this heading"></a></h3>
+<h3>Shutting down the cluster<a class="headerlink" href="#shutting-down-the-cluster" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Shut down the client modules</p></li>
 </ul>
@@ -207,7 +210,7 @@ sudo<span class="w"> </span>shutdown<span class="w"> </span>now
 </section>
 </section>
 <section id="without-a-route">
-<h2>Without a route<a class="headerlink" href="#without-a-route" title="Permalink to this heading"></a></h2>
+<h2>Without a route<a class="headerlink" href="#without-a-route" title="Link to this heading"></a></h2>
 <p>Since we don’t have a direct route into the cluster and to the client modules we connect to the Homematic module first where a static route to the server module exists.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>route
 <span class="c1"># 10.42.0.0       141.51.123.55   255.255.255.0   UG    0      0        0 eth0</span>
@@ -238,7 +241,7 @@ sudo<span class="w"> </span>shutdown<span class="w"> </span>now
 </div>
 </section>
 <section id="executing-commands-on-the-server-module-terminal">
-<h2>Executing commands on the server module (terminal)<a class="headerlink" href="#executing-commands-on-the-server-module-terminal" title="Permalink to this heading"></a></h2>
+<h2>Executing commands on the server module (terminal)<a class="headerlink" href="#executing-commands-on-the-server-module-terminal" title="Link to this heading"></a></h2>
 <p>Connect to the University’s VPN and ssh into the server module</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>pi@141.51.123.55
 <span class="c1"># Single command</span>
@@ -250,7 +253,7 @@ sudo<span class="w"> </span>shutdown<span class="w"> </span>now
 </div>
 </section>
 <section id="executing-commands-on-client-modules-terminal">
-<h2>Executing commands on client modules (terminal)<a class="headerlink" href="#executing-commands-on-client-modules-terminal" title="Permalink to this heading"></a></h2>
+<h2>Executing commands on client modules (terminal)<a class="headerlink" href="#executing-commands-on-client-modules-terminal" title="Link to this heading"></a></h2>
 <p>When you are connected with the University’s network or are using the WiFi you can directly connect to each client module.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>pi@10.42.0.1
 <span class="c1"># Single command</span>
@@ -278,7 +281,7 @@ sudo<span class="w"> </span>shutdown<span class="w"> </span>now
 </div>
 </section>
 <section id="executing-commands-on-client-modules-with-the-provided-scripts">
-<h2>Executing commands on client modules with the provided scripts<a class="headerlink" href="#executing-commands-on-client-modules-with-the-provided-scripts" title="Permalink to this heading"></a></h2>
+<h2>Executing commands on client modules with the provided scripts<a class="headerlink" href="#executing-commands-on-client-modules-with-the-provided-scripts" title="Link to this heading"></a></h2>
 <p>With a route you can use the toolchain to upload and run your software on the nodes.</p>
 <ul class="simple">
 <li><p>Copy your ssh key to the server module so there won’t be any password questions in the scripts we run later.</p></li>
@@ -332,7 +335,7 @@ q<span class="o">()</span>
 <span class="n">out</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">ssh_exec_wait</span><span class="p">(</span><span class="n">session</span><span class="p">,</span><span class="w"> </span><span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;mkdir /pxe/meta/simulation/YOURSIMULATIONNAME&#39;</span><span class="p">)</span>
 <span class="n">path</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s">&quot;/path/to/YOURSIMULATIONNAME&quot;</span>
 <span class="n">files</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">dir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-<span class="nf">for </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">files</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">for</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="kr">in</span><span class="w"> </span><span class="n">files</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="n">out</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">scp_upload</span><span class="p">(</span><span class="n">session</span><span class="p">,</span><span class="w"> </span><span class="nf">paste</span><span class="p">(</span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="n">sep</span><span class="o">=</span><span class="s">&quot;/&quot;</span><span class="p">),</span><span class="w"> </span><span class="s">&#39;/pxe/meta/simulation/YOURSIMULATIONNAME&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">verbose</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
 <span class="p">}</span>
 <span class="n">out</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">ssh_exec_wait</span><span class="p">(</span><span class="n">session</span><span class="p">,</span><span class="w"> </span><span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;/pxe/meta/sim_to_nodes &quot;YOURSIMULATIONNAME&quot; &quot;4-6;9&quot;&#39;</span><span class="p">)</span>

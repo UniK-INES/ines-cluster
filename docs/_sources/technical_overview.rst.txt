@@ -5,6 +5,12 @@ The cluster at Fachgebiet Integrierte Energiesysteme includes 48 RaspberryPi 3+ 
 for managing the system. All modules contain an sd-card. The card itself is only used in the management modules.
 
 
+.. figure:: resources/ines_cluster_500.jpg
+
+Manufacturer's manual
+----------------------------
+`local mirror <_static/KasselBitScopeClusterGuide.html>`_
+
 Server Module
 ----------------------------
 

@@ -1,19 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Technical Overview &mdash; RPi Cluster 0.1 alpha documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=dd986fa6"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -26,14 +28,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> RPi Cluster
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            RPi Cluster
           </a>
-              <div class="version">
-                0.1
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -42,6 +45,7 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Technical Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#manufacturer-s-manual">Manufacturer’s manual</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#server-module">Server Module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#network-interfaces">Network Interfaces</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#important-services">Important Services</a></li>
@@ -82,7 +86,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Technical Overview</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/technical_overview.rst.txt" rel="nofollow"> View page source</a>
@@ -94,13 +98,20 @@
            <div itemprop="articleBody">
              
   <section id="technical-overview">
-<h1>Technical Overview<a class="headerlink" href="#technical-overview" title="Permalink to this heading"></a></h1>
+<h1>Technical Overview<a class="headerlink" href="#technical-overview" title="Link to this heading"></a></h1>
 <p>The cluster at Fachgebiet Integrierte Energiesysteme includes 48 RaspberryPi 3+ and 12 RaspberryPi Zero modules for computing and 2 additional RaspberryPi 3+ modules
 for managing the system. All modules contain an sd-card. The card itself is only used in the management modules.</p>
+<figure class="align-default">
+<img alt="_images/ines_cluster_500.jpg" src="_images/ines_cluster_500.jpg" />
+</figure>
+<section id="manufacturer-s-manual">
+<h2>Manufacturer’s manual<a class="headerlink" href="#manufacturer-s-manual" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="_static/KasselBitScopeClusterGuide.html">local mirror</a></p>
+</section>
 <section id="server-module">
-<h2>Server Module<a class="headerlink" href="#server-module" title="Permalink to this heading"></a></h2>
+<h2>Server Module<a class="headerlink" href="#server-module" title="Link to this heading"></a></h2>
 <section id="network-interfaces">
-<h3>Network Interfaces<a class="headerlink" href="#network-interfaces" title="Permalink to this heading"></a></h3>
+<h3>Network Interfaces<a class="headerlink" href="#network-interfaces" title="Link to this heading"></a></h3>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Hardwareaddress</p></th>
@@ -129,7 +140,7 @@ for managing the system. All modules contain an sd-card. The card itself is only
 </table>
 </section>
 <section id="important-services">
-<h3>Important Services<a class="headerlink" href="#important-services" title="Permalink to this heading"></a></h3>
+<h3>Important Services<a class="headerlink" href="#important-services" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p><strong>dnsmasq</strong> used as DHCP and TFTP server</p></li>
 <li><p><strong>nfs-kernel-server</strong> used for providing the root partition and the individual content directory</p></li>
@@ -138,10 +149,10 @@ for managing the system. All modules contain an sd-card. The card itself is only
 </section>
 </section>
 <section id="homematic-module">
-<h2>Homematic Module<a class="headerlink" href="#homematic-module" title="Permalink to this heading"></a></h2>
+<h2>Homematic Module<a class="headerlink" href="#homematic-module" title="Link to this heading"></a></h2>
 <p>The Homematic module is used to power the cluster. Additionally we use it in case one is not able to create a direct route into the cluster.</p>
 <section id="id1">
-<h3>Network Interfaces<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<h3>Network Interfaces<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Hardwareaddress</p></th>
@@ -165,7 +176,7 @@ for managing the system. All modules contain an sd-card. The card itself is only
 </table>
 </section>
 <section id="id2">
-<h3>Important Services<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
+<h3>Important Services<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Debmatic / lighttpd running on <a class="reference external" href="http://141.51.123.42">http://141.51.123.42</a></p></li>
 <li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Network_Time_Protocol">NTP Server</a> providing time and date for the nodes</p></li>
@@ -173,10 +184,10 @@ for managing the system. All modules contain an sd-card. The card itself is only
 </section>
 </section>
 <section id="router">
-<h2>Router<a class="headerlink" href="#router" title="Permalink to this heading"></a></h2>
+<h2>Router<a class="headerlink" href="#router" title="Link to this heading"></a></h2>
 <p>The router provides a WiFi <strong>nostromo</strong> to the server module’s wlan0 interface and the Zero client modules. When connected to the wifi you can add a route to the client modules with <strong>192.168.1.111</strong> (server module wlan0) as a gateway.</p>
 <section id="id3">
-<h3>Network Interfaces<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h3>
+<h3>Network Interfaces<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Hardwareaddress</p></th>
@@ -201,9 +212,9 @@ for managing the system. All modules contain an sd-card. The card itself is only
 </section>
 </section>
 <section id="nodes">
-<h2>Nodes<a class="headerlink" href="#nodes" title="Permalink to this heading"></a></h2>
+<h2>Nodes<a class="headerlink" href="#nodes" title="Link to this heading"></a></h2>
 <section id="hostnames-and-hardware-address">
-<h3>Hostnames and Hardware Address<a class="headerlink" href="#hostnames-and-hardware-address" title="Permalink to this heading"></a></h3>
+<h3>Hostnames and Hardware Address<a class="headerlink" href="#hostnames-and-hardware-address" title="Link to this heading"></a></h3>
 <p>The clients ask the DHCP server to provide them a hostname. The hostname is given according to their hardware address. The geographical position row gives you information where the module is physically placed. Every bar starts with module 1 and ends with module 15. 4 single bars with 15 modules each bar.</p>
 <table class="docutils align-default">
 <thead>
@@ -579,7 +590,7 @@ for managing the system. All modules contain an sd-card. The card itself is only
 </table>
 </section>
 <section id="geographical-position">
-<h3>Geographical Position<a class="headerlink" href="#geographical-position" title="Permalink to this heading"></a></h3>
+<h3>Geographical Position<a class="headerlink" href="#geographical-position" title="Link to this heading"></a></h3>
 <p>This table provides an easier way to get a client module’s hardware address when you stand infront of the cluster.</p>
 <table class="docutils align-default">
 <thead>
@@ -686,7 +697,7 @@ for managing the system. All modules contain an sd-card. The card itself is only
 </section>
 </section>
 <section id="known-problems">
-<h2>Known Problems<a class="headerlink" href="#known-problems" title="Permalink to this heading"></a></h2>
+<h2>Known Problems<a class="headerlink" href="#known-problems" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/raspberrypi/firmware/issues/894">The module hangs in a while loop while waiting for an ip address and can only get unstuck if there is activity on the ethernet interface</a>,</p></li>
 </ul>
