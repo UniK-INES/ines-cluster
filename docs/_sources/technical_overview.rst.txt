@@ -9,7 +9,7 @@ for managing the system. All modules contain an sd-card. The card itself is only
 
 Manufacturer's manual
 ----------------------------
-`local mirror <_static/KasselBitScopeClusterGuide.html>`_
+`Kassel BitScope Cluster Guide <_static/KasselBitScopeClusterGuide.html>`_
 
 Server Module
 ----------------------------
